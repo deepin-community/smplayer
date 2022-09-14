@@ -1,0 +1,57 @@
+Source: smplayer
+Section: video
+Priority: optional
+Maintainer: Deepin Developer <deepin-dev@deepin.org>
+Uploaders: Deepin Packages Builder <packages@deepin.org>
+Build-Depends:
+ debhelper (>= 11),
+ qtbase5-dev (>= 5.1),
+ qtbase5-private-dev,
+ qt5-qmake,
+ qt5-qmake:native,
+ qtscript5-dev,
+ qttools5-dev-tools,
+ zlib1g-dev
+Standards-Version: 4.2.1
+Homepage: http://smplayer.sourceforge.net/
+
+Package: smplayer
+Architecture: any
+Depends:
+ mpv (>= 0.6.2) | mplayer,
+ ${misc:Depends},
+ ${shlibs:Depends}
+Recommends:
+ smplayer-themes,
+ smplayer-l10n
+Description: Complete front-end for MPlayer and mpv
+ Qt5 front-end for mplayer and forks, with basic features like playing
+ videos, DVDs, and VCDs to more advanced features like support
+ for MPlayer filters and more. One of the most interesting features
+ of SMPlayer: it remembers the settings of all files you play.
+ So you start to watch a movie but you have to leave... don't
+ worry, when you open that movie again it will resume at the same
+ point you left it, and with the same settings: audio track,
+ subtitles, volume...
+
+Package: smplayer-l10n
+Architecture: all
+Section: localization
+Depends:
+ smplayer (>= ${source:Version}),
+ ${misc:Depends}
+Replaces:
+ smplayer (<< 0.5.62), smplayer-translations (<< 14.3.0)
+Breaks:
+ smplayer-translations (<< 14.3.0)
+Description: Complete front-end for MPlayer and mpv - translation files
+ Qt5 front-end for mplayer and forks, with basic features like playing
+ videos, DVDs, and VCDs to more advanced features like support
+ for MPlayer filters and more. One of the most interesting features
+ of SMPlayer: it remembers the settings of all files you play.
+ So you start to watch a movie but you have to leave... don't
+ worry, when you open that movie again it will resume at the same
+ point you left it, and with the same settings: audio track,
+ subtitles, volume...
+ .
+ This package contains translation files.

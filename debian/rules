@@ -1,0 +1,50 @@
+#!/usr/bin/make -f
+
+export LC_ALL=C.UTF-8
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+include /usr/share/dpkg/architecture.mk
+
+ifeq ($(DEB_BUILD_ARCH),$(DEB_HOST_ARCH))
+QMAKE=qmake
+else
+QMAKE=$(DEB_HOST_GNU_TYPE)-qmake
+endif
+
+export QT_SELECT=5
+QMAKE_OPTS = DEFINES+=NO_DEBUG_ON_CONSOLE DEFINES-=MPLAYER2_SUPPORT
+MAKE_OPTS  = PREFIX=/usr QMAKE=qmake LRELEASE=lrelease QMAKE_OPTS="$(QMAKE_OPTS)"
+
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+	[ ! -d src/.moc ] || $(RM) -r src/.moc
+	[ ! -d src/.obj ] || $(RM) -r src/.obj
+	[ ! -d src/.ui ] || $(RM) -r src/.ui
+	[ ! -f src/Makefile ] || dh_auto_clean
+
+override_dh_auto_build:
+	dh_auto_build -- $(MAKE_OPTS) DOC_PATH=\\\"/usr/share/doc/smplayer\\\"
+
+override_dh_auto_install:
+	dh_auto_install -- $(MAKE_OPTS) DOC_PATH=/usr/share/doc/smplayer
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Copying_BSD.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Copying.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/*/gpl.html
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Finding_subtitles.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Portable_Edition.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Watching_TV.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Readme.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Install.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Not_so_obvious_things.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/dvdmenus.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Copying_libmaia.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Changelog
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Release_notes.txt
+	$(RM) -f debian/tmp/usr/share/doc/smplayer/Copying_openssl.txt
+
+override_dh_missing:
+	dh_missing --fail-missing

@@ -1,0 +1,5 @@
+smplayer (18.10.1.1-1+deepin) stable; urgency=medium
+
+  * ['Rebuild  against by  current gcc 11.2']
+
+ -- Deepin Packages Builder <packages@deepin.org>  Wed, 14 Sep 2022 15:25:09 +0800

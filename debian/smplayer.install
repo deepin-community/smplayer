@@ -1,0 +1,8 @@
+debian/smplayer.xpm usr/share/pixmaps
+usr/bin/smplayer
+usr/share/icons
+usr/share/man
+usr/share/smplayer/input.conf
+usr/share/smplayer/shortcuts
+usr/share/applications/smplayer.desktop
+usr/share/applications/smplayer_enqueue.desktop

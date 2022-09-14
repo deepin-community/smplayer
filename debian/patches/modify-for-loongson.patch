@@ -1,0 +1,50 @@
+--- smplayer-18.10.1.orig/src/preferences.cpp
++++ smplayer-18.10.1/src/preferences.cpp
+@@ -16,6 +16,7 @@
+     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+ 
++#include <unistd.h>
+ #include "preferences.h"
+ #include "global.h"
+ #include "paths.h"
+@@ -155,7 +156,7 @@ void Preferences::reset() {
+ 	vdpau.ffmpeg12vdpau = true;
+ 	vdpau.ffwmv3vdpau = true;
+ 	vdpau.ffvc1vdpau = true;
+-	vdpau.ffodivxvdpau = false;
++	vdpau.ffodivxvdpau = true;
+ 	vdpau.ffhevcvdpau = false;
+ 	vdpau.disable_video_filters = true;
+ #endif
+@@ -256,8 +257,8 @@ void Preferences::reset() {
+ 	fast_chapter_change = false;
+ #endif
+ 
+-	threads = 1;
+-	hwdec = "no";
++	threads = sysconf(_SC_NPROCESSORS_ONLN);
++	hwdec = "vdpau";
+ 
+ 	cache_auto = true;
+ 	cache_for_files = 2048;
+@@ -656,7 +657,7 @@ void Preferences::reset() {
+ 
+ #ifdef CHECK_UPGRADED
+ 	smplayer_stable_version = "";
+-	check_if_upgraded = true;
++	check_if_upgraded = false;
+ #endif
+ #ifdef FONTCACHE_DIALOG
+ 	smplayer_version = "";
+--- smplayer-18.10.1.orig/src/updatecheckerdata.cpp
++++ smplayer-18.10.1/src/updatecheckerdata.cpp
+@@ -32,7 +32,7 @@ void UpdateCheckerData::save(QSettings *
+ void UpdateCheckerData::load(QSettings * set) {
+ 	set->beginGroup("update_checker");
+ 	last_checked = set->value("checked_date", 0).toDate();
+-	enabled = set->value("enabled", true).toBool();
++	enabled = set->value("enabled", false).toBool();
+ 	days_to_check = set->value("days_to_check", 7).toInt();
+ 	last_known_version = set->value("last_known_version", Version::with_revision()).toString();
+ 	set->endGroup();
