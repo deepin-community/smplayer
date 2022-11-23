@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -163,10 +163,8 @@ DeviceList DeviceInfo::paDevices() {
 
 	QProcess p;
 	p.setProcessChannelMode( QProcess::MergedChannels );
-	QStringList env = QProcess::systemEnvironment();
-	env << "LC_ALL=C";
-	p.setEnvironment(env);
-	p.start("pacmd list-sinks");
+	p.setEnvironment( QProcess::systemEnvironment() << "LC_ALL=C" );
+	p.start("pacmd", QStringList() << "list-sinks");
 
 	int index = -1;
 	QString name;
@@ -185,7 +183,7 @@ DeviceList DeviceInfo::paDevices() {
 				if (name.startsWith('<') && name.endsWith('>')) { name = name.mid(1); name.chop(1); }
 				qDebug() << "DeviceInfo::paDevices: name:" << name;
 				if (index != -1) {
-					l.append( DeviceData(index, name) );
+					l.append( DeviceData(name, name) );
 					index = -1;
 				}
 			}
@@ -264,7 +262,7 @@ DeviceList DeviceInfo::xvAdaptors() {
 	QProcess p;
 	p.setProcessChannelMode( QProcess::MergedChannels );
 	p.setEnvironment( QProcess::systemEnvironment() << "LC_ALL=C" );
-	p.start("xvinfo");
+	p.start("xvinfo", QStringList());
 
 	if (p.waitForFinished()) {
 		QByteArray line;
@@ -303,6 +301,21 @@ DeviceList DeviceInfo::mpvAlsaDevices() {
 }
 #endif
 
+#if USE_MPV_PULSE_DEVICES
+DeviceList DeviceInfo::mpvPulseDevices() {
+	static DeviceList l;
+	if (!l.isEmpty()) return l;
+	l = mpvAudioDevices("pulse");
+	/*
+	for (int n = 0; n < l.count(); n++) {
+		l[n].setDesc(l[n].ID().toString());
+		l[0].setID(n);
+	}
+	*/
+	return l;
+}
+#endif
+
 #if USE_MPV_WASAPI_DEVICES
 DeviceList DeviceInfo::mpvWasapiDevices() {
 	static DeviceList l;
@@ -311,7 +324,16 @@ DeviceList DeviceInfo::mpvWasapiDevices() {
 	return l;
 }
 #endif
-	
+
+#if USE_MPV_COREAUDIO_DEVICES
+DeviceList DeviceInfo::mpvCoreaudioDevices() {
+	static DeviceList l;
+	if (!l.isEmpty()) return l;
+	l = mpvAudioDevices("coreaudio");
+	return l;
+}
+#endif
+
 DeviceList DeviceInfo::mpvAudioDevices(const QString & filter) {
 	DeviceList l;
 	if (!mpv_bin.isEmpty()) l = mpvAudioDevices(mpv_bin, filter);

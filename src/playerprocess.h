@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,19 +41,20 @@ public:
 
 	virtual bool start() = 0;
 
-	void writeToStdin(QString text);
+	virtual void sendCommand(QString text);
 	MediaData mediaData() { return md; };
 
 	// Command line options
 	virtual void setMedia(const QString & media, bool is_playlist = false) = 0;
-	virtual void setFixedOptions() = 0;
+	virtual void setPredefinedOptions() = 0;
+	virtual void disableConfig() = 0;
 	virtual void disableInput() = 0;
 	virtual void setOption(const QString & option_name, const QVariant & value = QVariant()) = 0;
 	virtual void addUserOption(const QString & option) = 0;
 	virtual void addVF(const QString & filter_name, const QVariant & value = QVariant()) = 0;
 	virtual void addAF(const QString & filter_name, const QVariant & value = QVariant()) = 0;
 	virtual void addStereo3DFilter(const QString & in, const QString & out) = 0;
-	virtual void setSubStyles(const AssStyles & styles, const QString & assStylesFile = QString::null) = 0;
+	virtual void setSubStyles(const AssStyles & styles, const QString & assStylesFile = QString()) = 0;
 	virtual void setSubEncoding(const QString & codepage, const QString & enca_lang) = 0;
 	virtual void setVideoEqualizerOptions(int contrast, int brightness, int hue, int saturation, int gamma, bool soft_eq) = 0;
 
@@ -132,7 +133,7 @@ public:
 	virtual void setOSDFractions(bool active) = 0;
 	virtual void setChannelsFile(const QString &) = 0;
 
-	virtual void enableScreenshots(const QString & dir, const QString & templ = QString::null, const QString & format = QString::null) = 0;
+	virtual void enableScreenshots(const QString & dir, const QString & templ = QString(), const QString & format = QString()) = 0;
 
 	void setPausingPrefix(const QString & prefix) { pausing_prefix = prefix; };
 
@@ -210,6 +211,8 @@ signals:
 
 	void receivedVideoBitrate(int);
 	void receivedAudioBitrate(int);
+
+	void receivedDemuxRotation(int);
 
 protected:
 	virtual void initializeOptionVars() {};

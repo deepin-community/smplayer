@@ -3,12 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# carlo giusepe tadei valente sasaki <carlo.gt.valente@gmail.com>, 2015-2016
+# carlo giusepe tadei valente sasaki <carlo.gt.valente@gmail.com>, 2015-2016,2021
 # carlo giusepe tadei valente sasaki <carlo.gt.valente@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: smplayer\n"
-"PO-Revision-Date: 2016-11-09 15:55+0000\n"
+"PO-Revision-Date: 2021-07-19 17:30+0000\n"
 "Last-Translator: carlo giusepe tadei valente sasaki <carlo.gt.valente@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/rvm/smplayer/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -131,6 +131,14 @@ msgstr "Codecs opcionais para o MPlayer. (Necessita conexão com a Internet para
 # Section_MPV_Desc
 msgid "A feature-rich fork of MPlayer && MPlayer2"
 msgstr "Um derivado do MPlayer && MPlayer2 cheio de funcionalidades"
+
+# Section_YTDL
+msgid "Youtube support (download required)"
+msgstr "Suporte ao Youtube (download necessário)"
+
+# Section_YTDL_Desc
+msgid "Provides the possibility to play Youtube videos."
+msgstr "Permite a possibilidade de reproduzir vídeos do Youtube."
 
 # Section_MEncoder_Desc
 msgid ""
@@ -354,6 +362,24 @@ msgstr "Falha ao baixar o youtube-dl:'$R0'."
 # YTDL_Update_Check
 msgid "Checking for youtube-dl updates..."
 msgstr "Buscando por atualizações do youtube-dl..."
+
+# YTDL_Error_Msg1
+msgid "Warning: youtube-dl exited abnormally with exit code: $YTDL_Exit_code"
+msgstr "Atenção: youtube-dl travou com o seguinte código: $YTDL_Exit_code"
+
+# YTDL_Error_Msg2
+msgid "Visual C++ 2010 Runtime (x86) is required for youtube-dl."
+msgstr "Visual C++ 2010 Runtime (x86) é exigido pelo youtube-dl."
+
+# SMTube_Incompatible_Msg1
+msgid ""
+"The current SMTube installation is incompatible with this version of "
+"SMPlayer."
+msgstr "A instalação atual do SMTube é incompatível com essa versão do SMPlayer."
+
+# SMTube_Incompatible_Msg2
+msgid "Please upgrade to a newer version of SMTube."
+msgstr "Por favor atualize para uma versão mais recente do SMTube."
 
 # Info_Cleaning_Fontconfig
 msgid "Cleaning fontconfig cache..."

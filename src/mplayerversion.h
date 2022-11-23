@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #define MPLAYER_1_0_RC4_SVN 33472
 #define MPLAYER_1_1 34992
 #define MPLAYER_1_2 37540
+#define MPLAYER_1_4 38132
 
 class MplayerVersion {
 public:

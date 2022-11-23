@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,8 +36,11 @@ protected:
 
 	QTranslator app_trans;
 	QTranslator qt_trans;
-	#if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050000
 	QTranslator qtbase_trans;
+#endif
+#ifdef USE_SMTUBE_LIB
+	QTranslator smtube_trans;
 #endif
 };
 

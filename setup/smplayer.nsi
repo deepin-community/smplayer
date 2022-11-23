@@ -54,12 +54,7 @@
   !define SMPLAYER_PRODUCT_VERSION "${VER_MAJOR}.${VER_MINOR}.${VER_BUILD}.0"
 !endif
 
-!ifdef WIN64
-  !define SMPLAYER_BUILD_DIR "smplayer-build64"
-!else
   !define SMPLAYER_BUILD_DIR "smplayer-build"
-!endif
-
   !define SMPLAYER_REG_KEY "Software\SMPlayer"
   !define SMPLAYER_APP_PATHS_KEY "Software\Microsoft\Windows\CurrentVersion\App Paths\smplayer.exe"
   !define SMPLAYER_DEF_PROGS_KEY "Software\Clients\Media\SMPlayer"
@@ -149,7 +144,7 @@
 !ifndef WIN64
   Var Restore_Codecs
 !endif
-  Var Restore_YTDL
+  ;Var Restore_YTDL
   Var Restore_SMTube
   Var SMPlayer_Path
   Var SMPlayer_UnStrPath
@@ -159,7 +154,7 @@
   Var Qt_Core_Installed_Version
   Var Qt_WebKit_Installed_Version
 
-  Var YTDL_Exit_Code
+  ;Var YTDL_Exit_Code
 
   Var MMEngineFlags
 
@@ -378,8 +373,8 @@ Section $(Section_SMPlayer) SecSMPlayer
 !ifndef WIN64
       Call Backup_Codecs
 !endif
-      Call Backup_YTDL
-      Call Backup_SMTube
+      ;Call Backup_YTDL
+      ;Call Backup_SMTube
 
       ${If} "$INSTDIR" == "$SMPlayer_Path"
         ExecWait '"$SMPlayer_UnStrPath" /S /R _?=$SMPlayer_Path'
@@ -408,10 +403,13 @@ Section $(Section_SMPlayer) SecSMPlayer
   ; SetOutPath "$INSTDIR\open-fonts"
   ; File /r "${SMPLAYER_BUILD_DIR}\open-fonts\*.*"
 
-  ;Qt platforms (Qt 5+)
+  ;Qt platforms and styles (Qt 5+)
 !ifndef COMPILED_WITH_QT4
   SetOutPath "$INSTDIR\platforms"
   File /nonfatal /r "${SMPLAYER_BUILD_DIR}\platforms\*.*"
+  
+  SetOutPath "$INSTDIR\styles"
+  File /nonfatal /r "${SMPLAYER_BUILD_DIR}\styles\*.*"
 !endif
 
   ;SMPlayer key shortcuts
@@ -455,31 +453,25 @@ SectionGroup $(MPlayerMPVGroupTitle)
   ${MementoSection} "MPlayer" SecMPlayer
 
     SetOutPath "$INSTDIR\mplayer"
-    File /r /x mplayer.exe /x mencoder.exe /x mplayer64.exe /x mencoder64.exe /x *.exe.debug /x gdb.exe /x gdb64.exe /x vfw2menc.exe /x buildinfo /x buildinfo64 /x buildinfo-mencoder-32 /x buildinfo-mencoder-debug-32 /x buildinfo-mplayer-32 /x buildinfo-mplayer-debug-32 /x buildinfo-mencoder-64 /x buildinfo-mencoder-debug-64 /x buildinfo-mplayer-64 /x buildinfo-mplayer-debug-64 /x libaacs.dll /x libaacs64.dll /x libbdplus.dll /x libbdplus64.dll "${SMPLAYER_BUILD_DIR}\mplayer\*.*"
-!ifdef WIN64
-    File /oname=mplayer.exe "${SMPLAYER_BUILD_DIR}\mplayer\mplayer64.exe"
-    File /nonfatal /oname=libaacs.dll "${SMPLAYER_BUILD_DIR}\mplayer\libaacs64.dll"
-    File /nonfatal /oname=libbdplus.dll "${SMPLAYER_BUILD_DIR}\mplayer\libbdplus64.dll"
-    RMDir "$INSTDIR\mplayer\codecs"
-!else
-    File "${SMPLAYER_BUILD_DIR}\mplayer\mplayer.exe"
-    File /nonfatal "${SMPLAYER_BUILD_DIR}\mplayer\libaacs.dll"
-    File /nonfatal "${SMPLAYER_BUILD_DIR}\mplayer\libbdplus.dll"
-!endif
+    File /r "${SMPLAYER_BUILD_DIR}\mplayer\*.*"
 
   ${MementoSectionEnd}
 
   ${MementoSection} "MPV" SecMPV
 
   SetOutPath "$INSTDIR\mpv"
-!ifdef WIN64
-  File /r /x mpv.exe /x mpv.com /x mpv64.exe /x mpv64.com /x d3dcompiler_43.dll /x d3dcompiler_43-64.dll "${SMPLAYER_BUILD_DIR}\mpv\*.*"
-  File /oname=d3dcompiler_43.dll "${SMPLAYER_BUILD_DIR}\mpv\d3dcompiler_43-64.dll"
-  File /oname=mpv.exe "${SMPLAYER_BUILD_DIR}\mpv\mpv64.exe"
-  File /oname=mpv.com "${SMPLAYER_BUILD_DIR}\mpv\mpv64.com"
-!else
-  File /r /x mpv64.exe /x mpv64.com /x d3dcompiler_43-64.dll "${SMPLAYER_BUILD_DIR}\mpv\*.*"
-!endif
+  File /r "${SMPLAYER_BUILD_DIR}\mpv\*.*"
+
+  ${MementoSectionEnd}
+
+SectionGroupEnd
+
+/*
+;--------------------------------
+;Youtube-dl
+${MementoSection} $(Section_YTDL) SecYTDL
+
+  SetOutPath "$INSTDIR\mpv"
 
   IfFileExists "$PLUGINSDIR\youtube-dl.exe" 0 YTDL
     CopyFiles /SILENT "$PLUGINSDIR\youtube-dl.exe" "$INSTDIR\mpv"
@@ -511,9 +503,8 @@ SectionGroup $(MPlayerMPVGroupTitle)
 
   skip_ytdl:
 
-  ${MementoSectionEnd}
-
-SectionGroupEnd
+${MementoSectionEnd}
+*/
 
 ;--------------------------------
 ;Icon themes
@@ -615,6 +606,10 @@ Section -Post
   WriteRegStr HKLM "${SMPLAYER_UNINST_KEY}" "URLUpdateInfo" "http://www.smplayer.info"
   WriteRegDWORD HKLM "${SMPLAYER_UNINST_KEY}" "NoModify" "1"
   WriteRegDWORD HKLM "${SMPLAYER_UNINST_KEY}" "NoRepair" "1"
+  
+  ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+  IntFmt $0 "0x%08X" $0
+  WriteRegDWORD HKLM "${SMPLAYER_UNINST_KEY}" "EstimatedSize" "$0"
 
   DetailPrint $(Info_Cleaning_Fontconfig)
   SetDetailsPrint none
@@ -649,6 +644,7 @@ ${MementoSectionDone}
   !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenuShortcut} $(Section_StartMenu_Desc)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecMPlayer} $(Section_MPlayer_Desc)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecMPV} $(Section_MPV_Desc)
+  ;!insertmacro MUI_DESCRIPTION_TEXT ${SecYTDL} $(Section_YTDL_Desc)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecThemes} $(Section_IconThemes_Desc)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecTranslations} $(Section_Translations_Desc)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
@@ -748,44 +744,18 @@ ${MementoSectionDone}
   RMDir /r "$INSTDIR\imageformats"
   RMDir /r "$INSTDIR\mplayer"
   RMDir /r "$INSTDIR\mpv"
-  ; RMDir /r "$INSTDIR\open-fonts"
   RMDir /r "$INSTDIR\platforms"
   RMDir /r "$INSTDIR\shortcuts"
   RMDir /r "$INSTDIR\themes"
   RMDir /r "$INSTDIR\translations"
+  RMDir /r "$INSTDIR\styles"
 
   ;Txt
-  Delete "$INSTDIR\Copying.txt"
-  Delete "$INSTDIR\Copying_BSD.txt"
-  Delete "$INSTDIR\Copying_libmaia.txt"
-  Delete "$INSTDIR\Copying_openssl.txt"
-  Delete "$INSTDIR\dvdmenus.txt"
-  Delete "$INSTDIR\Finding_subtitles.txt"
-  Delete "$INSTDIR\Install.txt"
-  Delete "$INSTDIR\Notes_about_mpv.txt"
-  Delete "$INSTDIR\Not_so_obvious_things.txt"
-  Delete "$INSTDIR\Portable_Edition.txt"
-  Delete "$INSTDIR\Readme.txt"
-  Delete "$INSTDIR\Release_notes.txt"
-  Delete "$INSTDIR\Watching_TV.txt"
+  Delete "$INSTDIR\*.txt"
 
   ;Binaries
-  Delete "$INSTDIR\smplayer.exe"
-  Delete "$INSTDIR\smtube.exe"
-  Delete "$INSTDIR\dxlist.exe"
-  Delete "$INSTDIR\simple_web_server.exe"
-  Delete "$INSTDIR\icudt*.dll"
-  Delete "$INSTDIR\icuin*.dll"
-  Delete "$INSTDIR\icuuc*.dll"
-  Delete "$INSTDIR\libgcc_s_*.dll"
-  Delete "$INSTDIR\libstdc++-6.dll"
-  Delete "$INSTDIR\libwinpthread-1.dll"
-  Delete "$INSTDIR\mingwm10.dll"
-  Delete "$INSTDIR\zlib1.dll"
-  Delete "$INSTDIR\Qt*.dll"
-  Delete "$INSTDIR\libeay32.dll"
-  Delete "$INSTDIR\ssleay32.dll"
-  Delete "$INSTDIR\sample.avi"
+  Delete "$INSTDIR\*.exe"
+  Delete "$INSTDIR\*.dll"
 
   ;Delete registry keys
   SetDetailsPrint textonly
@@ -909,7 +879,9 @@ Function .onInstSuccess
 
   ${MementoSectionSave}
   
-  ExecShell "open" "http://www.smplayer.info/post-install.php?version=${SMPLAYER_VERSION}"
+  ${IfNot} ${Silent}
+    ExecShell "open" "http://www.smplayer.info/post-install.php?version=${SMPLAYER_VERSION}"
+  ${Endif}
 
 FunctionEnd
 
@@ -993,6 +965,7 @@ Function Backup_Codecs
 FunctionEnd
 !endif
 
+/*
 Function Backup_YTDL
 
   ${IfNot} ${SectionIsSelected} ${SecMPV}
@@ -1008,6 +981,7 @@ Function Backup_YTDL
     StrCpy $Restore_YTDL 0
 
 FunctionEnd
+*/
 
 Function Backup_SMTube
 

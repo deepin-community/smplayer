@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,18 +26,23 @@
 #include <QStringList>
 #include "guiconfig.h"
 
-class QTableWidget;
-class QTableWidgetItem;
+class QTableView;
+class QStandardItemModel;
+class QStandardItem;
+class QModelIndex;
+class QSortFilterProxyModel;
+
 class QAction;
 class QSettings;
 class QPushButton;
+class QLineEdit;
 
 class ActionsEditor : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    ActionsEditor( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	ActionsEditor( QWidget * parent = 0, Qt::WindowFlags f = QFlag(0) );
 	~ActionsEditor();
 
 	// Clear the actionlist
@@ -55,10 +60,10 @@ public:
 	static void saveToConfig(QObject *o, QSettings *set);
 	static void loadFromConfig(QObject *o, QSettings *set);
 
-#if USE_MULTIPLE_SHORTCUTS
+	#if USE_MULTIPLE_SHORTCUTS
 	static QString shortcutsToString(QList <QKeySequence> shortcuts_list);
 	static QList <QKeySequence> stringToShortcuts(QString shortcuts);
-#endif
+	#endif
 
 public slots:
 	void applyChanges();
@@ -80,26 +85,31 @@ protected:
 	static bool containsShortcut(const QString & accel, const QString & shortcut);
 
 protected slots:
-#if !USE_SHORTCUTGETTER
-	void recordAction(QTableWidgetItem*);
-	void validateAction(QTableWidgetItem*);
-#else
+	#if !USE_SHORTCUTGETTER
+	void recordAction(const QModelIndex &);
+	void validateAction(QStandardItem * i);
+	#else
 	void editShortcut();
-#endif
+	#endif
+	void filterEditChanged(const QString &);
 
 private:
-	QTableWidget *actionsTable;
-    QList<QAction*> actionsList;
+	QTableView *actionsTable;
+	QStandardItemModel * table;
+	QSortFilterProxyModel * proxy;
+
+	QList<QAction*> actionsList;
 	QPushButton *saveButton;
 	QPushButton *loadButton;
+	QLineEdit * filterEdit;
 	QString latest_dir;
 
-#if USE_SHORTCUTGETTER
+	#if USE_SHORTCUTGETTER
 	QPushButton *editButton;
-#else
+	#else
 	QString oldAccelText;
 	bool dont_validate;
-#endif
+	#endif
 };
 
 #endif

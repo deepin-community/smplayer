@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,8 +25,10 @@
 #include "paths.h"
 #include "vdpauproperties.h"
 #include "playerid.h"
+#include "helper.h"
+#include <QDebug>
 
-#if USE_ALSA_DEVICES || USE_PULSEAUDIO_DEVICES || USE_XV_ADAPTORS || USE_DSOUND_DEVICES
+#if USE_ALSA_DEVICES || USE_PULSEAUDIO_DEVICES || USE_XV_ADAPTORS || USE_DSOUND_DEVICES || USE_MPV_PULSE_DEVICES
 #include "deviceinfo.h"
 #endif
 
@@ -58,19 +60,16 @@ PrefGeneral::PrefGeneral(QWidget * parent, Qt::WindowFlags f)
 	vo_list = i->voList();
 	ao_list = i->aoList();
 
-#if USE_DSOUND_DEVICES
+#ifdef AUDIO_DEVICES_SELECTION
+	#if USE_DSOUND_DEVICES
 	dsound_devices = DeviceInfo::dsoundDevices();
+	#endif
+
+	#if USE_ALSA_DEVICES
+	alsa_devices = DeviceInfo::alsaDevices();
+	#endif
 #endif
 
-#if USE_ALSA_DEVICES
-	alsa_devices = DeviceInfo::alsaDevices();
-#endif
-#if USE_MPV_ALSA_DEVICES
-	mpv_alsa_devices = DeviceInfo::mpvAlsaDevices();
-#endif
-#if USE_PULSEAUDIO_DEVICES
-	pa_devices = DeviceInfo::paDevices();
-#endif
 #if USE_XV_ADAPTORS
 	xv_adaptors = DeviceInfo::xvAdaptors();
 #endif
@@ -85,10 +84,14 @@ PrefGeneral::PrefGeneral(QWidget * parent, Qt::WindowFlags f)
 	avoid_screensaver_check->hide();
 	#endif
 #else
+	#ifndef SCREENSAVER_OFF
+	screensaver_check->hide();
+	#endif
 	screensaver_group->hide();
 #endif
 
-#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
+#ifndef OS_UNIX_NOT_MAC
+	wayland_check->hide();
 	vdpau_button->hide();
 #endif
 
@@ -110,7 +113,7 @@ PrefGeneral::PrefGeneral(QWidget * parent, Qt::WindowFlags f)
 #endif
 
 #ifdef MPV_SUPPORT
-	screenshot_format_combo->addItems(QStringList() << "png" << "ppm" << "pgm" << "pgmyuv" << "tga" << "jpg" << "jpeg");
+	screenshot_format_combo->addItems(QStringList() << "png" << "jpg" << "webp");
 #else
 	screenshot_template_label->hide();
 	screenshot_template_edit->hide();
@@ -189,7 +192,9 @@ void PrefGeneral::retranslateStrings() {
 	filesettings_method_combo->addItem( tr("multiple ini files"), "hash");
 	filesettings_method_combo->setCurrentIndex(filesettings_method_item);
 
+#ifndef AUDIO_DEVICES_SELECTION
 	updateDriverCombos();
+#endif
 
     // Icons
 	/*
@@ -285,16 +290,21 @@ void PrefGeneral::setData(Preferences * pref) {
 
 #ifdef Q_OS_WIN
 	#ifdef SCREENSAVER_OFF
-	setTurnScreensaverOff( pref->turn_screensaver_off );
+	setTurnScreensaverOff( pref->disable_screensaver );
 	#endif
 	#ifdef AVOID_SCREENSAVER
 	setAvoidScreensaver( pref->avoid_screensaver );
 	#endif
 #else
+	#ifdef SCREENSAVER_OFF
 	setDisableScreensaver( pref->disable_screensaver );
+	#endif
+	#ifdef OS_UNIX_NOT_MAC
+	wayland_check->setChecked(pref->wayland_workarounds);
+	#endif
 #endif
 
-#if !defined(Q_OS_WIN) && !defined(Q_OS_OS2)
+#ifdef OS_UNIX_NOT_MAC
 	vdpau = pref->vdpau;
 #endif
 
@@ -306,15 +316,52 @@ void PrefGeneral::setData(Preferences * pref) {
 
 	setMcActivated( pref->use_mc );
 	setMc( pref->mc_value );
+
+#ifdef AUDIO_DEVICES_SELECTION
+#if USE_PULSEAUDIO_DEVICES
+	#if USE_MPV_PULSE_DEVICES
+	if (PlayerID::player(pref->mplayer_bin) == PlayerID::MPLAYER)
+	#endif
+	{
+		pa_devices = DeviceInfo::paDevices();
+	}
+#endif
+#if MPV_AUDIO_DEVICES
+	if (PlayerID::player(pref->mplayer_bin) == PlayerID::MPV) {
+		#if USE_MPV_PULSE_DEVICES
+		pa_devices = DeviceInfo::mpvPulseDevices();
+		#endif
+		#if USE_MPV_ALSA_DEVICES
+		mpv_alsa_devices = DeviceInfo::mpvAlsaDevices();
+		#endif
+		#if USE_MPV_COREAUDIO_DEVICES
+		coreaudio_devices = DeviceInfo::mpvCoreaudioDevices();
+		#endif
+	}
+#endif
+	updateDriverCombos();
+#endif // AUDIO_DEVICES_SELECTION
 }
 
 void PrefGeneral::getData(Preferences * pref) {
 	requires_restart = false;
 	filesettings_method_changed = false;
 
-	if (pref->mplayer_bin != mplayerPath()) {
+	QString player_path = mplayerPath();
+#ifdef MPLAYER_MPV_SELECTION
+	#ifdef OS_UNIX_NOT_MAC
+	if (player_path == PLAYER_COMBO_MPLAYER_PATH || player_path == PLAYER_COMBO_MPV_PATH || !QFile::exists(player_path)) {
+		QString player_name = QFileInfo(player_path).fileName();
+		QString found_player = Helper::findExecutable(player_name);
+		if (!found_player.isEmpty()) player_path = found_player;
+	}
+	#endif
+#endif
+	qDebug() << "PrefGeneral::getData: player_path:" << player_path;
+
+	if (pref->mplayer_bin != player_path) {
 		requires_restart = true;
-		pref->mplayer_bin = mplayerPath();
+		pref->mplayer_bin = player_path;
 
 		qDebug("PrefGeneral::getData: mplayer binary has changed, getting version number");
 		// Forces to get info from mplayer to update version number
@@ -395,16 +442,24 @@ void PrefGeneral::getData(Preferences * pref) {
 
 #ifdef Q_OS_WIN
 	#ifdef SCREENSAVER_OFF
-	TEST_AND_SET(pref->turn_screensaver_off, turnScreensaverOff());
+	TEST_AND_SET(pref->disable_screensaver, turnScreensaverOff());
 	#endif
 	#ifdef AVOID_SCREENSAVER
 	pref->avoid_screensaver = avoidScreensaver();
 	#endif
 #else
+	#ifdef SCREENSAVER_OFF
 	TEST_AND_SET(pref->disable_screensaver, disableScreensaver());
+	#endif
+	#ifdef OS_UNIX_NOT_MAC
+	if (pref->wayland_workarounds != wayland_check->isChecked()) {
+		requires_restart = true;
+		pref->wayland_workarounds = wayland_check->isChecked();
+	}
+	#endif
 #endif
 
-#if !defined(Q_OS_WIN) && !defined(Q_OS_OS2)
+#ifdef OS_UNIX_NOT_MAC
 	pref->vdpau = vdpau;
 #endif
 
@@ -433,11 +488,11 @@ void PrefGeneral::updateDriverCombos() {
 		vo = vo_list[n].name();
 		#ifdef Q_OS_WIN
 		if ( vo == "directx" ) {
-			vo_combo->addItem( "directx (" + tr("fast") + ")", "directx" );
-			vo_combo->addItem( "directx (" + tr("slow") + ")", "directx:noaccel" );
+			vo_combo->addItem( "directx (" + tr("hardware") + ")", "directx" );
+			vo_combo->addItem( "directx (" + tr("software") + ")", "directx:noaccel" );
 		}
 		else
-		#else
+		#endif
 		#ifdef Q_OS_OS2
 		if ( vo == "kva") {
 			vo_combo->addItem( "kva (" + tr("fast") + ")", "kva" );
@@ -445,11 +500,7 @@ void PrefGeneral::updateDriverCombos() {
 			vo_combo->addItem( "kva (" + tr("slower dive mode") + ")", "kva:dive" );
 		}
 		else
-		#else
-		/*
-		if (vo == "xv") vo_combo->addItem( "xv (" + tr("fastest") + ")", vo);
-		else
-		*/
+		#endif
 		#if USE_XV_ADAPTORS
 		if ((vo == "xv") && (!xv_adaptors.isEmpty())) {
 			vo_combo->addItem(vo, vo);
@@ -459,30 +510,21 @@ void PrefGeneral::updateDriverCombos() {
 			}
 		}
 		else
-		#endif // USE_XV_ADAPTORS
 		#endif
+		#ifdef USE_SHM
+		if (vo == "shm") {
+			vo_combo->addItem( "Shared memory", vo);
+		}
+		else
 		#endif
-		if (vo == "x11") vo_combo->addItem( "x11 (" + tr("slow") + ")", vo);
-		else
-		if (vo == "gl") {
-			vo_combo->addItem( vo, vo);
-			vo_combo->addItem( "gl (" + tr("fast") + ")", "gl:yuv=2:force-pbo");
-			vo_combo->addItem( "gl (" + tr("fast - ATI cards") + ")", "gl:yuv=2:force-pbo:ati-hack");
-			vo_combo->addItem( "gl (yuv)", "gl:yuv=3");
+		#ifdef Q_OS_MACX
+		if (vo == "sharedbuffer") {
+			vo_combo->addItem( "Cocoa shared buffer", vo);
 		}
 		else
-		if (vo == "gl2") {
-			vo_combo->addItem( vo, vo);
-			vo_combo->addItem( "gl2 (yuv)", "gl2:yuv=3");
-		}
-		else
-		if (vo == "gl_tiled") {
-			vo_combo->addItem( vo, vo);
-			vo_combo->addItem( "gl_tiled (yuv)", "gl_tiled:yuv=3");
-		}
-		else
-		if (vo == "null" || vo == "png" || vo == "jpeg" || vo == "gif89a" || 
-            vo == "tga" || vo == "pnm" || vo == "md5sum" || vo == "image" || vo == "tct") 
+		#endif
+		if (/*vo == "libmpv" ||*/ vo == "null" || vo == "png" || vo == "jpeg" || vo == "gif89a" ||
+            vo == "tga" || vo == "pnm" || vo == "md5sum" || vo == "image" || vo == "tct" || vo == "yuv4mpeg")
 		{
 			; // Nothing to do
 		}
@@ -503,6 +545,7 @@ void PrefGeneral::updateDriverCombos() {
 		}
 		#endif
 		*/
+		#ifdef AUDIO_DEVICES_SELECTION
 		#if USE_ALSA_DEVICES
 		if ((ao == "alsa") && (!alsa_devices.isEmpty())) {
 			for (int n=0; n < alsa_devices.count(); n++) {
@@ -517,10 +560,17 @@ void PrefGeneral::updateDriverCombos() {
 			}
 		}
 		#endif
-		#if USE_PULSEAUDIO_DEVICES
+		#if USE_PULSEAUDIO_DEVICES || USE_MPV_PULSE_DEVICES
 		if ((ao == "pulse") && (!pa_devices.isEmpty())) {
 			for (int n=0; n < pa_devices.count(); n++) {
 				ao_combo->addItem( DeviceInfo::printableName("pulse", pa_devices[n]), DeviceInfo::internalName("pulse", pa_devices[n]) );
+			}
+		}
+		#endif
+		#if USE_MPV_COREAUDIO_DEVICES
+		if ((ao == "coreaudio") && (!coreaudio_devices.isEmpty())) {
+			for (int n=0; n < coreaudio_devices.count(); n++) {
+				ao_combo->addItem( DeviceInfo::printableName("coreaudio", coreaudio_devices[n]), DeviceInfo::internalName("coreaudio", coreaudio_devices[n]) );
 			}
 		}
 		#endif
@@ -531,6 +581,7 @@ void PrefGeneral::updateDriverCombos() {
 			}
 		}
 		#endif
+		#endif // AUDIO_DEVICES_SELECTION
 	}
 	ao_combo->addItem( tr("User defined..."), "user_defined" );
 
@@ -966,6 +1017,10 @@ void PrefGeneral::player_combo_changed(int idx) {
 		player_spacer->changeSize(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 		mplayerbin_edit->setVisible(false);
 	}
+
+	#ifdef OS_UNIX_NOT_MAC
+	wayland_check->setVisible(mplayerPath().contains("mpv"));
+	#endif
 }
 #endif
 
@@ -975,7 +1030,7 @@ void PrefGeneral::vo_combo_changed(int idx) {
 	vo_user_defined_edit->setVisible(visible);
 	vo_user_defined_edit->setFocus();
 
-#ifndef Q_OS_WIN
+#ifdef OS_UNIX_NOT_MAC
 	bool vdpau_button_visible = (vo_combo->itemData(idx).toString() == "vdpau" && mplayerPath().contains("mplayer"));
 	vdpau_button->setVisible(vdpau_button_visible);
 #endif
@@ -988,7 +1043,7 @@ void PrefGeneral::ao_combo_changed(int idx) {
 	ao_user_defined_edit->setFocus();
 }
 
-#ifndef Q_OS_WIN
+#ifdef OS_UNIX_NOT_MAC
 void PrefGeneral::on_vdpau_button_clicked() {
 	qDebug("PrefGeneral::on_vdpau_button_clicked");
 
@@ -1106,12 +1161,15 @@ void PrefGeneral::createHelp() {
 	setWhatsThis(vo_combo, tr("Video output driver"),
 		tr("Select the video output driver."));
 
-#if !defined(Q_OS_WIN) && !defined(Q_OS_OS2)
+#ifdef OS_UNIX_NOT_MAC
 	/*
 	setWhatsThis(vdpau_filters_check, tr("Disable video filters when using vdpau"),
 		tr("Usually video filters won't work when using vdpau as video output "
            "driver, so it's wise to keep this option checked.") );
 	*/
+
+	setWhatsThis(wayland_check, tr("Wayland support"),
+		tr("This activates some options to prevent the video being displayed outside the main window."));
 #endif
 
 	setWhatsThis(postprocessing_check, tr("Enable postprocessing by default"),

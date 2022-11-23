@@ -1,0 +1,20 @@
+Description: Disable donate reminder
+Author: Mateusz Łukasik <mati75@linuxmint.pl>
+
+Origin: vendor
+Bug-Debian: https://bugs.debian.org/964359
+Last-Update: 2020-08-13
+
+--- a/src/basegui.cpp
++++ b/src/basegui.cpp
+@@ -255,10 +255,6 @@ BaseGui::BaseGui( QWidget* parent, Qt::W
+ 	QTimer::singleShot(2000, this, SLOT(checkIfUpgraded()));
+ #endif
+ 
+-#ifdef DONATE_REMINDER
+-	QTimer::singleShot(1000, this, SLOT(checkReminder()));
+-#endif
+-
+ #ifdef MPRIS2
+ 	if (pref->use_mpris2) new Mpris2(this, this);
+ #endif

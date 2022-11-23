@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,96 +17,91 @@
 */
 
 #include "retrieveyoutubeurl.h"
-#include "loadpage.h"
+
+#define YT_USE_JSON
+#define DEBUG_OUTPUT_JSON
+
+#if QT_VERSION >= 0x050000
+  #include <QJsonDocument>
+  #include <QJsonObject>
+  #include <QUrlQuery>
+#else
+  #include <QRegExp>
+  #include "qt-json/json.h"
+#endif
+
+#ifdef DEBUG_OUTPUT_JSON
+#include <QFile>
+#endif
 
 #include <QUrl>
 #include <QDebug>
-#include <QRegExp>
 #include <QStringList>
-#include <QSslSocket>
+#include <QProcess>
+#include <QFileInfo>
+#include <QDir>
+#include "qtcompat.h"
 
-#ifdef YT_USE_YTSIG
-#include "ytsig.h"
-#endif
-
-#if QT_VERSION >= 0x050000
-#include <QUrlQuery>
-#endif
-
-#define DEBUG_OUTPUT_PAGE
-#ifdef DEBUG_OUTPUT_PAGE
-#include <QFile>
- #if QT_VERSION >= 0x050000
- #include <QStandardPaths>
- #else
- #include <QDesktopServices>
- #endif
-#endif
-
+QString RetrieveYoutubeUrl::ytdl_bin;
 
 RetrieveYoutubeUrl::RetrieveYoutubeUrl(QObject* parent)
 	: QObject(parent)
-#ifdef YT_USE_SIG
-	, set(0)
-#endif
 	, preferred_resolution(R720p)
+#ifdef YT_OBSOLETE
 	, use_https_main(false)
-	, use_https_vi(false)
-#ifdef YT_DASH_SUPPORT
+#endif
 	, use_dash(false)
-#endif
+	, use_60fps(false)
+	, use_av1(false)
 {
+	process = new QProcess(this);
+	connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
+	connect(process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(processError(QProcess::ProcessError)));
+
 	clearData();
-	manager = new QNetworkAccessManager(this);
-
-	dl_video_page = new LoadPage(manager, this);
-	connect(dl_video_page, SIGNAL(pageLoaded(QByteArray)), this, SLOT(videoPageLoaded(QByteArray)));
-	connect(dl_video_page, SIGNAL(errorOcurred(int, QString)), this, SIGNAL(errorOcurred(int, QString)));
-	/* connect(dl_video_page, SIGNAL(response303(QString)), this, SLOT(receivedResponse303(QString))); */
-
-#ifdef YT_GET_VIDEOINFO
-	dl_video_info_page = new LoadPage(manager, this);
-	connect(dl_video_info_page, SIGNAL(pageLoaded(QByteArray)), this, SLOT(videoInfoPageLoaded(QByteArray)));
-	connect(dl_video_info_page, SIGNAL(errorOcurred(int, QString)), this, SIGNAL(errorOcurred(int, QString)));
-#endif
-
-#ifdef YT_USE_SIG
-	dl_player_page = new LoadPage(manager, this);
-	connect(dl_player_page, SIGNAL(pageLoaded(QByteArray)), this, SLOT(playerPageLoaded(QByteArray)));
-	connect(dl_player_page, SIGNAL(errorOcurred(int, QString)), this, SIGNAL(errorOcurred(int, QString)));
-#endif
-
-#ifdef YT_LIVE_STREAM
-	dl_stream_page = new LoadPage(manager, this);
-	connect(dl_stream_page, SIGNAL(pageLoaded(QByteArray)), this, SLOT(streamPageLoaded(QByteArray)));
-	connect(dl_stream_page, SIGNAL(errorOcurred(int, QString)), this, SIGNAL(errorOcurred(int, QString)));
-#endif
 }
 
 RetrieveYoutubeUrl::~RetrieveYoutubeUrl() {
 }
 
-void RetrieveYoutubeUrl::clearData() {
-	selected_url = "";
-	selected_quality = None;
+QString RetrieveYoutubeUrl::ytdlBin() {
+	if (ytdl_bin.isEmpty()) ytdl_bin = YTDL_DEFAULT_BIN;
+	QString app_path = ytdl_bin;
 
-#ifdef YT_DASH_SUPPORT
+	QFileInfo fi(ytdl_bin);
+	qDebug() << "RetrieveYoutubeUrl::ytdlBin: ytdl_bin:" << ytdl_bin << "path:" << fi.path();
+
+	if (fi.path() == ".") {
+		#ifdef Q_OS_WIN
+		  #ifdef YT_BIN_ON_CONFIG_DIR
+		  app_path = QDir::homePath() + "/.smplayer/" + ytdl_bin;
+		  #else
+		  app_path = "mpv/" + ytdl_bin;
+		  #endif
+		#endif
+		#ifdef Q_OS_MACX
+		app_path = QDir::homePath() + "/bin/" + ytdl_bin;
+		#endif
+	}
+	qDebug() << "RetrieveYoutubeUrl::ytdlBin: app_path:" << app_path;
+	return app_path;
+}
+
+void RetrieveYoutubeUrl::close() {
+	qDebug("RetrieveYoutubeUrl::close");
+	process->close();
+}
+
+void RetrieveYoutubeUrl::clearData() {
+	selected_video_url = "";
+	selected_video_quality = None;
+
 	selected_audio_url = "";
 	selected_audio_quality = None;
-#endif
 
 	yt_url = "";
-	url_title = "";
-
-	urlmap.clear();
+	video_title = "";
 }
-
-#ifdef YT_USE_SIG
-void RetrieveYoutubeUrl::setSettings(QSettings * settings) {
-	set = settings;
-	sig.load(set);
-}
-#endif
 
 bool RetrieveYoutubeUrl::isUrlSupported(const QString & url) {
 	return (!getVideoID(url).isEmpty());
@@ -116,7 +111,11 @@ QString RetrieveYoutubeUrl::fullUrl(const QString & url) {
 	QString r;
 	QString ID = getVideoID(url);
 	if (!ID.isEmpty()) {
+		#ifdef YT_OBSOLETE
 		QString scheme = use_https_main ? "https" : "http";
+		#else
+		QString scheme =  "https";
+		#endif
 		r = scheme + "://www.youtube.com/watch?v=" + ID;
 	}
 	return r;
@@ -183,588 +182,181 @@ QString RetrieveYoutubeUrl::getVideoID(QString video_url) {
 }
 
 void RetrieveYoutubeUrl::fetchPage(const QString & url) {
+	runYtdl(url);
+}
+
+QString RetrieveYoutubeUrl::absoluteFilePath(QString app_bin) {
+	QFileInfo fi(app_bin);
+	#ifdef Q_OS_WIN
+	app_bin = fi.absoluteFilePath();
+	#else
+	if (fi.exists() && fi.isExecutable() && !fi.isDir()) {
+		app_bin = fi.absoluteFilePath();
+	}
+	#endif
+	return app_bin;
+}
+
+void RetrieveYoutubeUrl::runYtdl(const QString & url) {
 	clearData();
 
+	emit connecting("youtube.com");
+
 	yt_url = url;
-	fetchVideoPage(url);
-	//fetchVideoInfoPage(url);
-}
 
-void RetrieveYoutubeUrl::fetchVideoPage(const QString & url) {
-	qDebug() << "RetrieveYoutubeUrl::fetchVideoPage: url:" << url;
+	QStringList args;
+	QString format;
 
-	if (url.toLower().startsWith("https") && !QSslSocket::supportsSsl()) {
-		qDebug() << "RetrieveYoutubeUrl::fetchVideoPage: no support for ssl";
-		emit noSslSupport();
-		return;
+	QString resolution = resolutionToText(preferred_resolution);
+	if (!resolution.isEmpty()) resolution = "[height<=?" + resolution + "]";
+
+	if (!user_format.isEmpty()) {
+		format = user_format;
+	} else {
+		if (use_dash) {
+			format = "bestvideo" + resolution +"[protocol!=http_dash_segments]";
+			if (!use_60fps) format += "[fps!=60]";
+			if (!use_av1) format += "[vcodec!*=av01]";
+			format += ",bestaudio[protocol!=http_dash_segments]";
+			format += "/best" + resolution;
+		} else {
+			format = "best" + resolution;
+			//format += ",bestaudio[protocol!=http_dash_segments]";
+		}
 	}
 
-	dl_video_page->fetchPage(url);
+	#ifdef YT_USE_JSON
+	args << "-j";
+	#else
+	args << "--get-title" << "--get-format" << "-g";
+	#endif
+	args << "-f" << format << "--no-playlist";
+	if (!user_agent.isEmpty()) args << "--user-agent" << user_agent;
+	args << url;
 
-	emit connecting(QUrl(url).host());
-};
+	QString app_bin = absoluteFilePath(ytdlBin());
 
-/*
-void RetrieveYoutubeUrl::receivedResponse303(QString url) {
-	qDebug() << "RetrieveYoutubeUrl::receivedResponse303:" << url;
-	fetchPage(url);
-}
-*/
-
-#ifdef YT_GET_VIDEOINFO
-void RetrieveYoutubeUrl::fetchVideoInfoPage(const QString & url) {
-	QString video_id = getVideoID(url);
-
-	QString scheme = use_https_vi ? "https" : "http";
-	QString u = QString("%2://www.youtube.com/get_video_info?video_id=%1&disable_polymer=true&eurl=https://youtube.googleapis.com/v/%1&gl=US&hl=en").arg(video_id).arg(scheme);
-	qDebug() << "RetrieveYoutubeUrl::fetchVideoInfoPage: url:" << url;
-
-	if (u.toLower().startsWith("https") && !QSslSocket::supportsSsl()) {
-		qDebug() << "RetrieveYoutubeUrl::fetchVideoInfoPage: no support for ssl";
-		emit noSslSupport();
-		return;
+	#ifdef OS_UNIX_NOT_MAC
+	QFileInfo fi(app_bin);
+	QString basename = fi.completeBaseName();
+	if (fi.path() == ".") {
+		QString bin = findExecutable(app_bin);
+		if (!bin.isEmpty()) app_bin = bin;
 	}
-
-	#ifdef YT_USE_SIG
-	if (!sig.sts.isEmpty()) {
-		u += "&sts=" + sig.sts;
+	qDebug() << "RetrieveYoutubeUrl::runYtdl: basename:" << basename << "app_bin:" << app_bin;
+	if (basename == "youtube-dl") {
+		QString python_bin = findExecutable("python3");
+		if (python_bin.isEmpty()) python_bin = findExecutable("python2");
+		if (!python_bin.isEmpty()) {
+			args.prepend(app_bin);
+			app_bin = python_bin;
+		}
 	}
 	#endif
 
-	dl_video_info_page->fetchPage(u);
+	QString command = app_bin + " " + args.join(" ");
+	qDebug() << "RetrieveYoutubeUrl::runYtdl: command:" << command;
 
-	emit connecting(QUrl(u).host());
-}
-#endif
+	//process->setWorkingDirectory(full_output_dir);
+	process->start(app_bin, args);
 
-#ifdef YT_USE_SIG
-void RetrieveYoutubeUrl::fetchPlayerPage(const QString & player_name) {
-	qDebug() << "RetrieveYoutubeUrl::fetchPlayerPage:" << player_name;
-
-	if (!player_name.isEmpty()) {
-		QString url = Sig::playerURL(player_name);
-		qDebug() << "RetrieveYoutubeUrl::fetchPlayerPage: url:" << url;
-		#ifdef SIG_FROM_SMPLAYER_SITE
-		if (dl_player_page->userAgent().isEmpty()) dl_player_page->setUserAgent("SMPlayer");
-		#endif
-		dl_player_page->fetchPage(url);
+	if (!process->waitForStarted()) {
+		qDebug("RetrieveYoutubeUrl::runYtdl: error: the process didn't start");
+		emit processFailedToStart();
 	}
 }
-#endif
 
-#ifdef YT_LIVE_STREAM
-void RetrieveYoutubeUrl::fetchStreamPage(const QString & url) {
-	qDebug() << "RetrieveYoutubeUrl::fetchStreamPage:" << url;
-	dl_stream_page->fetchPage(url);
-}
-#endif
+void RetrieveYoutubeUrl::processFinished(int exitCode, QProcess::ExitStatus exitStatus) {
+	qDebug() << "RetrieveYoutubeUrl::processFinished: exitCode:" << exitCode << "exitStatus:" << exitStatus;
 
-void RetrieveYoutubeUrl::videoPageLoaded(QByteArray page) {
-	qDebug() << "RetrieveYoutubeUrl::videoPageLoaded";
-
-	QString replyString = QString::fromUtf8(page);
-
-	QRegExp rx_title(".*<title>(.*)</title>.*");
-	if (rx_title.indexIn(replyString) != -1) {
-		url_title = rx_title.cap(1).simplified();
-		url_title = QString(url_title).replace("&amp;","&").replace("&gt;", ">").replace("&lt;", "<").replace("&quot;","\"").replace("&#39;","'");
-		qDebug() << "RetrieveYoutubeUrl::videoPageLoaded: title:" << url_title;
-	} else {
-		url_title = "YouTube video";
+#ifdef Q_OS_WIN
+	if (exitCode == -1073741515) {
+		emit dllNotFound();
+		return;
 	}
+#endif
 
-	#ifdef YT_USE_SIG
-	QString html5_player;
-	#endif
+	QByteArray data = process->readAll().replace("\r", "").trimmed();
+#ifndef YT_USE_JSON
+	qDebug() << "RetrieveYoutubeUrl::fetchPage: process output:" << data;
+#endif
+	QList<QByteArray> lines = data.split('\n');
+	qDebug() << "RetrieveYoutubeUrl::fetchPage: lines:" << lines.count();
 
-	QRegExp rxplayer("jsbin\\/player(.*)\\/base\\.js");
-	rxplayer.setMinimal(true);
-	if (rxplayer.indexIn(replyString) != -1) {
-		QString player = rxplayer.cap(1);
-		qDebug() << "RetrieveYoutubeUrl::videoPageLoaded: html5player:" << player;
-		#ifdef YT_USE_SIG
-		html5_player = "player" + player;
-		#endif
-	} else {
-		qDebug() << "RetrieveYoutubeUrl::videoPageLoaded: player not found!";
-		//qDebug() << "RetrieveYoutubeUrl::videoPageLoaded: page:" << page;
-		#ifdef DEBUG_OUTPUT_PAGE
+#ifdef YT_USE_JSON
+	if (lines.count() >= 1) {
 		#if QT_VERSION >= 0x050000
-		QString tmp_path = QStandardPaths::standardLocations(QStandardPaths::TempLocation)[0];
+		QJsonObject json = QJsonDocument::fromJson(lines[0]).object();
 		#else
-		QString tmp_path = QDesktopServices::storageLocation(QDesktopServices::TempLocation);
+		QtJson::JsonObject json = QtJson::parse(lines[0]).toMap();
 		#endif
-		QString output = tmp_path + "/smplayer_yt_page.html";
-		QFile f(output);
-		if (f.open(QIODevice::ReadWrite)) {
-			f.write(page);
-			f.close();
-			qDebug() << "RetrieveYoutubeUrl::videoPageLoaded: page saved to" << output;
-		}
-		#endif
+		video_title = json["title"].toString();
+		selected_video_url = json["url"].toString();
+		selected_video_quality = (Quality) json["format_id"].toString().toInt();
 	}
 
-	video_page = replyString;
-
-	#ifdef YT_USE_SIG
-	if (!html5_player.isEmpty() && html5_player != sig.html5_player) {
-		sig.clear();
-		sig.html5_player = html5_player;
-		fetchPlayerPage(html5_player);
-	} else {
-		processVideoPage();
-	}
-	#else
-	processVideoPage();
-	#endif
-}
-
-void RetrieveYoutubeUrl::processVideoPage() {
-	QString replyString = video_page;
-
-#ifdef YT_LIVE_STREAM
-	QRegExp rxhlsvp("\"hlsvp\":\"([a-zA-Z0-9\\\\\\/_%\\+:\\.-]+)\"");
-	if (rxhlsvp.indexIn(replyString) != -1) {
-		QString hlsvp = QUrl::fromPercentEncoding(rxhlsvp.cap(1).toLatin1()).replace("\\/", "/");
-		qDebug() << "RetrieveYoutubeUrl::processVideoPage: hlsvp:" << hlsvp;
-
-		if (!hlsvp.isEmpty()) {
-			fetchStreamPage(hlsvp);
-			return;
-		}
-	}
-#endif
-
-	QString fmtArray;
-	QRegExp regex("\\\"url_encoded_fmt_stream_map\\\"\\s*:\\s*\\\"([^\\\"]*)");
-	if (regex.indexIn(replyString) != -1) {
-		fmtArray = regex.cap(1);
-	}
-
-	#ifdef YT_DASH_SUPPORT
-	QRegExp regex2("\\\"adaptive_fmts\\\"\\s*:\\s*\\\"([^\\\"]*)");
-	if (regex2.indexIn(replyString) != -1) {
-		if (!fmtArray.isEmpty()) fmtArray += ",";
-		fmtArray += regex2.cap(1);
-	}
-	#endif
-
-	fmtArray = sanitizeForUnicodePoint(fmtArray);
-	fmtArray.replace(QRegExp("\\\\(.)"), "\\1");
-
-	//qDebug() << "RetrieveYoutubeUrl::videoPageLoaded: fmtArray:" << fmtArray;
-
-	#ifdef YT_DISCARD_HTTPS
-	bool allow_https = false;
-	#else
-	bool allow_https = true;
-	#endif
-
-	UrlMap url_map = extractURLs(fmtArray, allow_https, true);
-	#ifdef YT_GET_VIDEOINFO
-	if (url_map.isEmpty()) {
-		fetchVideoInfoPage(yt_url);
-	} else {
-		finish(url_map);
-	}
-	#else
-	finish(url_map);
-	#endif
-}
-
-#ifdef YT_GET_VIDEOINFO
-void RetrieveYoutubeUrl::videoInfoPageLoaded(QByteArray page) {
-	qDebug() << "RetrieveYoutubeUrl::videoInfoPageLoaded";
-
-	#if QT_VERSION >= 0x050000
-	QUrlQuery all;
-	all.setQuery(page);
-	#else
-	QUrl all;
-	all.setEncodedQuery(page);
-	#endif
-
-	QByteArray fmtArray;
-	#if QT_VERSION >= 0x050000
-	fmtArray = all.queryItemValue("url_encoded_fmt_stream_map", QUrl::FullyDecoded).toLatin1();
-	#else
-	fmtArray = all.queryItemValue("url_encoded_fmt_stream_map").toLatin1();
-	#endif
-
-#ifdef YT_DASH_SUPPORT
-	if (!fmtArray.isEmpty()) fmtArray += ",";
-	#if QT_VERSION >= 0x050000
-	fmtArray += all.queryItemValue("adaptive_fmts", QUrl::FullyDecoded).toLatin1();
-	#else
-	fmtArray += all.queryItemValue("adaptive_fmts").toLatin1();
-	#endif
-#endif
-
-	//qDebug() <<"RetrieveYoutubeUrl::videoInfoPageLoaded: fmtArray:" << fmtArray;
-
-	UrlMap url_map = extractURLs(fmtArray, true, false);
-
-	if ((url_map.count() == 0) && (failed_to_decrypt_signature)) {
-		qDebug() << "RetrieveYoutubeUrl::videoInfoPageLoaded: no url found with valid signature";
-		emit signatureNotFound(url_title);
-		return;
-	}
-
-	finish(url_map);
-}
-#endif
-
-#ifdef YT_USE_SIG
-void RetrieveYoutubeUrl::playerPageLoaded(QByteArray page) {
-	qDebug() << "RetrieveYoutubeUrl::playerPageLoaded";
-
-	QString replyString = QString::fromUtf8(page);
-	QString signature_code = sig.findFunctions(replyString);
-	qDebug() << "RetrieveYoutubeUrl::playerPageLoaded: signature_code:" << signature_code;
-
-	if (!signature_code.isEmpty() && set) sig.save(set);
-
-	processVideoPage();
-}
-#endif
-
-#ifdef YT_LIVE_STREAM
-void RetrieveYoutubeUrl::streamPageLoaded(QByteArray page) {
-	qDebug() << "RetrieveYoutubeUrl::streamPageLoaded";
-
-	//qDebug() << "RetrieveYoutubeUrl::streamPageLoaded: page:" << page;
-
-	QRegExp rx("#EXT-X-STREAM-INF:.*RESOLUTION=\\d+x(\\d+)");
-
-	UrlMap url_map;
-	int best_resolution = 0;
-	int res_height = 0;
-
-	QTextStream stream(page);
-	QString line;
-	do {
-		line = stream.readLine();
-		if (!line.isEmpty()) {
-			//qDebug() << "RetrieveYoutubeUrl::streamPageLoaded: line:" << line;
-			if (rx.indexIn(line) != -1) {
-				res_height = rx.cap(1).toInt();
-				qDebug() << "RetrieveYoutubeUrl::streamPageLoaded: height:" << res_height;
-				if (res_height > best_resolution) best_resolution = res_height;
-			}
-			else
-			if (!line.startsWith("#") && res_height != 0) {
-				url_map[res_height] = line;
-				res_height = 0;
-			}
-		}
-	} while (!line.isNull());
-
-	qDebug() << "RetrieveYoutubeUrl::streamPageLoaded: best_resolution:" << best_resolution;
-
-	// Try to find a URL with the user's preferred resolution
-	qDebug() << "RetrieveYoutubeUrl::streamPageLoaded: preferred_resolution:" << preferred_resolution;
-
-	int chosen_quality = 0;
-	int r = preferred_resolution;
-
-	if (r == R1080p) {
-		if (url_map.contains(1080)) {
-			chosen_quality = 1080;
-		} else r = R720p;
-	}
-
-	if (r == R720p) {
-		if (url_map.contains(720)) {
-			chosen_quality = 720;
-		} else r = R480p;
-	}
-
-	if (r == R480p) {
-		if (url_map.contains(480)) {
-			chosen_quality = 480;
-		} else r = R360p;
-	}
-
-	if (r == R360p) {
-		if (url_map.contains(360)) {
-			chosen_quality = 360;
-		} else r = R240p;
-	}
-
-	if (r == R240p) {
-		if (url_map.contains(240)) {
-			chosen_quality = 240;
-		}
-	}
-
-	qDebug() << "RetrieveYoutubeUrl::streamPageLoaded: chosen_quality:" << chosen_quality;
-
-	if (chosen_quality == 0) chosen_quality = best_resolution;
-
-	setUrlMap(url_map);
-
-	if (url_map.contains(chosen_quality)) {
-		selected_url = url_map.value(chosen_quality);
-		qDebug() << "RetrieveYoutubeUrl::streamPageLoaded: selected_url:" << selected_url;
-		emit gotPreferredUrl(selected_url, 0);
-	} else {
-		 emit gotEmptyList();
-	}
-}
-#endif
-
-void RetrieveYoutubeUrl::finish(const UrlMap & url_map) {
-	qDebug() << "RetrieveYoutubeUrl::finish";
-
-	setUrlMap(url_map);
-
-	#ifdef YT_DASH_SUPPORT
-	selected_quality = findPreferredResolution(url_map, preferred_resolution, use_dash);
-	#else
-	selected_quality = findPreferredResolution(url_map, preferred_resolution);
-	#endif
-
-	selected_url = "";
-	if (selected_quality != None) selected_url = url_map[selected_quality];
-	qDebug() << "RetrieveYoutubeUrl::finish: selected_url:" << selected_url;
-
-	#ifdef YT_DASH_SUPPORT
-	selected_audio_quality = findBestAudio(url_map);
-	selected_audio_url = "";
-	if (use_dash) {
-		if (selected_audio_quality != None) selected_audio_url = url_map[selected_audio_quality];
-		qDebug() << "RetrieveYoutubeUrl::finish: audio itag:" << selected_audio_quality;
-		qDebug() << "RetrieveYoutubeUrl::finish: audio url:" << selected_audio_url;
-	}
-	#endif
-
-	if (selected_quality != None) {
-		emit gotUrls(url_map);
-		//emit gotPreferredUrl(p_url);
-		emit gotPreferredUrl(selected_url, selected_quality);
-	} else {
-		 emit gotEmptyList();
-	}
-}
-
-#ifdef YT_USE_SIG
-QString RetrieveYoutubeUrl::aclara(const QString & text, const QString & player) {
-	Q_UNUSED(player);
-
-	QString res;
-
-	#ifdef YT_USE_SIG
-	if (!sig.decrypt_function.isEmpty()) {
-		res = sig.aclara(text);
-	}
-	#endif
-
-	return res;
-}
-#endif
-
-UrlMap RetrieveYoutubeUrl::extractURLs(QString fmtArray, bool allow_https, bool use_player) {
-	UrlMap url_map;
-
-	failed_to_decrypt_signature = false;
-
-	#if QT_VERSION >= 0x050000
-	QUrlQuery * q = new QUrlQuery();
-	#endif
-
-	//qDebug() << "RetrieveYoutubeUrl::extractURLs: fmtArray:" << fmtArray;
-
-	QList<QByteArray> codeList = fmtArray.toLatin1().split(',');
-	//qDebug() << "RetrieveYoutubeUrl::extractURLs: codeList.count:" << codeList.count();
-
-	foreach(QByteArray code, codeList) {
-		code = QUrl::fromPercentEncoding(code).toLatin1();
-		//qDebug() << "RetrieveYoutubeUrl::extractURLs: code:" << code;
-
-		QUrl line;
+	if (lines.count() >= 2) {
 		#if QT_VERSION >= 0x050000
-		q->setQuery(code);
+		QJsonObject json = QJsonDocument::fromJson(lines[1]).object();
 		#else
-		QUrl * q = &line;
-		q->setEncodedQuery(code);
+		QtJson::JsonObject json = QtJson::parse(lines[1]).toMap();
 		#endif
+		selected_audio_url = json["url"].toString();
+		selected_audio_quality = (Quality) json["format_id"].toString().toInt();
+	}
 
-		if (q->hasQueryItem("url")) {
-			QUrl url( q->queryItemValue("url") );
-			line.setScheme(url.scheme());
-			line.setHost(url.host());
-			line.setPath(url.path());
-			q->removeQueryItem("url");
-			#if QT_VERSION >= 0x050000
-			q->setQuery( q->query(QUrl::FullyDecoded) + "&" + url.query(QUrl::FullyDecoded) );
-			#else
-			q->setEncodedQuery( q->encodedQuery() + "&" + url.encodedQuery() );
-			#endif
-
-			if (q->hasQueryItem("sig")) {
-				q->addQueryItem("signature", q->queryItemValue("sig"));
-				q->removeQueryItem("sig");
-			}
-			else
-			if (q->hasQueryItem("s")) {
-				#ifdef YT_USE_SIG
-				QString player = sig.html5_player;
-				QString signature = aclara(q->queryItemValue("s"), use_player ? player : QString::null);
-				if (!signature.isEmpty()) {
-					q->addQueryItem("signature", signature);
-				} else {
-					failed_to_decrypt_signature = true;
-				}
-				#else
-				failed_to_decrypt_signature = true;
-				#endif
-				q->removeQueryItem("s");
-			}
-			q->removeAllQueryItems("fallback_host");
-			q->removeAllQueryItems("type");
-			q->removeAllQueryItems("xtags");
-
-			if (!q->hasQueryItem("ratebypass")) q->addQueryItem("ratebypass", "yes");
-
-			if ((q->hasQueryItem("itag")) && (q->hasQueryItem("signature"))) {
-				QString itag = q->queryItemValue("itag");
-
-				// Remove duplicated queries
-				QPair <QString,QString> item;
-				QList<QPair<QString, QString> > items = q->queryItems();
-				foreach(item, items) {
-					q->removeAllQueryItems(item.first);
-					q->addQueryItem(item.first, item.second);
-				}
-
-				#if QT_VERSION >= 0x050000
-				line.setQuery(q->query(QUrl::FullyDecoded));
-				#endif
-
-				if (!line.toString().startsWith("https") || allow_https) {
-					url_map[itag.toInt()] = line.toString();
-				} else {
-					qDebug() << "RetrieveYoutubeUrl::extractURLs: discarted url with itag:" << itag.toInt();
-				}
-
-				//qDebug() << "RetrieveYoutubeUrl::extractURLs: itag:" << itag << "line:" << line.toString();
-			}
+	#ifdef DEBUG_OUTPUT_JSON
+	QString output = QDir::tempPath() + "/smplayer_yt.json";
+	QFile f(output);
+	if (f.open(QIODevice::WriteOnly)) {
+		QByteArray o = "{";
+		if (lines.count() >= 1) {
+			o += "\"video\": "+ lines[0];
 		}
+		if (lines.count() >= 2) {
+			o += ", \"audio\": " + lines[1];
+		}
+		o += "}";
+		f.write(o);
+		f.close();
+		qDebug() << "RetrieveYoutubeUrl::processFinished: json data saved to" << output;
 	}
-
-	#if QT_VERSION >= 0x050000
-	delete q;
 	#endif
+#else
+	#define LINE_TITLE 0
+	#define LINE_VIDEO_URL 1
+	#define LINE_VIDEO_ITAG 2
+	#define LINE_AUDIO_URL 4
+	#define LINE_AUDIO_ITAG 5
 
-	qDebug() << "RetrieveYoutubeUrl::extractURLs: url count:" << url_map.count();
-
-	return url_map;
-}
-
-RetrieveYoutubeUrl::Quality RetrieveYoutubeUrl::findResolution(const UrlMap & url_map, QList<Quality> l) {
-	foreach(Quality q, l) {
-		QString url = url_map.value(q, QString()); \
-		if (!url.isNull()) return q;
-	}
-	return None;
-}
-
-RetrieveYoutubeUrl::Quality RetrieveYoutubeUrl::findPreferredResolution(const UrlMap & url_map, Resolution res, bool use_dash) {
-	Quality chosen_quality = None;
-
-	QList<Quality> l2160p, l1440p, l1080p, l720p, l480p, l360p, l240p;
-
-	if (!use_dash) {
-		l1080p << MP4_1080p << WEBM_1080p;
-		l720p << MP4_720p << WEBM_720p;
-		l480p << MP4_480p << MP4_480p2 << WEBM_480p << FLV_480p;
-		l360p << MP4_360p << WEBM_360p << FLV_360p;
-		l240p << FLV_240p << FLV_270p;
+	if (lines.count() >= 3) {
+		video_title = QString::fromUtf8(lines[LINE_TITLE]);
+		if (lines[LINE_VIDEO_URL].startsWith("http")) selected_video_url = lines[LINE_VIDEO_URL];
+		selected_video_quality = (Quality) getItagFromFormat(lines[LINE_VIDEO_ITAG]);
 	}
 
-#ifdef YT_DASH_SUPPORT
-	else {
-		#if 0
-		l240p << DASH_VIDEO_WEBM_240p60hdr;
-		l360p << DASH_VIDEO_WEBM_360p60hdr;
-		l480p << DASH_VIDEO_WEBM_480p60hdr;
-		l720p << DASH_VIDEO_WEBM_720p60hdr;
-		l1080p << DASH_VIDEO_WEBM_1080p60hdr;
-		l1440p << DASH_VIDEO_WEBM_1440p60hdr;
-		l2160p << DASH_VIDEO_WEBM_2160p60hdr;
-		#endif
-
-		#if 0
-		l720p << DASH_VIDEO_720p60 << DASH_VIDEO_WEBM_720p60;
-		l1080p << DASH_VIDEO_1080p60 << DASH_VIDEO_WEBM_1080p60;
-		l1440p << DASH_VIDEO_WEBM_1440p60;
-		l2160p << DASH_VIDEO_WEBM_2160p60;
-		#endif
-
-		l2160p << DASH_VIDEO_2160p << DASH_VIDEO_2160p2 << DASH_VIDEO_WEBM_2160p << DASH_VIDEO_WEBM_2160p2;
-		l1440p << DASH_VIDEO_1440p << DASH_VIDEO_WEBM_1440p;
-		l1080p << DASH_VIDEO_1080p << DASH_VIDEO_WEBM_1080p << DASH_VIDEO_WEBM_1080p2;
-		l720p << DASH_VIDEO_720p << DASH_VIDEO_WEBM_720p << DASH_VIDEO_WEBM_720p2;
-		l480p << DASH_VIDEO_480p << DASH_VIDEO_480p2 << DASH_VIDEO_WEBM_480p << DASH_VIDEO_WEBM_480p2 
-              << DASH_VIDEO_WEBM_480p3 << DASH_VIDEO_WEBM_480p4 << DASH_VIDEO_WEBM_480p5 << DASH_VIDEO_WEBM_480p6;
-		l360p << DASH_VIDEO_360p << DASH_VIDEO_WEBM_360p << DASH_VIDEO_WEBM_360p2;
-		l240p << DASH_VIDEO_240p << DASH_VIDEO_WEBM_240p;
+	if (lines.count() >= 6) {
+		if (lines[LINE_AUDIO_URL].startsWith("http")) selected_audio_url = lines[LINE_AUDIO_URL];
+		selected_audio_quality = (Quality) getItagFromFormat(lines[LINE_AUDIO_ITAG]);
 	}
 #endif
 
-	if (res == R2160p) {
-		chosen_quality = findResolution(url_map, l2160p);
-		if (chosen_quality == None) res = R1440p;
-	}
+	qDebug() << "RetrieveYoutubeUrl::fetchPage: title:" << video_title;
+	qDebug() << "RetrieveYoutubeUrl::fetchPage: video url:" << selected_video_url;
+	qDebug() << "RetrieveYoutubeUrl::fetchPage: video itag:" << selected_video_quality;
 
-	if (res == R1440p) {
-		chosen_quality = findResolution(url_map, l1440p);
-		if (chosen_quality == None) res = R1080p;
-	}
+	qDebug() << "RetrieveYoutubeUrl::fetchPage: audio url:" << selected_audio_url;
+	qDebug() << "RetrieveYoutubeUrl::fetchPage: audio itag:" << selected_audio_quality;
 
-	if (res == R1080p) {
-		chosen_quality = findResolution(url_map, l1080p);
-		if (chosen_quality == None) res = R720p;
+	if (selected_video_url.isEmpty()) {
+		emit gotEmptyList();
+	} else {
+		emit gotPreferredUrl(selected_video_url, selected_video_quality);
 	}
-
-	if (res == R720p) {
-		chosen_quality = findResolution(url_map, l720p);
-		if (chosen_quality == None) res = R480p;
-	}
-
-	if (res == R480p) {
-		chosen_quality = findResolution(url_map, l480p);
-		if (chosen_quality == None) res = R360p;
-	}
-
-	if (res == R360p) {
-		chosen_quality = findResolution(url_map, l360p);
-		if (chosen_quality == None) res = R240p;
-	}
-
-	if (res == R240p) {
-		chosen_quality = findResolution(url_map, l240p);
-	}
-
-	// If everything fails, take the first url in the map
-	if (chosen_quality == None) {
-		QList<int> keys = url_map.keys();
-		if (!keys.isEmpty()) {
-			QString url = url_map.value(keys[0], QString());
-			if (!url.isNull()) chosen_quality = (Quality) keys[0];
-		}
-	}
-
-	qDebug() << "RetrieveYoutubeUrl::findResolution: chosen_quality:" << chosen_quality;
-	return chosen_quality;
 }
 
-QString RetrieveYoutubeUrl::sanitizeForUnicodePoint(QString string) {
-	QRegExp rx("\\\\u(\\d{4})");
-	while (rx.indexIn(string) != -1) {
-		string.replace(rx.cap(0), QString(QChar(rx.cap(1).toInt(0,16))));
-	}
-	return string;
+void RetrieveYoutubeUrl::processError(QProcess::ProcessError error) {
+	qDebug() << "RetrieveYoutubeUrl::processError:" << error;
 }
 
 QString RetrieveYoutubeUrl::extensionForItag(int itag) {
@@ -795,22 +387,94 @@ QString RetrieveYoutubeUrl::extensionForItag(int itag) {
 	return ext;
 }
 
-#ifdef YT_DASH_SUPPORT
-RetrieveYoutubeUrl::Quality RetrieveYoutubeUrl::findBestAudio(const QMap<int, QString>& url_map) {
-	QString url;
+QString RetrieveYoutubeUrl::resolutionToText(Resolution r) {
+	QString s;
+	switch (r) {
+		case R240p: s = "240"; break;
+		case R360p: s = "360"; break;
+		case R480p: s = "480"; break;
+		case R720p: s = "720"; break;
+		case R1080p: s = "1080"; break;
+		case R1440p: s = "1440"; break;
+		case R2160p: s = "2160"; break;
+	}
+	return s;
+}
 
-	#define CHECKAQ(QUALITY) { \
-			url = url_map.value(QUALITY, QString()); \
-			if (!url.isNull()) return QUALITY; \
+int RetrieveYoutubeUrl::getItagFromFormat(const QByteArray & t) {
+	int itag = -1;
+	QList<QByteArray> l = t.split(' ');
+	if (l.count() > 0) {
+		itag = l[0].toInt();
+	}
+	return itag;
+}
+
+QList<itemMap> RetrieveYoutubeUrl::getPlaylistItems(const QString & url) {
+	QProcess proc(this);
+	proc.setProcessChannelMode( QProcess::MergedChannels );
+
+	QStringList args;
+
+	args << "-j" << "--flat-playlist";
+	if (!user_agent.isEmpty()) args << "--user-agent" << user_agent;
+	args << url;
+
+	QString app_bin = absoluteFilePath(ytdlBin());
+
+	QString command = app_bin + " " + args.join(" ");
+	qDebug() << "RetrieveYoutubeUrl::getPlaylistItems: command:" << command;
+
+	proc.start(app_bin, args);
+	proc.waitForFinished();
+	
+	QByteArray data = proc.readAll().replace("\r", "").trimmed();
+	QList<QByteArray> lines = data.split('\n');
+
+	QList<itemMap> list;
+
+	for (int n = 0; n < lines.count(); n++) {
+		qDebug() << "RetrieveYoutubeUrl::getPlaylistItems: item:" << n << "data:" << lines[n];
+		itemMap item;
+		#if QT_VERSION >= 0x050000
+		QJsonObject json = QJsonDocument::fromJson(lines[n]).object();
+		#else
+		QtJson::JsonObject json = QtJson::parse(lines[n]).toMap();
+		#endif
+
+		qDebug() << "RetrieveYoutubeUrl::getPlaylistItems: json:" << json;
+
+		item["title"] = json["title"].toString();
+		item["duration"] = QString::number(json["duration"].toInt());
+		item["id"] = json["id"].toString();
+		item["url"] = "https://www.youtube.com/watch?v=" + item["id"];
+		if (!item["id"].isEmpty()) {
+			list << item;
 		}
+	}
 
-	CHECKAQ(DASH_AUDIO_MP4_256);
-	CHECKAQ(DASH_AUDIO_WEBM_192);
-	CHECKAQ(DASH_AUDIO_MP4_128);
-	CHECKAQ(DASH_AUDIO_WEBM_128);
-	CHECKAQ(DASH_AUDIO_MP4_48);
+	qDebug() << "RetrieveYoutubeUrl::getPlaylistItems: list:" << list;
+	return list;
+}
 
-	return None;
+#ifndef Q_OS_WIN
+QString RetrieveYoutubeUrl::findExecutable(const QString & name) {
+	QByteArray env = qgetenv("PATH");
+	QStringList search_paths = QString::fromLocal8Bit(env.constData()).split(':', QTC_SkipEmptyParts);
+	QString user_bin = QDir::homePath() + "/bin";
+	if (!search_paths.contains(user_bin)) search_paths.prepend(user_bin);
+	qDebug() << "RetrieveYoutubeUrl::findExecutable: search_paths:" << search_paths;
+
+	for (int n = 0; n < search_paths.count(); n++) {
+		QString candidate = search_paths[n] + "/" + name;
+		qDebug("RetrieveYoutubeUrl::findExecutable: candidate: %s", candidate.toUtf8().constData());
+		QFileInfo info(candidate);
+		if (info.isFile() && info.isExecutable()) {
+			qDebug("RetrieveYoutubeUrl::findExecutable: executable found: %s", candidate.toUtf8().constData());
+			return candidate;
+		}
+	}
+	return QString();
 }
 #endif
 

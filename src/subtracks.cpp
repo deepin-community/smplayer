@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ void SubTracks::add( SubData::Type t, int ID ) {
 }
 
 void SubTracks::list() {
-	for (unsigned int n=0; n < subs.count(); n++) {
+	for (int n=0; n < subs.count(); n++) {
 		qDebug("SubTracks::list: item %d: type: %d ID: %d lang: '%s' name: '%s' filename: '%s'",
                n, subs[n].type(), subs[n].ID(), subs[n].lang().toUtf8().data(),
                subs[n].name().toUtf8().data(), subs[n].filename().toUtf8().data() );
@@ -51,7 +51,7 @@ void SubTracks::list() {
 }
 
 void SubTracks::listNames() {
-	for (unsigned int n=0; n < subs.count(); n++) {
+	for (int n=0; n < subs.count(); n++) {
 		qDebug("SubTracks::list: item %d: '%s'",
                n, subs[n].displayName().toUtf8().data() );
 	}
@@ -115,7 +115,7 @@ int SubTracks::selectOne(QString preferred_lang, int default_sub) {
 #endif
 
 int SubTracks::find( SubData::Type t, int ID ) {
-	for (unsigned int n=0; n < subs.count(); n++) {
+	for (int n=0; n < subs.count(); n++) {
 		if ( ( subs[n].type() == t ) && ( subs[n].ID() == ID ) ) {
 			return n;
 		}

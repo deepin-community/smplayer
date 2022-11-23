@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,8 +48,8 @@ public:
                          ChFull51 = 6, ChFull61 = 7, ChFull71 = 8 };
 	enum StereoMode { Stereo = 0, Left = 1, Right = 2, Mono = 3, Reverse = 4 };
 
-	enum Rotate { NoRotate = -1, Clockwise_flip = 0, Clockwise = 1, 
-                  Counterclockwise = 2, Counterclockwise_flip = 3 };
+	enum Rotate { NoRotate = -1, Clockwise_flip = 0, Clockwise = 1,
+                  Counterclockwise = 2, Counterclockwise_flip = 3, Rotate_180 = 4 };
 
 	enum IDs { NoneSelected = -1000, SubNone = 90000 };
 

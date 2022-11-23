@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,60 +41,72 @@ QString Paths::appPath() {
 QString Paths::dataPath() {
 #ifdef DATA_PATH
 	QString path = QString(DATA_PATH);
-	if (!path.isEmpty())
+	if (!path.isEmpty()) {
 		return path;
-	else
-		return appPath();
-#else
-	return appPath();
+	} else
 #endif
+	{
+		return appPath();
+	}
 }
 
 QString Paths::translationPath() {
+#ifdef Q_OS_MACX
+	return appPath() + "/../Resources/translations";
+#else
 #ifdef TRANSLATION_PATH
 	QString path = QString(TRANSLATION_PATH);
-	if (!path.isEmpty())
+	if (!path.isEmpty()) {
 		return path;
-	else
+	} else
+#endif
+	{
 		return appPath() + "/translations";
-#else
-	return appPath() + "/translations";
+	}
 #endif
 }
 
 QString Paths::docPath() {
 #ifdef DOC_PATH
 	QString path = QString(DOC_PATH);
-	if (!path.isEmpty())
+	if (!path.isEmpty()) {
 		return path;
-	else
-		return appPath() + "/docs";
-#else
-	return appPath() + "/docs";
+	} else
 #endif
+	{
+		return appPath() + "/docs";
+	}
 }
 
 QString Paths::themesPath() {
+#ifdef Q_OS_MACX
+	return appPath() + "/../Resources/themes";
+#else
 #ifdef THEMES_PATH
 	QString path = QString(THEMES_PATH);
-	if (!path.isEmpty())
+	if (!path.isEmpty()) {
 		return path;
-	else
+	} else
+#endif
+	{
 		return appPath() + "/themes";
-#else
-	return appPath() + "/themes";
+	}
 #endif
 }
 
 QString Paths::shortcutsPath() {
+#ifdef Q_OS_MACX
+	return appPath() + "/../Resources/shortcuts";
+#else
 #ifdef SHORTCUTS_PATH
 	QString path = QString(SHORTCUTS_PATH);
-	if (!path.isEmpty())
+	if (!path.isEmpty()) {
 		return path;
-	else
+	} else
+#endif
+	{
 		return appPath() + "/shortcuts";
-#else
-	return appPath() + "/shortcuts";
+	}
 #endif
 }
 
@@ -123,7 +135,7 @@ QString Paths::doc(QString file, QString locale, bool english_fallback) {
 		return f;
 	}
 
-	return QString::null;
+	return QString();
 }
 
 void Paths::setConfigPath(QString path) {

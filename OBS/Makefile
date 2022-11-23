@@ -2,8 +2,8 @@
 # deb packages at build.opensuse.org
 
 PACKAGE = smplayer
-VERSION = 18.10.0
-#DEPENDS = debhelper (>= 5), zlib1g-dev, qtbase5-dev, qt5-qmake, qtscript5-dev, qttools5-dev-tools, qt5-default, qtbase5-private-dev
+VERSION = 22.7.0
+#DEPENDS = debhelper (>= 5), zlib1g-dev, qtbase5-dev, qt5-qmake, qtscript5-dev, qttools5-dev-tools, qtbase5-private-dev, qt5-default | nano
 DEPENDS = debhelper (>= 5), zlib1g-dev, libqt4-dev
 
 DSC_FILE = $(PACKAGE).dsc
@@ -22,14 +22,14 @@ $(DSC_FILE): Makefile
 	echo "Binary: $(PACKAGE)" >> $(DSC_FILE)
 	echo "Architecture: any" >> $(DSC_FILE)
 	echo "Version: $(VERSION)" >> $(DSC_FILE)
-	echo "Maintainer: Ricardo Villalba <rvm@users.sourceforge.net>" >> $(DSC_FILE)
-	echo "Standards-Version: 3.7.2" >> $(DSC_FILE)
+	echo "Maintainer: Ricardo Villalba <ricardo@smplayer.info>" >> $(DSC_FILE)
+	echo "Standards-Version: 3.9.7" >> $(DSC_FILE)
 	echo "Build-Depends: $(DEPENDS)" >> $(DSC_FILE)
 	echo "DEBTRANSFORM-TAR: $(PACKAGE)-$(VERSION).tar.bz2" >> $(DSC_FILE)
 	echo "DEBTRANSFORM-FILES-TAR: $(DEBIAN_FILE)" >> $(DSC_FILE)
 	echo "DEBTRANSFORM-RELEASE: 1" >> $(DSC_FILE)
 
 clean:
-	- rm debian/*
+	- rm -r debian/*
 	- rmdir debian
 	- rm $(DEBIAN_FILE) $(DSC_FILE)

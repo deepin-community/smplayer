@@ -44,12 +44,15 @@ ${LangFileString} Section_MPlayer_Desc "MPlayer; elengedhetetlen a lejátszásho
 
 ${LangFileString} Section_MPlayerCodecs "Bináris Kodekek"
 !ifdef WIN64
-${LangFileString} Section_MPlayerCodecs_Desc "A bináris kodekek nem támogatottak ebben a verzióban."
+${LangFileString} Section_MPlayerCodecs_Desc "Binary codecs are not supported in this version."
 !else
 ${LangFileString} Section_MPlayerCodecs_Desc "További kodekek az MPlayer számára. (Internet Kapcsolat kell a telepítésükhöz)"
 !endif
 
 ${LangFileString} Section_MPV_Desc "Az MPlayer && MPlayer2 funkciókban gazdag forkja"
+
+${LangFileString} Section_YTDL "Youtube support (download required)"
+${LangFileString} Section_YTDL_Desc "Lehetőséget biztosít a Youtube videók lejátszásához."
 
 ${LangFileString} Section_MEncoder_Desc "Az MPlayer segédprogramja, mely audió- és videó sugárzások átkódolására és átalakítására használható."
 

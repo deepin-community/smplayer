@@ -4,12 +4,12 @@
 # 
 # Translators:
 # ever_green, 2016,2018
-# nardog, 2014-2017
+# nardog, 2014-2017,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: smplayer\n"
-"PO-Revision-Date: 2018-02-11 11:07+0000\n"
-"Last-Translator: ever_green\n"
+"PO-Revision-Date: 2021-07-19 16:55+0000\n"
+"Last-Translator: nardog\n"
 "Language-Team: Japanese (http://www.transifex.com/rvm/smplayer/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,6 +131,14 @@ msgstr "MPlayer のオプション コーデックです。(インストール�
 # Section_MPV_Desc
 msgid "A feature-rich fork of MPlayer && MPlayer2"
 msgstr "MPlayer と MPlayer2 の機能豊富なフォークです。"
+
+# Section_YTDL
+msgid "Youtube support (download required)"
+msgstr "YouTube サポート (ダウンロードが必要です)"
+
+# Section_YTDL_Desc
+msgid "Provides the possibility to play Youtube videos."
+msgstr "YouTube 動画を再生する能力を提供します。"
 
 # Section_MEncoder_Desc
 msgid ""
@@ -354,6 +362,24 @@ msgstr "youtube-dl のダウンロードに失敗しました: '$R0'。"
 # YTDL_Update_Check
 msgid "Checking for youtube-dl updates..."
 msgstr "youtube-dl の更新を確認しています..."
+
+# YTDL_Error_Msg1
+msgid "Warning: youtube-dl exited abnormally with exit code: $YTDL_Exit_code"
+msgstr "警告: youtube-dl が異常に終了しました。終了コード: $YTDL_Exit_code"
+
+# YTDL_Error_Msg2
+msgid "Visual C++ 2010 Runtime (x86) is required for youtube-dl."
+msgstr "Visual C++ 2010 ラインタイム (x86) は youtube-dl に必要です。"
+
+# SMTube_Incompatible_Msg1
+msgid ""
+"The current SMTube installation is incompatible with this version of "
+"SMPlayer."
+msgstr "現在の SMTube インストールは SMPlayer のこのバージョンと互換性がありません。"
+
+# SMTube_Incompatible_Msg2
+msgid "Please upgrade to a newer version of SMTube."
+msgstr "SMTube の新しいバージョンにアップグレードしてください。"
 
 # Info_Cleaning_Fontconfig
 msgid "Cleaning fontconfig cache..."

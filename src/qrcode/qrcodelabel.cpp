@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ void QRCodeLabel::paintEvent(QPaintEvent * event) {
 	//qDebug("str: '%s'", str);
 	#else
 	QByteArray str_utf8 = qrcode_text.toUtf8();
-	char str[str_utf8.size() + 1];
+	char * str = new char[str_utf8.size() + 1];
 	strcpy(str, str_utf8.data());
 	//qDebug("str: '%s'", str);
 	#endif
@@ -83,6 +83,7 @@ void QRCodeLabel::paintEvent(QPaintEvent * event) {
 			}
 		}
 	}
+	delete [] str;
 }
 
 #include "moc_qrcodelabel.cpp"

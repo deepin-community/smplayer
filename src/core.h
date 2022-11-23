@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ class MplayerWindow;
 class QSettings;
 
 #ifdef SCREENSAVER_OFF
-class WinScreenSaver;
+class ScreenSaver;
 #endif
 
 #ifdef YOUTUBE_SUPPORT
@@ -96,8 +96,9 @@ public slots:
 	void unloadSub();
 
 	//! Forces to use the specified subtitle file. It's not loaded immediately but stored
-	//! and will be used for the next video. After that the variable is cleared.  
+	//! and will be used for the next video. After that the variable is cleared.
 	void setInitialSubtitle(const QString & subtitle_file) { initial_subtitle = subtitle_file; };
+	void setInitialSecond(int second) { initial_second = second; };
 
 	void loadAudioFile(const QString & audiofile);
 	void unloadAudioFile();
@@ -107,6 +108,7 @@ public slots:
 	void play_or_pause();
 	void pause_and_frame_step();
 	void pause();
+	void setPause(bool b);
 	void frameStep();
 	void frameBackStep();
 
@@ -295,13 +297,16 @@ public slots:
 
 	void changeDeinterlace(int);
 	void changeSubtitle(int track);
+	void prevSubtitle();
 	void nextSubtitle();
 #ifdef MPV_SUPPORT
 	void changeSecondarySubtitle(int track);
 #endif
 	void changeAudio(int ID, bool allow_restart = true);
+	void prevAudio();
 	void nextAudio();
 	void changeVideo(int ID, bool allow_restart = true);
+	void prevVideo();
 	void nextVideo();
 #if PROGRAM_SWITCH
 	void changeProgram(int ID);
@@ -378,9 +383,11 @@ public slots:
 
 	//! Wrapper for the osd_show_text slave command
 	void displayTextOnOSD(QString text, int duration = 3000, int level = 1, 
-                          QString prefix = QString::null);
+                          QString prefix = QString());
 
 public:
+	int currentVolume();
+
 	//! Returns the number of the first chapter in 
 	//! files. In some versions of mplayer is 0, in others 1
 	static int firstChapter();
@@ -389,14 +396,17 @@ public:
 
 	void changeFileSettingsMethod(QString method);
 
+	void setDisplayScreen(int n) { display_screen = n; }
+	int displayScreen() { return display_screen; }
+
 protected:
 	//! Returns the prefix to keep pausing on slave commands
 	QString pausing_prefix();
 	void seek_cmd(double secs, int mode);
 
 protected slots:
-    void changeCurrentSec(double sec);
-    void changePause();
+	void changeCurrentSec(double sec);
+	void changePause();
 	void gotWindowResolution( int w, int h );
 	void gotNoVideo();
 	void gotVO(QString);
@@ -404,6 +414,7 @@ protected slots:
 	void gotStartingTime(double);
 	void gotVideoBitrate(int);
 	void gotAudioBitrate(int);
+	void gotDemuxRotation(int);
 
 	void finishRestart();
     void processFinished();
@@ -460,7 +471,6 @@ protected slots:
 
 #ifdef YOUTUBE_SUPPORT
 	void connectingToYT(QString host);
-	void YTFailed(int error_number, QString error_str);
 	void YTNoVideoUrl();
 #endif
 
@@ -540,8 +550,11 @@ signals:
 	void logLineAvailable(QString);
 
 #ifdef YOUTUBE_SUPPORT
-	void signatureNotFound(const QString &);
-	void noSslSupport();
+	void YTprocessFailedToStart();
+	void YTUrlNotFound();
+	#ifdef Q_OS_WIN
+	void YTDLLNotFound();
+	#endif
 #endif
 
 	void receivedForbidden();
@@ -556,12 +569,14 @@ protected:
 #endif
 
 #ifdef SCREENSAVER_OFF
-	WinScreenSaver * win_screensaver;
+	ScreenSaver * screensaver;
 #endif
 
 #ifdef YOUTUBE_SUPPORT
 	RetrieveYoutubeUrl * yt;
 #endif
+
+	int display_screen;
 
 private:
 	// Some variables to proper restart
@@ -573,6 +588,7 @@ private:
 	bool change_volume_after_unpause;
 
 	QString initial_subtitle;
+	int initial_second;
 
 #if DVDNAV_SUPPORT
 	bool dvdnav_title_is_menu;

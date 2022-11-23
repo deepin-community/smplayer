@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,16 +24,21 @@
 #include <QList>
 
 #ifdef Q_OS_WIN
-#define USE_DSOUND_DEVICES 1
-#define USE_MPV_WASAPI_DEVICES 1
+ #define USE_DSOUND_DEVICES 1
+ #define USE_MPV_WASAPI_DEVICES 1
 #else
-#define USE_ALSA_DEVICES 0
-#define USE_MPV_ALSA_DEVICES 0
-#define USE_PULSEAUDIO_DEVICES 1
-#define USE_XV_ADAPTORS 1
+#ifdef Q_OS_MACX
+ #define USE_MPV_COREAUDIO_DEVICES 1
+#else
+ #define USE_XV_ADAPTORS 1
+ #define USE_ALSA_DEVICES 0
+ #define USE_PULSEAUDIO_DEVICES 1
+ #define USE_MPV_ALSA_DEVICES 0
+ #define USE_MPV_PULSE_DEVICES 1
+#endif
 #endif
 
-#if defined(USE_MPV_ALSA_DEVICES) || defined(USE_MPV_WASAPI_DEVICES)
+#if USE_MPV_ALSA_DEVICES || USE_MPV_WASAPI_DEVICES || USE_MPV_PULSE_DEVICES || USE_MPV_COREAUDIO_DEVICES
 #define MPV_AUDIO_DEVICES 1
 #endif
 
@@ -89,9 +94,17 @@ public:
 	#if USE_MPV_ALSA_DEVICES
 	static DeviceList mpvAlsaDevices();
 	#endif
-	
+
+	#if USE_MPV_PULSE_DEVICES
+	static DeviceList mpvPulseDevices();
+	#endif
+
 	#if USE_MPV_WASAPI_DEVICES
 	static DeviceList mpvWasapiDevices();
+	#endif
+
+	#if USE_MPV_COREAUDIO_DEVICES
+	static DeviceList mpvCoreaudioDevices();
 	#endif
 
 	static DeviceList mpvAudioDevices(const QString & mpv_bin, const QString & filter);

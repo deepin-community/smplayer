@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ OSClient::OSClient(QObject* parent) :
 #endif
 	, search_method(HashAndFilename)
 {
-	rpc = new MaiaXmlRpcClient(QUrl("http://api.opensubtitles.org/xml-rpc"), this);
+	rpc = new MaiaXmlRpcClient(QUrl("https://api.opensubtitles.org/xml-rpc"), this);
 }
 
 void OSClient::setServer(const QString & server) {
@@ -50,7 +50,7 @@ void OSClient::login() {
 
 	QVariantList args;
 
-	args << "" << "" << "" << user_agent;
+	args << os_username << os_password << "" << user_agent;
 
 	rpc->call("LogIn", args,
 			  this, SLOT(responseLogin(QVariant &)),
@@ -200,11 +200,7 @@ void OSClient::responseSearch(QVariant &arg) {
 
 		sub.releasename = m["MovieReleaseName"].toString();
 		sub.movie = m["MovieName"].toString();
-#ifdef USE_QUAZIP
-		sub.link = m["ZipDownloadLink"].toString();
-#else
 		sub.link = m["SubDownloadLink"].toString();
-#endif
 		sub.date = m["SubAddDate"].toString();
 		sub.iso639 = m["ISO639"].toString();
 		sub.rating = m["SubRating"].toString();

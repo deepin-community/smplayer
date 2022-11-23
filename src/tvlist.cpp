@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,7 +27,10 @@
 TVList::TVList(bool check_channels_conf, Services services, QString filename, QWidget * parent) 
 	: Favorites(filename,parent)
 {
-#ifndef Q_OS_WIN
+#ifdef Q_OS_WIN
+	Q_UNUSED(check_channels_conf);
+	Q_UNUSED(services);
+#else
 	if (check_channels_conf) {
 		/* f_list.clear(); */
 		parse_channels_conf(services);
@@ -100,7 +103,7 @@ QString TVList::findChannelsFile() {
 	file = QDir::homePath() + "/.config/mpv/channels.conf";
 	if (QFile::exists(file)) return file;
 
-	return QString::null;
+	return QString();
 }
 #endif
 

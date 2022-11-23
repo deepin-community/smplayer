@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ class PrefUpdates : public PrefWidget, public Ui::PrefUpdates
 	Q_OBJECT
 
 public:
-	PrefUpdates( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	PrefUpdates( QWidget * parent = 0, Qt::WindowFlags f = QFlag(0) );
 	~PrefUpdates();
 
 	virtual QString sectionName();

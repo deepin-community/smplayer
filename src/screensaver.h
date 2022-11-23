@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,44 +16,32 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-//! This class disables and restores the windows screensaver 
+#ifndef SCREENSAVER_H
+#define SCREENSAVER_H
 
-#ifndef WINSCREENSAVER_H
-#define WINSCREENSAVER_H
+#include <QObject>
 
-#ifdef Q_OS_OS2
-#include <QLibrary>
-#else
-#undef _WIN32_WINNT
-#define _WIN32_WINNT 0x0501
-#endif
+class PowerSaving;
+class WinScreenSaver;
 
-class WinScreenSaver
+class ScreenSaver : public QObject
 {
+	Q_OBJECT
+
 public:
-	WinScreenSaver();
-	~WinScreenSaver();
+	ScreenSaver(QObject * parent = 0);
+	~ScreenSaver();
 
-	void disable();
+public slots:
 	void enable();
+	void disable();
 
-private:
-	void retrieveState();
-	void restoreState();
-#ifdef Q_OS_OS2
-	void unload();
-#endif
-
-private:
-#ifndef Q_OS_OS2
-	int lowpower, poweroff, screensaver;
+protected:
+#ifdef Q_OS_WIN
+	WinScreenSaver * win_screensaver;
 #else
-	QLibrary *SSaver;
-	typedef int (*FuncPtr) (void);
-	FuncPtr SSCore_TempDisable;
-	FuncPtr SSCore_TempEnable;
+	PowerSaving * power_saving;
 #endif
-	bool state_saved, modified;
 };
 
 #endif

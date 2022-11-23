@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -112,18 +112,16 @@ public:
 	bool add_blackborders_on_fullscreen;
 #endif
 
-#ifdef Q_OS_WIN
-	#ifdef SCREENSAVER_OFF
-	bool turn_screensaver_off;
-	#endif
-	#ifdef AVOID_SCREENSAVER
-	bool avoid_screensaver;
-	#endif
-#else
+#ifdef SCREENSAVER_OFF
 	bool disable_screensaver;
 #endif
+#if defined(Q_OS_WIN) && defined(AVOID_SCREENSAVER)
+	bool avoid_screensaver;
+#endif
 
-#ifndef Q_OS_WIN
+#ifdef OS_UNIX_NOT_MAC
+	bool wayland_workarounds;
+
 	struct VDPAU_settings {
 		bool ffh264vdpau;
 		bool ffmpeg12vdpau;
@@ -369,6 +367,8 @@ public:
 
 	bool use_native_open_dialog;
 
+	bool disable_player_config;
+
 
 	/* *********
 	   GUI stuff
@@ -518,9 +518,11 @@ public:
 	#ifdef YOUTUBE_SUPPORT
 	int yt_resolution;
 	QString yt_user_agent;
-	bool yt_use_https_main;
-	bool yt_use_https_vi;
+	QString yt_ytdl_bin;
+	QString yt_override_format;
 	bool yt_use_dash;
+	bool yt_use_60fps;
+	bool yt_use_av1;
 	#endif
 
 	// Proxy

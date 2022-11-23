@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,6 +27,8 @@
 #include <QDebug>
 #include "config.h"
 #include "extensions.h"
+#include "paths.h"
+#include "qtcompat.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h> // For the screensaver stuff
@@ -91,6 +93,30 @@ QString Helper::formatTime2(double secs) {
 	//qDebug() << "Helper::formatTime: secs:" << secs << "="  << hours << ":" << minutes << ":" << seconds << "." << milliseconds;
 
 	return QString("%1%2:%3:%4.%5").arg(negative ? "-" : "").arg(hours, 2, 10, QChar('0')).arg(minutes, 2, 10, QChar('0')).arg(seconds, 2, 10, QChar('0')).arg(milliseconds, 3, 10, QChar('0'));
+}
+
+QString Helper::formatTimes(double current_sec, double total_time, bool use_milliseconds, bool use_remaining_time) {
+	QString time;
+
+	if (use_milliseconds) {
+		time = formatTime2(current_sec);
+	} else {
+		time = formatTime((int) current_sec);
+	}
+
+	time += " / ";
+
+	if (!use_remaining_time) {
+		time += formatTime((int) total_time);
+	} else {
+		int remaining_time = (int) total_time - current_sec;
+		if (remaining_time < 0) remaining_time = 0;
+		time += formatTime(remaining_time);
+	}
+
+	//qDebug() << "Helper::formatTimes:" << time;
+
+	return time;
 }
 
 QString Helper::timeForJumps(int secs) {
@@ -325,7 +351,9 @@ QStringList Helper::resolveSymlinks(const QStringList & files) {
 #ifndef Q_OS_WIN
 QString Helper::findExecutable(const QString & name) {
 	QByteArray env = qgetenv("PATH");
-	QStringList search_paths = QString::fromLocal8Bit(env.constData()).split(':', QString::SkipEmptyParts);
+	QStringList search_paths = QString::fromLocal8Bit(env.constData()).split(':', QTC_SkipEmptyParts);
+	search_paths.prepend(Paths::appPath());
+
 	for (int n = 0; n < search_paths.count(); n++) {
 		QString candidate = search_paths[n] + "/" + name;
 		qDebug("Helper::findExecutable: candidate: %s", candidate.toUtf8().constData());
@@ -335,6 +363,6 @@ QString Helper::findExecutable(const QString & name) {
 			return candidate;
 		}
 	}
-	return QString::null;
+	return QString();
 }
 #endif

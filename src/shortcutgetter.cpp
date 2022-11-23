@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -219,7 +219,7 @@ static QString keyToString(int k)
 {
 	if (	k == Qt::Key_Shift || k == Qt::Key_Control || k == Qt::Key_Meta ||
 			k == Qt::Key_Alt || k == Qt::Key_AltGr )
-		return QString::null;
+		return QString();
 
 	initKeyMap();
 	
@@ -232,7 +232,7 @@ static QString keyToString(int k)
 {
 	if (	k == Qt::Key_Shift || k == Qt::Key_Control || k == Qt::Key_Meta ||
 			k == Qt::Key_Alt || k == Qt::Key_AltGr )
-		return QString::null;
+		return QString();
 
 	return QKeySequence(k).toString();
 }

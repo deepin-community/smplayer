@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -133,7 +133,11 @@ QMap<QString,QString> Languages::list() {
 	l["mt"] = tr("Maltese");
 	l["my"] = tr("Burmese");
 	l["na"] = tr("Nauru");
+#if QT_VERSION >= 0x050000
+	l["nb"] = tr("Bokmål");
+#else
 	l["nb"] = trUtf8("Bokmål");
+#endif
 	l["nd"] = tr("Ndebele");
 	l["ne"] = tr("Nepali");
 	l["ng"] = tr("Ndonga");
@@ -197,7 +201,11 @@ QMap<QString,QString> Languages::list() {
 	l["uz"] = tr("Uzbek");
 	l["ve"] = tr("Venda");
 	l["vi"] = tr("Vietnamese");
+#if QT_VERSION >= 0x050000
+	l["vo"] = tr("Volapük");
+#else
 	l["vo"] = trUtf8("Volapük");
+#endif
 	l["wa"] = tr("Walloon");
 	l["wo"] = tr("Wolof");
 	l["xh"] = tr("Xhosa");
@@ -244,7 +252,8 @@ QMap<QString,QString> Languages::translations() {
 	m["en"] = "English";
 	m["en_GB"] = "British English";
 	m["en_US"] = "American English";
-	m["es"] =  QString::fromUtf8("Español"); //tr("Spanish");
+	m["es"] =  QString::fromUtf8("Español - Latinoamérica");
+	m["es_ES"] =  QString::fromUtf8("Español - España");
 	m["et"] = "Eesti"; //tr("Estonian");
 	m["eu"] = "Euskara"; //tr("Basque");
 	m["fa"] = QString::fromUtf8("فارسی"); //tr("Persian");

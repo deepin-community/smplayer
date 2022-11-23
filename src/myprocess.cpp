@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 */
 
 #include "myprocess.h"
+#include <QDir>
 #include <QDebug>
 
 #ifdef Q_OS_WIN
@@ -36,7 +37,22 @@ MyProcess::MyProcess(QObject * parent) : QProcess(parent)
 {
 	clearArguments();
 	setProcessChannelMode( QProcess::MergedChannels );
-	
+
+	QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+#ifndef Q_OS_WIN
+	QString bin_path = QDir::homePath() + "/bin";
+	qDebug() << "MyProcess::MyProcess: bin_path:" << bin_path;
+	qDebug() << "MyProcess::MyProcess: PATH:" << env.value("PATH");
+	QStringList paths = env.value("PATH").split(":");
+	qDebug() << "MyProcess::MyProcess: paths:" << paths;
+	if (!paths.contains(bin_path)) {
+		QString new_path = bin_path +":" + env.value("PATH");
+		env.insert("PATH", new_path);
+		qDebug() << "MyProcess::MyProcess: PATH:" << env.value("PATH");
+	}
+#endif
+	setProcessEnvironment(env);
+
 #if USE_TEMP_FILE
 	temp_file.open(); // Create temporary file
 	QString filename = temp_file.fileName();
@@ -81,9 +97,21 @@ QStringList MyProcess::arguments() {
 }
 
 void MyProcess::start() {
+	qDebug() << "MyProcess::start: environment path:" << processEnvironment().value("PATH");
+	qDebug() << "MyProcess::start: current directory:" << QDir::currentPath();
+
 	remaining_output.clear();
 
-	QProcess::start(program, arg);
+	QString bin = program;
+	/*
+	QFileInfo fi(program);
+	if (fi.exists() && fi.isExecutable() && !fi.isDir()) {
+		bin = fi.absoluteFilePath();
+	}
+	qDebug() << "MyProcess::start: executable:" << bin;
+	*/
+
+	QProcess::start(bin, arg);
 
 #if USE_TEMP_FILE
 	//bool r = temp_file.open(QIODevice::ReadOnly);

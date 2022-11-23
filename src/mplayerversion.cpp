@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ int MplayerVersion::mplayerVersion(QString string) {
 	int mplayer_svn = 0;
 	is_mpv = false;
 #ifdef MPLAYER2_SUPPORT
-	mplayer2_version = QString::null;
+	mplayer2_version = QString();
 	is_mplayer2 = false;
 #endif
 
@@ -105,6 +105,8 @@ int MplayerVersion::mplayerVersion(QString string) {
 		qDebug() << "MplayerVersion::mplayerVersion: MPlayer version found:" << version;
 		mplayer_svn = 0;
 
+		if (version == "1.4") mplayer_svn = MPLAYER_1_4;
+		else
 		if (version == "1.2") mplayer_svn = MPLAYER_1_2;
 		else
 		if (version == "1.1") mplayer_svn = MPLAYER_1_1;

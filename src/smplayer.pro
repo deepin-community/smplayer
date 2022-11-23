@@ -9,6 +9,7 @@ QT += network xml
 
 RESOURCES = icons.qrc H2O.qrc
 
+DEFINES += NO_DEBUG_ON_CONSOLE
 #DEFINES += EXPERIMENTAL
 DEFINES += SINGLE_INSTANCE
 DEFINES += FIND_SUBTITLES
@@ -35,13 +36,16 @@ DEFINES += ADD_BLACKBORDERS_FS
 DEFINES += INITIAL_BLACKBORDERS
 DEFINES += CHROMECAST_SUPPORT
 DEFINES += USE_QRCODE
+DEFINES += SCREENSAVER_OFF
+#DEFINES += USE_SHM
+#DEFINES += USE_SMTUBE_LIB
 
 DEFINES += MPV_SUPPORT
 DEFINES += MPLAYER_SUPPORT
 
 # Whether to include support for the obsolete mplayer2 or not
 # (requires MPLAYER_SUPPORT)
-DEFINES += MPLAYER2_SUPPORT
+#DEFINES += MPLAYER2_SUPPORT
 
 # OBSOLETE:
 #DEFINES += SHARE_ACTIONS
@@ -54,6 +58,8 @@ greaterThan(QT_MAJOR_VERSION, 4):greaterThan(QT_MINOR_VERSION, 3) {
 
 #DEFINES += SIMPLE_BUILD
 #DEFINES += IDOPT_BUILD
+
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x050F00
 
 contains( DEFINES, SIMPLE_BUILD ) {
 	DEFINES -= SINGLE_INSTANCE
@@ -84,11 +90,20 @@ contains( DEFINES, IDOPT_BUILD ) {
 	DEFINES -= MPLAYER2_SUPPORT
 }
 
+contains( DEFINES, NO_MPLAYER ) {
+	DEFINES -= MPLAYER_SUPPORT
+	DEFINES -= MPLAYER2_SUPPORT
+}
+
+contains( DEFINES, NO_MPV ) {
+	DEFINES -= MPV_SUPPORT
+}
+
 isEqual(QT_MAJOR_VERSION, 5) {
 	QT += widgets gui
 	#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x040000
 	win32 {
-		DEFINES -= MPRIS2
+		#DEFINES -= MPRIS2
 	}
 }
 
@@ -128,6 +143,17 @@ contains( DEFINES, GLOBALSHORTCUTS ) {
 	}
 }
 
+macx {
+	DEFINES -= GLOBALSHORTCUTS
+	DEFINES -= AUTO_SHUTDOWN_PC
+	DEFINES -= SINGLE_INSTANCE
+	#DEFINES -= MPRIS2
+	DEFINES += USE_SHM
+	DEFINES += USE_COREVIDEO_BUFFER
+	DEFINES += USE_GL_WINDOW
+	message("Some features are disabled on macx.")
+}
+
 HEADERS += guiconfig.h \
 	config.h \
 	constants.h \
@@ -151,6 +177,8 @@ HEADERS += guiconfig.h \
 	playerid.h \
 	playerprocess.h \
 	infoprovider.h \
+	screenhelper.h \
+	videolayer.h \
 	mplayerwindow.h \
 	mediadata.h \
 	audioequalizerlist.h \
@@ -249,6 +277,8 @@ SOURCES	+= version.cpp \
 	playerid.cpp \
 	playerprocess.cpp \
 	infoprovider.cpp \
+	screenhelper.cpp \
+	videolayer.cpp \
 	mplayerwindow.cpp \
 	mediadata.cpp \
 	audioequalizerlist.cpp \
@@ -366,7 +396,6 @@ contains( DEFINES, SINGLE_INSTANCE ) {
 contains( DEFINES, FIND_SUBTITLES ) {
 	DEFINES += DOWNLOAD_SUBS
 	#DEFINES += OS_SEARCH_WORKAROUND
-	#DEFINES += USE_QUAZIP
 
 	INCLUDEPATH += findsubtitles
 	DEPENDPATH += findsubtitles
@@ -393,48 +422,48 @@ contains( DEFINES, DOWNLOAD_SUBS ) {
 
 	FORMS += findsubtitles/subchooserdialog.ui
 
-	contains( DEFINES, USE_QUAZIP ) {
-		INCLUDEPATH += findsubtitles/quazip
-		DEPENDPATH += findsubtitles/quazip
+	unix {
+		LIBS += -lz
+	}
 
-		HEADERS += crypt.h \
-		           ioapi.h \
-		           quazip.h \
-		           quazipfile.h \
-		           quazipfileinfo.h \
-		           quazipnewinfo.h \
-		           unzip.h \
-		           zip.h
-
-		SOURCES += ioapi.c \
-		           quazip.cpp \
-		           quazipfile.cpp \
-		           quazipnewinfo.cpp \
-		           unzip.c \
-		           zip.c
-}
-
-	LIBS += -lz
-	
 	win32 {
-		INCLUDEPATH += ..\\zlib
-		LIBS += -L..\\zlib
+		INCLUDEPATH += ..\zlib
+		LIBS += -L..\zlib
+		
+		win32-msvc* {
+			LIBS += -lzlib
+		} else {
+			LIBS += -lz
+		}
 	}
 }
 
 # Youtube support
 contains( DEFINES, YOUTUBE_SUPPORT ) {
-	DEFINES += YT_USE_SIG
+	DEFINES += YT_CODEDOWNLOADER
 	INCLUDEPATH += youtube
 	DEPENDPATH += youtube
 
 	HEADERS += youtube/retrieveyoutubeurl.h youtube/loadpage.h
 	SOURCES += youtube/retrieveyoutubeurl.cpp youtube/loadpage.cpp
 
-	contains( DEFINES, YT_USE_SIG ) {
-		HEADERS += youtube/sig.h
-		SOURCES += youtube/sig.cpp
-		QT += script # optional
+	# FIXME: loadpage is not used by youtube anymore,
+	# but it's used by the playlist
+
+	contains( DEFINES, YT_CODEDOWNLOADER ) {
+		HEADERS += youtube/codedownloader.h
+		SOURCES += youtube/codedownloader.cpp
+	}
+
+	isEqual(QT_MAJOR_VERSION, 4) {
+		HEADERS += youtube/qt-json/json.h
+		SOURCES += youtube/qt-json/json.cpp
+	}
+
+	win32 {
+		!contains( DEFINES, PORTABLE_APP ) {
+			DEFINES += YT_BIN_ON_CONFIG_DIR
+		}
 	}
 }
 
@@ -553,6 +582,71 @@ contains( DEFINES, CHROMECAST_SUPPORT ) {
 	}
 }
 
+contains( DEFINES, SCREENSAVER_OFF ) {
+	HEADERS += screensaver.h
+	SOURCES += screensaver.cpp
+	unix:!macx {
+		QT += dbus
+		HEADERS += powersaving.h
+		SOURCES += powersaving.cpp
+	}
+	win32 {
+		HEADERS += winscreensaver.h
+		SOURCES += winscreensaver.cpp
+	}
+	mac {
+		HEADERS += powersaving_mac.h
+		SOURCES += powersaving_mac.cpp
+	}
+}
+
+contains( DEFINES, USE_SHM|USE_COREVIDEO_BUFFER ) {
+	HEADERS += videolayerrender.h connectionbase.h
+	SOURCES += videolayerrender.cpp connectionbase.cpp
+
+	contains( DEFINES, USE_SHM ) {
+		HEADERS += connectionshm.h
+		SOURCES += connectionshm.cpp
+	}
+
+	contains( DEFINES, USE_COREVIDEO_BUFFER) {
+		HEADERS += connectioncv.h mconnection.h
+		SOURCES += connectioncv.cpp
+		OBJECTIVE_SOURCES += mconnection.mm
+		LIBS += -framework Cocoa
+	}
+
+	isEqual(QT_MAJOR_VERSION, 5) {
+		#DEFINES += USE_GL_WINDOW
+	}
+
+	contains( DEFINES, USE_GL_WINDOW ) {
+		HEADERS += openglrenderer.h
+		SOURCES += openglrenderer.cpp
+		RESOURCES += glsl.qrc
+		QT += opengl
+	} else {
+		LIBS += -lswscale
+		mac {
+		    INCLUDEPATH += /usr/local/Cellar/ffmpeg/4.4_2/include/
+			LIBS += -L/usr/local/Cellar/ffmpeg/4.4_2/lib/
+		}
+	}
+
+	unix:!macx {
+		LIBS += -lrt
+	}
+}
+
+contains(DEFINES, USE_SMTUBE_LIB) {
+	LIBS += -L../smtube -lsmtube
+	isEqual(QT_MAJOR_VERSION, 5) {
+		QT += webkitwidgets widgets gui
+	} else {
+		QT += webkit
+	}
+}
+
 unix {
 	UI_DIR = .ui
 	MOC_DIR = .moc
@@ -571,15 +665,9 @@ unix {
 }
 
 win32 {
-	DEFINES += SCREENSAVER_OFF
 	DEFINES += AVOID_SCREENSAVER
 	#DEFINES += FONTCACHE_DIALOG
 	#DEFINES += FONTS_HACK
-
-	contains( DEFINES, SCREENSAVER_OFF ) {
-		HEADERS += screensaver.h
-		SOURCES += screensaver.cpp
-	}
 
 	contains( DEFINES, FONTCACHE_DIALOG ) {
 		HEADERS += fontcache.h
@@ -598,8 +686,8 @@ win32 {
 		FORMS += prefassociations.ui
 	}
 
-	contains(TEMPLATE,vcapp) {
-		LIBS += ole32.lib user32.lib
+	win32-msvc* {
+		LIBS += -luser32 -lole32
 	} else {
 		LIBS += libole32
 	}
@@ -614,7 +702,6 @@ win32 {
 }
 
 os2 {
-	DEFINES += SCREENSAVER_OFF
 	INCLUDEPATH += .
 	contains( DEFINES, SCREENSAVER_OFF ) {
 		HEADERS += screensaver.h
@@ -623,8 +710,21 @@ os2 {
 	RC_FILE = smplayer_os2.rc
 }
 
+mac {
+	ICON = smplayer.icns
+	translations.files += $$files(translations/*.qm)
+	translations.path = Contents/Resources/translations
+	shortcuts.files += $$files(shortcuts/*.keys)
+	shortcuts.path = Contents/Resources/shortcuts
+	QMAKE_BUNDLE_DATA += translations shortcuts
+}
 
-TRANSLATIONS = translations/smplayer_es.ts translations/smplayer_de.ts \
+unix:!macx {
+	DEFINES += OS_UNIX_NOT_MAC
+}
+
+TRANSLATIONS = translations/smplayer_es.ts translations/smplayer_es_ES.ts \
+               translations/smplayer_de.ts \
                translations/smplayer_sk.ts translations/smplayer_it.ts \
                translations/smplayer_fr.ts translations/smplayer_zh_CN.ts \
                translations/smplayer_ru_RU.ts translations/smplayer_hu.ts \

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ EqSlider::EqSlider( QWidget* parent, Qt::WindowFlags f)
 {
 	setupUi(this);
 
-	_icon->setText( QString::null );
+	_icon->setText( QString() );
 	_slider->setFocusPolicy( Qt::StrongFocus );
 	_slider->setTickPosition( QSlider::TicksRight );
 	_slider->setTickInterval( 10 );
@@ -51,8 +51,12 @@ void EqSlider::setIcon( QPixmap i) {
 	_icon->setPixmap(i);
 }
 
-const QPixmap * EqSlider::icon() const {
-	return _icon->pixmap();
+QPixmap EqSlider::icon() const {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	return _icon->pixmap(Qt::ReturnByValue);
+#else
+	return QPixmap(*_icon->pixmap());
+#endif
 }
 
 void EqSlider::setLabel( QString s) {

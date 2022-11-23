@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,24 +25,23 @@
 
 class SeekWidget : public QWidget, public Ui::SeekWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 	Q_PROPERTY(QPixmap icon READ icon WRITE setIcon)
 	Q_PROPERTY(QString label READ label WRITE setLabel)
 	Q_PROPERTY(int time READ time WRITE setTime)
 
 public:
-    SeekWidget( QWidget* parent = 0, Qt::WindowFlags f = 0 );
-    ~SeekWidget();
+	SeekWidget( QWidget* parent = 0, Qt::WindowFlags f = QFlag(0) );
+	~SeekWidget();
 
 	int time() const;
-	const QPixmap * icon() const;
+	QPixmap icon() const;
 	QString label() const;
 
 public slots:
 	void setIcon(QPixmap icon);
 	void setLabel(QString text);
 	void setTime(int secs);
-
 };
 
 #endif

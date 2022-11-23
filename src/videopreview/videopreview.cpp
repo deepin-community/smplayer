@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -294,7 +294,7 @@ bool VideoPreview::extractImages() {
 	return true;
 }
 
-#if defined(Q_OS_LINUX) && !defined(NO_SMPLAYER_SUPPORT)
+#if defined(Q_OS_UNIX) && !defined(NO_SMPLAYER_SUPPORT)
 bool VideoPreview::isOptionAvailableinMPV(const QString & option) {
 	static QStringList option_list;
 	static QString executable;
@@ -315,7 +315,7 @@ bool VideoPreview::runPlayer(double seek, double aspect_ratio) {
 	if (PlayerID::player(mplayer_bin) == PlayerID::MPV) {
 		#ifdef MPV_SUPPORT
 		bool use_new_options = true;
-		#if defined(Q_OS_LINUX) && !defined(NO_SMPLAYER_SUPPORT)
+		#if defined(Q_OS_UNIX) && !defined(NO_SMPLAYER_SUPPORT)
 		if (!isOptionAvailableinMPV("--vo-image-format")) use_new_options = false;
 		#endif
 
@@ -347,7 +347,7 @@ bool VideoPreview::runPlayer(double seek, double aspect_ratio) {
 	else {
 		#ifdef MPLAYER_SUPPORT
 		// MPlayer
-		args << "-nosound" << "-nocache" << "-noframedrop";
+		args << "-nosound" << "-nocache" << "-noframedrop" << "-noconfig" << "all";
 
 		if (prop.extract_format == PNG) {
 			args << "-vo"
@@ -454,7 +454,11 @@ bool VideoPreview::addPicture(const QString & filename, int num, int time) {
 
 		// Set background
 		QFontMetrics fm(font);
+		#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
+		int px_wide = fm.horizontalAdvance(stime);
+		#else
 		int px_wide = fm.width(stime);
+		#endif
 		int px_high = fm.height();
 		QRect rect(scaled_picture.rect());
 		rect.setX(rect.width() - px_wide);
@@ -594,7 +598,7 @@ VideoInfo VideoPreview::getInfo(const QString & mplayer_path, const QString & fi
 	else {
 		#ifdef MPLAYER_SUPPORT
 		// MPlayer
-		args << "-vo" << "null" << "-ao" << "null" << "-frames" << "1" << "-identify" << "-nocache" << "-noquiet";
+		args << "-vo" << "null" << "-ao" << "null" << "-frames" << "1" << "-identify" << "-nocache" << "-noquiet" << "-noconfig" << "all";
 		if (!prop.dvd_device.isEmpty()) args << "-dvd-device" << prop.dvd_device;
 
 		#ifdef Q_OS_WIN
@@ -694,7 +698,11 @@ void VideoPreview::saveImage() {
                             proposed_name, tr("Images") +" ("+ write_formats +")");
 
 	if (!filename.isEmpty()) {
+		#if QT_VERSION >= 0x050000
+		QPixmap image = w_contents->grab();
+		#else
 		QPixmap image = QPixmap::grabWidget(w_contents);
+		#endif
 		qDebug("VideoPreview::saveImage: size: %d %d", image.size().width(), image.size().height());
 		if (image.size().width() > prop.max_width) {
 			image = image.scaledToWidth(prop.max_width, Qt::SmoothTransformation);

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ class SMPlayer : public QObject
 public:
 	enum ExitCode { ErrorArgument = -3, NoAction = -2, NoRunningInstance = -1, NoError = 0, NoExit = 1 };
 
-	SMPlayer(const QString & config_path = QString::null, QObject * parent = 0);
+	SMPlayer(const QString & config_path = QString(), QObject * parent = 0);
 	~SMPlayer();
 
 	//! Process arguments. If ExitCode != NoExit the application must be exited.
@@ -65,6 +65,7 @@ private:
 	QString actions_list; //!< Actions to be run on startup
 	QString gui_to_use;
 	QString media_title; //!< Force a title for the first file
+	int initial_second; //!< Initial position in seconds
 
 	// Change position and size
 	bool move_gui;

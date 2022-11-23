@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -88,6 +88,15 @@ void MiniGui::createActions() {
 
 	time_label_action = createTimeLabelAction(TimeLabelAction::CurrentAndTotalTime, this);
 	time_label_action->setObjectName("timelabel_action");
+
+	current_time_label_action = createTimeLabelAction(TimeLabelAction::CurrentTime, this);
+	current_time_label_action->setObjectName("current_timelabel_action");
+
+	total_time_label_action = createTimeLabelAction(TimeLabelAction::TotalTime, this);
+	total_time_label_action->setObjectName("total_timelabel_action");
+
+	remaining_time_label_action = createTimeLabelAction(TimeLabelAction::RemainingTime, this);
+	remaining_time_label_action->setObjectName("remaining_timelabel_action");
 
 #if USE_CONFIGURABLE_TOOLBARS
 	editControlAct = new MyAction( this, "edit_control_minigui" );

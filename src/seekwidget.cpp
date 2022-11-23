@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,26 +25,32 @@ SeekWidget::SeekWidget( QWidget* parent, Qt::WindowFlags f)
 {
 	setupUi(this);
 	time_edit->setDisplayFormat("mm:ss");
+	time_edit->setMinimumTime(QTime(0,0,1));
+	time_edit->setMaximumTime(QTime(0,59,59));
 }
 
 SeekWidget::~SeekWidget() {
 }
 
 void SeekWidget::setIcon(QPixmap icon) {
-	_image->setText("");
-	_image->setPixmap(icon);
+	icon_label->setText("");
+	icon_label->setPixmap(icon);
 }
 
-const QPixmap * SeekWidget::icon() const {
-	return _image->pixmap();
+QPixmap SeekWidget::icon() const {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	return icon_label->pixmap(Qt::ReturnByValue);
+#else
+	return QPixmap(*icon_label->pixmap());
+#endif
 }
 
 void SeekWidget::setLabel(QString text) {
-	_label->setText(text);
+	text_label->setText(text);
 }
 
 QString SeekWidget::label() const {
-	return _label->text();
+	return text_label->text();
 }
 
 void SeekWidget::setTime(int secs) {

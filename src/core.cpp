@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@
 #include <windows.h> // To change app priority
 #include <QSysInfo> // To get Windows version
 #endif
+
 #ifdef SCREENSAVER_OFF
 #include "screensaver.h"
 #endif
@@ -62,17 +63,15 @@
 
 #ifdef YOUTUBE_SUPPORT
 #include "retrieveyoutubeurl.h"
-  #ifdef YT_USE_YTSIG
-  #include "ytsig.h"
-  #endif
-
   #define PREF_YT_ENABLED pref->streaming_type == Preferences::StreamingYT || pref->streaming_type == Preferences::StreamingAuto
 #endif
 
 using namespace Global;
 
 Core::Core( MplayerWindow *mpw, QWidget* parent ) 
-	: QObject( parent ) 
+	: QObject( parent )
+	, display_screen(0)
+	, initial_second(0)
 {
 	qRegisterMetaType<Core::State>("Core::State");
 
@@ -100,20 +99,14 @@ Core::Core( MplayerWindow *mpw, QWidget* parent )
 
 	proc = PlayerProcess::createPlayerProcess(pref->mplayer_bin);
 
-	// Do this the first
-	connect( proc, SIGNAL(processExited()),
-             mplayerwindow->videoLayer(), SLOT(playingStopped()) );
-
-	connect( proc, SIGNAL(error(QProcess::ProcessError)),
-             mplayerwindow->videoLayer(), SLOT(playingStopped()) );
-
-	// Necessary to hide/unhide mouse cursor on black borders
 	connect( proc, SIGNAL(processExited()),
              mplayerwindow, SLOT(playingStopped()) );
 
 	connect( proc, SIGNAL(error(QProcess::ProcessError)),
              mplayerwindow, SLOT(playingStopped()) );
 
+	connect( proc, SIGNAL(receivedVO(QString)),
+             mplayerwindow, SLOT(gotVO(QString)) );
 
 	connect( proc, SIGNAL(receivedCurrentSec(double)),
              this, SLOT(changeCurrentSec(double)) );
@@ -198,6 +191,8 @@ Core::Core( MplayerWindow *mpw, QWidget* parent )
 	connect( proc, SIGNAL(receivedVideoBitrate(int)), this, SLOT(gotVideoBitrate(int)) );
 	connect( proc, SIGNAL(receivedAudioBitrate(int)), this, SLOT(gotAudioBitrate(int)) );
 
+	connect( proc, SIGNAL(receivedDemuxRotation(int)), this, SLOT(gotDemuxRotation(int)) );
+
 	connect( proc, SIGNAL(receivedStreamTitle(QString)),
              this, SLOT(streamTitleChanged(QString)) );
 
@@ -259,11 +254,6 @@ Core::Core( MplayerWindow *mpw, QWidget* parent )
 	//pref->load();
 	mset.reset();
 
-	// Mplayerwindow
-	connect( this, SIGNAL(aboutToStartPlaying()),
-             mplayerwindow->videoLayer(), SLOT(playingStarted()) );
-
-	// Necessary to hide/unhide mouse cursor on black borders
 	connect( this, SIGNAL(aboutToStartPlaying()),
              mplayerwindow, SLOT(playingStarted()) );
 
@@ -273,13 +263,12 @@ Core::Core( MplayerWindow *mpw, QWidget* parent )
 #endif
 
 #if REPAINT_BACKGROUND_OPTION
-	mplayerwindow->videoLayer()->setRepaintBackground(pref->repaint_video_background);
+	mplayerwindow->setRepaintBackground(pref->repaint_video_background);
 #endif
 	mplayerwindow->setMonitorAspect( pref->monitor_aspect_double() );
 
 #ifdef SCREENSAVER_OFF
-	// Windows or OS2 screensaver
-	win_screensaver = new WinScreenSaver();
+	screensaver = new ScreenSaver(this);
 	connect( this, SIGNAL(aboutToStartPlaying()), this, SLOT(disableScreensaver()) );
 	connect( proc, SIGNAL(processExited()), this, SLOT(enableScreensaver()) );
 	connect( proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(enableScreensaver()) );
@@ -287,20 +276,17 @@ Core::Core( MplayerWindow *mpw, QWidget* parent )
 
 #ifdef YOUTUBE_SUPPORT
 	yt = new RetrieveYoutubeUrl(this);
+	#ifdef YT_OBSOLETE
 	yt->setUseHttpsMain(pref->yt_use_https_main);
-	yt->setUseHttpsVi(pref->yt_use_https_vi);
-
-	#ifdef YT_USE_SIG
-	QSettings * sigset = new QSettings(Paths::configPath() + "/sig.ini", QSettings::IniFormat, this);
-	yt->setSettings(sigset);
 	#endif
 
 	connect(yt, SIGNAL(gotPreferredUrl(const QString &, int)), this, SLOT(openYT(const QString &)));
 	connect(yt, SIGNAL(connecting(QString)), this, SLOT(connectingToYT(QString)));
-	connect(yt, SIGNAL(errorOcurred(int,QString)), this, SLOT(YTFailed(int,QString)));
-	connect(yt, SIGNAL(noSslSupport()), this, SIGNAL(noSslSupport()));
-	connect(yt, SIGNAL(signatureNotFound(const QString&)), this, SIGNAL(signatureNotFound(const QString&)));
+	connect(yt, SIGNAL(processFailedToStart()), this, SIGNAL(YTprocessFailedToStart()));
 	connect(yt, SIGNAL(gotEmptyList()), this, SLOT(YTNoVideoUrl()));
+	#ifdef Q_OS_WIN
+	connect(yt, SIGNAL(dllNotFound()), this, SIGNAL(YTDLLNotFound()));
+	#endif
 #endif
 
 	connect(this, SIGNAL(buffering()), this, SLOT(displayBuffering()));
@@ -317,10 +303,6 @@ Core::~Core() {
 	delete file_settings;
 #ifdef TV_SUPPORT
 	delete tv_settings;
-#endif
-
-#ifdef SCREENSAVER_OFF
-	delete win_screensaver;
 #endif
 
 #ifdef YOUTUBE_SUPPORT
@@ -591,30 +573,27 @@ void Core::openYT(const QString & url) {
 }
 
 void Core::connectingToYT(QString host) {
-	emit showMessage( tr("Connecting to %1").arg(host) );
-}
-
-void Core::YTFailed(int /*error_number*/, QString /*error_str*/) {
-	emit showMessage( tr("Unable to retrieve the Youtube page") );
+	emit showMessage( tr("Connecting to %1").arg(host), 10000 );
 }
 
 void Core::YTNoVideoUrl() {
 	emit showMessage( tr("Unable to locate the URL of the video") );
+	emit YTUrlNotFound();
 }
 #endif
 
 #ifdef SCREENSAVER_OFF
 void Core::enableScreensaver() {
 	qDebug("Core::enableScreensaver");
-	if (pref->turn_screensaver_off) {
-		win_screensaver->enable();
+	if (pref->disable_screensaver) {
+		screensaver->enable();
 	}
 }
 
 void Core::disableScreensaver() {
 	qDebug("Core::disableScreensaver");
-	if (pref->turn_screensaver_off) {
-		win_screensaver->disable();
+	if (pref->disable_screensaver) {
+		screensaver->disable();
 	}
 }
 #endif
@@ -931,18 +910,14 @@ void Core::openStream(QString name, QStringList params) {
 		// Check if the stream is a youtube url
 		QString yt_full_url = yt->fullUrl(name);
 		if (!yt_full_url.isEmpty()) {
-			qDebug("Core::openStream: youtube url detected: %s", yt_full_url.toLatin1().constData());
+			qDebug() << "Core::openStream: youtube url detected:" << yt_full_url;
 			name = yt_full_url;
 			yt->setPreferredResolution( (RetrieveYoutubeUrl::Resolution) pref->yt_resolution );
-			qDebug("Core::openStream: user_agent: '%s'", pref->yt_user_agent.toUtf8().constData());
-			/*if (!pref->yt_user_agent.isEmpty()) yt->setUserAgent(pref->yt_user_agent); */
 			yt->setUserAgent(pref->yt_user_agent);
-			#ifdef YT_DASH_SUPPORT
+			yt->setUserFormat(pref->yt_override_format);
 			yt->setUseDASH(pref->yt_use_dash);
-			#endif
-			#ifdef YT_USE_YTSIG
-			YTSig::setScriptFile( Paths::configPath() + "/yt.js" );
-			#endif
+			yt->enable60fps(pref->yt_use_60fps);
+			yt->enableAv1(pref->yt_use_av1);
 			yt->fetchPage(name);
 			return;
 		}
@@ -966,7 +941,7 @@ void Core::openStream(QString name, QStringList params) {
 
 	#ifdef YOUTUBE_SUPPORT
 	if (PREF_YT_ENABLED) {
-		if (mdat.filename == yt->selectedUrl()) {
+		if (mdat.filename == yt->selectedVideoUrl()) {
 			name = yt->origUrl();
 		}
 	}
@@ -1041,12 +1016,18 @@ void Core::initPlaying(int seek) {
 	int start_sec = (int) mset.current_sec;
 	if (seek > -1) start_sec = seek;
 
+	if (initial_second != 0) {
+		qDebug("Core::initPlaying: initial_second: %d", initial_second);
+		start_sec = initial_second;
+		initial_second = 0;
+	}
+
 #ifdef YOUTUBE_SUPPORT
 	if (PREF_YT_ENABLED) {
 		// Avoid to pass to mplayer the youtube page url
 		if (mdat.type == TYPE_STREAM) {
 			if (mdat.filename == yt->origUrl()) {
-				mdat.filename = yt->selectedUrl();
+				mdat.filename = yt->selectedVideoUrl();
 			}
 		}
 	}
@@ -1168,11 +1149,11 @@ void Core::finishRestart() {
 	if (PREF_YT_ENABLED) {
 		// Change the real url with the youtube page url and set the title
 		if (mdat.type == TYPE_STREAM) {
-			if (mdat.filename == yt->selectedUrl()) {
+			if (mdat.filename == yt->selectedVideoUrl()) {
 				mdat.filename = yt->origUrl();
-				mdat.stream_title = yt->urlTitle();
+				mdat.stream_title = yt->videoTitle();
 				if (proc->isMPlayer()) {
-					mdat.stream_path = yt->selectedUrl();
+					mdat.stream_path = yt->selectedVideoUrl();
 				}
 			}
 		}
@@ -1392,6 +1373,12 @@ void Core::pause() {
 	}
 }
 
+void Core::setPause(bool b) {
+	if (proc->isRunning()) {
+		proc->setPause(b);
+	}
+}
+
 void Core::play_or_pause() {
 	qDebug("Core::play_or_pause");
 
@@ -1534,7 +1521,7 @@ void Core::goToPos(int perc) {
 
 
 void Core::startMplayer( QString file, double seek ) {
-	qDebug("Core::startMplayer");
+	qDebug() << "Core::startMplayer: file:" << file << "seek:" << seek;
 
 	if (file.isEmpty()) {
 		qWarning("Core:startMplayer: file is empty!");
@@ -1620,19 +1607,8 @@ void Core::startMplayer( QString file, double seek ) {
 
 	proc->clearArguments();
 
-	// Set the screenshot directory
-	/* deleted (done later) */
-
-	// Use absolute path, otherwise after changing to the screenshot directory
-	// the mplayer path might not be found if it's a relative path
-	// (seems to be necessary only for linux)
-	QString mplayer_bin = pref->mplayer_bin;
-	QFileInfo fi(mplayer_bin);
-	if (fi.exists() && fi.isExecutable() && !fi.isDir()) {
-		mplayer_bin = fi.absoluteFilePath();
-	}
-
 #ifdef MPLAYER2_SUPPORT
+	QFileInfo fi(pref->mplayer_bin);
 	if (fi.baseName().toLower() == "mplayer2") {
 		if (!pref->mplayer_is_mplayer2) {
 			qDebug("Core::startMplayer: this seems mplayer2");
@@ -1641,8 +1617,9 @@ void Core::startMplayer( QString file, double seek ) {
 	}
 #endif
 
-	proc->setExecutable(mplayer_bin);
-	proc->setFixedOptions();
+	proc->setExecutable(pref->mplayer_bin);
+	proc->setPredefinedOptions();
+	if (pref->disable_player_config) proc->disableConfig();
 
 #ifdef LOG_MPLAYER
 	if (pref->verbose_log) {
@@ -1650,7 +1627,7 @@ void Core::startMplayer( QString file, double seek ) {
 	}
 #endif
 
-	if (pref->fullscreen && pref->use_mplayer_window) {
+	if ((pref->fullscreen && pref->use_mplayer_window) || display_screen != 0) {
 		proc->setOption("fs", true);
 	} else {
 		// No mplayer fullscreen mode
@@ -1675,7 +1652,7 @@ void Core::startMplayer( QString file, double seek ) {
 	else
 #endif
 	{
-		#ifndef Q_OS_WIN
+		#ifdef OS_UNIX_NOT_MAC
 		/* if (pref->vo.startsWith("x11")) { */ // My card doesn't support vdpau, I use x11 to test
 		if (pref->vo.startsWith("vdpau")) {
 			QString c;
@@ -1689,14 +1666,13 @@ void Core::startMplayer( QString file, double seek ) {
 				proc->setOption("vc", c);
 			}
 		}
-		else {
+		else
 		#endif
+		{
 			if (pref->coreavc) {
 				proc->setOption("vc", "coreserve,");
 			}
-		#ifndef Q_OS_WIN
 		}
-		#endif
 	}
 
 	if (pref->use_hwac3) {
@@ -1747,14 +1723,53 @@ void Core::startMplayer( QString file, double seek ) {
 		QString vo = pref->vo;
 		if (!vo.endsWith(",")) vo += ",";
 		proc->setOption("vo", vo);
-	}
-	#ifdef Q_OS_WIN
-	else {
+	} else {
+		#ifdef Q_OS_WIN
+        /*
 		if ((proc->isMPlayer() && QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA) || proc->isMPV()) {
 			proc->setOption("vo", "direct3d,");
 		}
+        */
+		#endif
+		#ifdef Q_OS_MACX
+		if (pref->use_mplayer_window || display_screen != 0) {
+			if (proc->isMPlayer()) proc->setOption("vo", "gl,"); else proc->setOption("vo", "gpu,");
+		} else {
+			#ifdef USE_SHM
+			proc->setOption("vo", "shm,");
+			#else
+			#ifdef USE_COREVIDEO_BUFFER
+			if (proc->isMPlayer()) {
+				proc->setOption("vo", "corevideo,");
+			}
+			#endif
+			#endif // USE_SHM
+		}
+		#endif // Q_OS_MACX
 	}
-	#endif
+
+#ifdef OS_UNIX_NOT_MAC
+	// If using Wayland
+	if (pref->wayland_workarounds && qgetenv("XDG_SESSION_TYPE") != "x11") {
+		// Trying to prevent the video to be outside the application window
+		if (pref->vo.isEmpty()) {
+			#ifdef USE_SHM
+			if (pref->use_mplayer_window || display_screen != 0) {
+				if (proc->isMPlayer()) proc->setOption("vo", "gl,"); else proc->setOption("vo", "gpu,");
+			} else {
+				proc->setOption("vo", "shm,");
+			}
+			#else
+			proc->setOption("vo", "xv,x11,");
+			#endif
+		}
+		if (proc->isMPV()) {
+			if (pref->vo.startsWith("gpu")) {
+				proc->setOption("gpu-context", "x11egl");
+			}
+		}
+	}
+#endif
 
 #if USE_ADAPTER
 	if (pref->adapter > -1) {
@@ -1796,6 +1811,7 @@ void Core::startMplayer( QString file, double seek ) {
 		default: 						p = "normal";
 	}
 	proc->setOption("priority", p);
+	Q_UNUSED(app_p);
 	/*
 	SetPriorityClass(GetCurrentProcess(), app_p);
 	qDebug("Core::startMplayer: priority of smplayer process set to %d", app_p);
@@ -1825,34 +1841,41 @@ void Core::startMplayer( QString file, double seek ) {
 	proc->setOption("dr", pref->use_direct_rendering);
 	proc->setOption("double", pref->use_double_buffer);
 
-#ifdef Q_WS_X11
+#if defined(Q_WS_X11) && defined(SCREENSAVER_OFF)
 	proc->setOption("stop-xscreensaver", pref->disable_screensaver);
 #endif
 
-	if (!pref->use_mplayer_window) {
+	if (display_screen != 0) {
+		proc->setOption("screen", display_screen);
+	}
+
+	if (!pref->use_mplayer_window && display_screen == 0) {
+		#ifndef Q_OS_MACX
 		proc->disableInput();
+		#endif
 		proc->setOption("keepaspect", false);
 
-#if defined(Q_OS_OS2)
+		#ifdef Q_OS_OS2
 		#define WINIDFROMHWND(hwnd) ( ( hwnd ) - 0x80000000UL )
 		proc->setOption("wid", QString::number( WINIDFROMHWND( (int) mplayerwindow->videoLayer()->winId() ) ));
-#else
+		#else
+		#ifndef Q_OS_MACX
 		proc->setOption("wid", QString::number( (qint64) mplayerwindow->videoLayer()->winId() ) );
-#endif
+		#endif
+		#endif
 
 #if USE_COLORKEY
 		#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
 		if ((pref->vo.startsWith("directx")) || (pref->vo.startsWith("kva")) || (pref->vo.isEmpty())) {
 			proc->setOption("colorkey", ColorUtils::colorToRGB(pref->color_key));
-		} else {
+		} else
 		#endif
+		{
 			/*
 			qDebug("Core::startMplayer: * not using -colorkey for %s", pref->vo.toUtf8().data());
 			qDebug("Core::startMplayer: * report if you can't see the video"); 
 			*/
-		#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
 		}
-		#endif
 #endif
 
 		// Square pixels
@@ -2047,10 +2070,12 @@ void Core::startMplayer( QString file, double seek ) {
 	}
 
 	{ // Audio file
-		QString audio_file = mset.external_audio;
-		#if defined(YOUTUBE_SUPPORT) && defined(YT_DASH_SUPPORT)
+		QString audio_file = "";
+		if (!mset.external_audio.isEmpty() && QFile::exists(mset.external_audio)) audio_file = mset.external_audio;
+
+		#ifdef YOUTUBE_SUPPORT
 		if (PREF_YT_ENABLED) {
-			if (file == yt->selectedUrl() && yt->useDASH()) audio_file = yt->selectedAudioUrl();
+			if (file == yt->selectedVideoUrl() && yt->useDASH()) audio_file = yt->selectedAudioUrl();
 		}
 		#endif
 
@@ -2193,6 +2218,16 @@ void Core::startMplayer( QString file, double seek ) {
 		}
 	}
 
+	#ifdef MPV_SUPPORT
+	// Fix Audio CD
+	if (proc->isMPV()) {
+		if (file.startsWith("cdda:")) {
+			file = "cdda://";
+			proc->setOption("start_chapter",  mset.current_title_id);
+		}
+	}
+	#endif
+
 	if (pref->use_idx) {
 		proc->setOption("idx");
 	}
@@ -2213,10 +2248,12 @@ void Core::startMplayer( QString file, double seek ) {
 
 #ifndef Q_OS_WIN
 	if (proc->isMPlayer()) {
+		#ifdef OS_UNIX_NOT_MAC
 		if ((pref->vdpau.disable_video_filters) && (pref->vo.startsWith("vdpau"))) {
 			qDebug("Core::startMplayer: using vdpau, video filters are ignored");
 			goto end_video_filters;
 		}
+		#endif
 	} else {
 		// MPV
 		if (!pref->hwdec.isEmpty() && pref->hwdec != "no") {
@@ -2397,7 +2434,7 @@ void Core::startMplayer( QString file, double seek ) {
 
 	// Audio channels
 	if (mset.audio_use_channels != 0) {
-		proc->setOption("channels", QString::number(mset.audio_use_channels));
+		proc->setOption("channels", mset.audio_use_channels);
 	}
 
 	if (!pref->use_hwac3) {
@@ -2473,10 +2510,12 @@ void Core::startMplayer( QString file, double seek ) {
 
 #ifdef MPV_SUPPORT
 	if (mdat.type == TYPE_STREAM) {
+		QString ytdl_bin = pref->yt_ytdl_bin;
+		if (ytdl_bin.isEmpty()) ytdl_bin = YTDL_DEFAULT_BIN;
 		if (pref->streaming_type == Preferences::StreamingAuto) {
 			bool is_youtube = false;
 			#ifdef YOUTUBE_SUPPORT
-			if (PREF_YT_ENABLED) is_youtube = (file == yt->selectedUrl());
+			if (PREF_YT_ENABLED) is_youtube = (file == yt->selectedVideoUrl());
 			#endif
 			qDebug() << "Core::startMplayer: is_youtube:" << is_youtube;
 			bool enable_sites = !is_youtube;
@@ -2493,11 +2532,25 @@ void Core::startMplayer( QString file, double seek ) {
 			}
 			qDebug() << "Core::startMplayer: enable_sites:" << enable_sites;
 			proc->setOption("enable_streaming_sites_support", enable_sites);
-			if (enable_sites) proc->setOption("ytdl_quality", pref->ytdl_quality);
+			if (enable_sites) {
+				proc->setOption("ytdl_quality", pref->ytdl_quality);
+				#ifdef YT_BIN_ON_CONFIG_DIR
+				proc->setOption("ytdl_path", RetrieveYoutubeUrl::ytdlBin());
+				#else
+				proc->setOption("ytdl_path", ytdl_bin);
+				#endif
+			}
 		} else {
 			bool enable_sites = pref->streaming_type == Preferences::StreamingYTDL;
 			proc->setOption("enable_streaming_sites_support", enable_sites);
-			if (enable_sites) proc->setOption("ytdl_quality", pref->ytdl_quality);
+			if (enable_sites) {
+				proc->setOption("ytdl_quality", pref->ytdl_quality);
+				#ifdef YT_BIN_ON_CONFIG_DIR
+				proc->setOption("ytdl_path", RetrieveYoutubeUrl::ytdlBin());
+				#else
+				proc->setOption("ytdl_path", ytdl_bin);
+				#endif
+			}
 		}
 	}
 #endif
@@ -2633,7 +2686,7 @@ void Core::startMplayer( QString file, double seek ) {
 	QString line_for_log = commandline + "\n";
 	emit logLineAvailable(line_for_log);
 
-	QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+	QProcessEnvironment env = proc->processEnvironment();
 	if ((pref->use_proxy) && (pref->proxy_type == QNetworkProxy::HttpProxy) && (!pref->proxy_host.isEmpty())) {
 		QString proxy = QString("http://%1:%2@%3:%4").arg(pref->proxy_username).arg(pref->proxy_password).arg(pref->proxy_host).arg(pref->proxy_port);
 		env.insert("http_proxy", proxy);
@@ -3401,6 +3454,10 @@ void Core::setVolume(int volume, bool force) {
 	emit volumeChanged( current_volume );
 }
 
+int Core::currentVolume() {
+	if (pref->global_volume) return pref->volume; else return mset.volume;
+}
+
 void Core::switchMute() {
 	qDebug("Core::switchMute");
 
@@ -3618,7 +3675,10 @@ void Core::decSubStep() {
 void Core::changeSubVisibility(bool visible) {
 	qDebug("Core::changeSubVisilibity: %d", visible);
 	pref->sub_visibility = visible;
-	proc->setSubtitlesVisibility(pref->sub_visibility);
+
+	if (proc->isRunning()) {
+		proc->setSubtitlesVisibility(pref->sub_visibility);
+	}
 
 	if (pref->sub_visibility) 
 		displayMessage( tr("Subtitles on") );
@@ -3788,6 +3848,17 @@ void Core::gotAudioBitrate(int b) {
 	emit bitrateChanged(mdat.video_bitrate, mdat.audio_bitrate);
 }
 
+void Core::gotDemuxRotation(int r) {
+	qDebug("Core::gotDemuxRotation: %d", r);
+	if (proc->isMPV() && mset.rotate == MediaSettings::NoRotate) {
+		switch(r) {
+			case 90: proc->changeVF("rotate", true,  "1"); break;
+			case 270: proc->changeVF("rotate", true,  "2"); break;
+			case 180: proc->changeVF("rotate", true,  "4"); break;
+		}
+	}
+}
+
 void Core::changePause() {
 	qDebug("Core::changePause");
 	qDebug("Core::changePause: mplayer reports that it's paused");
@@ -3858,20 +3929,33 @@ void Core::changeSubtitle(int track) {
 	updateWidgets();
 }
 
+void Core::prevSubtitle() {
+	qDebug("Core::prevSubtitle");
+
+	if (mset.subs.numItems() > 0) {
+		if (mset.current_subtitle_track == MediaSettings::SubNone) {
+			changeSubtitle(mset.subs.numItems() - 1);
+		} else {
+			int item = mset.current_subtitle_track - 1;
+			if (item < 0) item = MediaSettings::SubNone;
+			changeSubtitle(item);
+		}
+	}
+}
+
 void Core::nextSubtitle() {
 	qDebug("Core::nextSubtitle");
 
-	if ( (mset.current_subtitle_track == MediaSettings::SubNone) && 
-         (mset.subs.numItems() > 0) )
-	{
-		changeSubtitle(0);
-	} 
-	else {
-		int item = mset.current_subtitle_track + 1;
-		if (item >= mset.subs.numItems()) {
-			item = MediaSettings::SubNone;
+	if (mset.subs.numItems() > 0) {
+		if (mset.current_subtitle_track == MediaSettings::SubNone) {
+			changeSubtitle(0);
+		} else {
+			int item = mset.current_subtitle_track + 1;
+			if (item >= mset.subs.numItems()) {
+				item = MediaSettings::SubNone;
+			}
+			changeSubtitle(item);
 		}
-		changeSubtitle( item );
 	}
 }
 
@@ -3948,6 +4032,22 @@ void Core::changeAudio(int ID, bool allow_restart) {
 	}
 }
 
+void Core::prevAudio() {
+	qDebug("Core::prevAudio");
+
+	int item = mset.audios.find( mset.current_audio_id );
+	if (item == -1) {
+		qWarning("Core::prevAudio: audio ID %d not found!", mset.current_audio_id);
+	} else {
+		qDebug( "Core::prevAudio: numItems: %d, item: %d", mset.audios.numItems(), item);
+		item--;
+		if (item < 0) item = mset.audios.numItems() - 1;
+		int ID = mset.audios.itemAt(item).ID();
+		qDebug( "Core::prevAudio: item: %d, ID: %d", item, ID);
+		changeAudio( ID );
+	}
+}
+
 void Core::nextAudio() {
 	qDebug("Core::nextAudio");
 
@@ -3991,6 +4091,22 @@ void Core::changeVideo(int ID, bool allow_restart) {
 			}
 		}
 		*/
+	}
+}
+
+void Core::prevVideo() {
+	qDebug("Core::prevVideo");
+
+	int item = mset.videos.find( mset.current_video_id );
+	if (item == -1) {
+		qWarning("Core::prevVideo: video ID %d not found!", mset.current_video_id);
+	} else {
+		qDebug( "Core::prevVideo: numItems: %d, item: %d", mset.videos.numItems(), item);
+		item--;
+		if (item < 0) item = mset.videos.numItems() - 1;
+		int ID = mset.videos.itemAt(item).ID();
+		qDebug( "Core::prevVideo: item: %d, ID: %d", item, ID);
+		changeVideo( ID );
 	}
 }
 
@@ -4129,7 +4245,7 @@ void Core::changeAspectRatio( int ID ) {
 
 	double asp = mset.aspectToNum( (MediaSettings::Aspect) ID);
 
-	if (!pref->use_mplayer_window) {
+	if (!pref->use_mplayer_window && display_screen ==0) {
 		mplayerwindow->setAspect(asp);
 	} else {
 		// Using mplayer own window
@@ -4255,6 +4371,7 @@ void Core::changeRotate(int r) {
 				case MediaSettings::Clockwise: proc->changeVF("rotate", false, MediaSettings::Clockwise); break;
 				case MediaSettings::Counterclockwise: proc->changeVF("rotate", false, MediaSettings::Counterclockwise); break;
 				case MediaSettings::Counterclockwise_flip: proc->changeVF("rotate", false, MediaSettings::Counterclockwise_flip); break;
+				case MediaSettings::Rotate_180: proc->changeVF("rotate", false, MediaSettings::Rotate_180); break;
 			}
 			mset.rotate = r;
 			// New filter
@@ -4263,6 +4380,7 @@ void Core::changeRotate(int r) {
 				case MediaSettings::Clockwise: proc->changeVF("rotate", true, MediaSettings::Clockwise); break;
 				case MediaSettings::Counterclockwise: proc->changeVF("rotate", true, MediaSettings::Counterclockwise); break;
 				case MediaSettings::Counterclockwise_flip: proc->changeVF("rotate", true, MediaSettings::Counterclockwise_flip); break;
+				case MediaSettings::Rotate_180: proc->changeVF("rotate", true, MediaSettings::Rotate_180); break;
 			}
 		}
 	}
@@ -5057,7 +5175,7 @@ QString Core::pausing_prefix() {
 
 #ifdef MPLAYER2_SUPPORT
 	if (MplayerVersion::isMplayer2()) {
-		return QString::null;
+		return QString();
 	}
 	else
 #endif

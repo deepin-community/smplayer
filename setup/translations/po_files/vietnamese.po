@@ -4,12 +4,12 @@
 # 
 # Translators:
 # Nguyen Thanh Tai <thanhtai2009@outlook.com>, 2015
-# Thanh Phu <thanhphu@soongsil.ac.kr>, 2017
+# Thanh Phu, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: smplayer\n"
-"PO-Revision-Date: 2017-09-21 04:58+0000\n"
-"Last-Translator: Thanh Phu <thanhphu@soongsil.ac.kr>\n"
+"PO-Revision-Date: 2021-07-19 14:21+0000\n"
+"Last-Translator: Ricardo Villalba <ricardo@smplayer.info>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/rvm/smplayer/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,6 +131,14 @@ msgstr "Những bộ mã tuỳ chọn cho MPlayer. (Yêu cầu có kết nối I
 # Section_MPV_Desc
 msgid "A feature-rich fork of MPlayer && MPlayer2"
 msgstr "Một bản sao đa tính năng của MPlayer && MPlayer2"
+
+# Section_YTDL
+msgid "Youtube support (download required)"
+msgstr ""
+
+# Section_YTDL_Desc
+msgid "Provides the possibility to play Youtube videos."
+msgstr ""
 
 # Section_MEncoder_Desc
 msgid ""
@@ -355,6 +363,24 @@ msgstr "Không thể tải xuống youtube-dl: '$R0'."
 msgid "Checking for youtube-dl updates..."
 msgstr "Đang tìm cập nhật cho youtube-dl"
 
+# YTDL_Error_Msg1
+msgid "Warning: youtube-dl exited abnormally with exit code: $YTDL_Exit_code"
+msgstr ""
+
+# YTDL_Error_Msg2
+msgid "Visual C++ 2010 Runtime (x86) is required for youtube-dl."
+msgstr ""
+
+# SMTube_Incompatible_Msg1
+msgid ""
+"The current SMTube installation is incompatible with this version of "
+"SMPlayer."
+msgstr ""
+
+# SMTube_Incompatible_Msg2
+msgid "Please upgrade to a newer version of SMTube."
+msgstr ""
+
 # Info_Cleaning_Fontconfig
 msgid "Cleaning fontconfig cache..."
 msgstr "Đang xoá cache của fontconfig..."
@@ -365,4 +391,4 @@ msgstr "Đang xoá thiết lập của SMPlayer..."
 
 # Section_MPlayerCodecs_Desc
 msgid "Binary codecs are not supported in this version."
-msgstr "Các bộ mã nhị phân chưa được hỗ trợ trong phiên bản này."
+msgstr ""

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ class FavoriteEditor : public QDialog, public Ui::FavoriteEditor
 	Q_OBJECT
 
 public:
-	FavoriteEditor( QWidget* parent = 0, Qt::WindowFlags f = 0 );
+	FavoriteEditor( QWidget* parent = 0, Qt::WindowFlags f = QFlag(0) );
 	~FavoriteEditor();
 
 	void setCaption(const QString & caption);
@@ -42,7 +42,7 @@ public:
 	FavoriteList data();
 
 	void setDialogIcon( const QPixmap & icon );
-	const QPixmap * dialogIcon() const;
+	QPixmap dialogIcon() const;
 
 	//! The editor will give a filename to subentries (submenus), using this path.
 	void setStorePath(const QString & path) { store_path = path; }

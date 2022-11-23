@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# miroslav <miroslav031@yandex.com>, 2014-2015
-# Slobodan Simić <slsimic@gmail.com>, 2017
+# 3f60af792528cbe6de7b1c9693739fa5_735b236 <8debdce912cec02de52c016740e17681_12400>, 2014-2015
+# Slobodan Simić <slsimic@gmail.com>, 2017,2020
 # Slobodan Simić <slsimic@gmail.com>, 2014
 # Slobodan Simić <slsimic@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: smplayer\n"
-"PO-Revision-Date: 2017-09-23 19:35+0000\n"
-"Last-Translator: Slobodan Simić <slsimic@gmail.com>\n"
+"PO-Revision-Date: 2021-07-19 14:21+0000\n"
+"Last-Translator: Ricardo Villalba <ricardo@smplayer.info>\n"
 "Language-Team: Serbian (http://www.transifex.com/rvm/smplayer/language/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,6 +133,14 @@ msgstr "Опциони кодеци за МПлејер. (Интернет ве�
 # Section_MPV_Desc
 msgid "A feature-rich fork of MPlayer && MPlayer2"
 msgstr "Могућностима богат наследник МПлејера2"
+
+# Section_YTDL
+msgid "Youtube support (download required)"
+msgstr ""
+
+# Section_YTDL_Desc
+msgid "Provides the possibility to play Youtube videos."
+msgstr ""
 
 # Section_MEncoder_Desc
 msgid ""
@@ -272,7 +280,7 @@ msgstr "СМПлејер инсталација није пронађена."
 
 # Uninstaller_64bitOnly
 msgid "This installation can only be uninstalled on 64-bit Windows."
-msgstr "Ова инсталација може бити деинсталирана само на 64-битном Windowsu."
+msgstr "Ова инсталација може бити деинсталирана само на 64-битном Виндоузу."
 
 # Application_Description
 msgid ""
@@ -357,6 +365,24 @@ msgstr "Неуспешно преузимање Youtube-DL: '$R0'."
 msgid "Checking for youtube-dl updates..."
 msgstr "Проверавам ажурирања за YouTube-DL..."
 
+# YTDL_Error_Msg1
+msgid "Warning: youtube-dl exited abnormally with exit code: $YTDL_Exit_code"
+msgstr ""
+
+# YTDL_Error_Msg2
+msgid "Visual C++ 2010 Runtime (x86) is required for youtube-dl."
+msgstr ""
+
+# SMTube_Incompatible_Msg1
+msgid ""
+"The current SMTube installation is incompatible with this version of "
+"SMPlayer."
+msgstr ""
+
+# SMTube_Incompatible_Msg2
+msgid "Please upgrade to a newer version of SMTube."
+msgstr ""
+
 # Info_Cleaning_Fontconfig
 msgid "Cleaning fontconfig cache..."
 msgstr "Чистим кеш за фонтове..."
@@ -367,4 +393,4 @@ msgstr "Чистим поставке СМПлејера..."
 
 # Section_MPlayerCodecs_Desc
 msgid "Binary codecs are not supported in this version."
-msgstr "Бинарни кодеци нису подржани у овој верзији."
+msgstr ""

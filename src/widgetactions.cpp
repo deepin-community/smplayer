@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -229,7 +229,7 @@ void TimeLabelAction::updateText() {
 	QString ct = Helper::formatTime(current_time);
 	QString tt = Helper::formatTime(total_time);
 	QString rt;
-	if (total_time < 1) rt = "00:00:00"; else rt = "-" + Helper::formatTime(total_time - current_time);
+	if (total_time < 1) rt = "00:00:00"; else rt = Helper::formatTime(total_time - current_time);
 
 	switch (label_type) {
 		case CurrentTime: setText(ct); break;

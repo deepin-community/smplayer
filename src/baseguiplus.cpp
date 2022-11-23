@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@
 #include <QCloseEvent>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QTime>
 
 #ifdef PLAYLIST_DOCKABLE
 #include <QDockWidget>
@@ -46,7 +47,6 @@
 #endif
 
 #ifdef SCREENS_SUPPORT
-#include <QVBoxLayout>
 #include <QLabel>
 #include "mplayerwindow.h"
 #include "infowindow.h"
@@ -55,7 +55,11 @@
 #include <QScreen>
 #include <QWindow>
 #endif
+
+#ifdef DETACH_VIDEO_LAYER
+#include <QVBoxLayout>
 #endif
+#endif // SCREENS_SUPPORT
 
 #ifdef GLOBALSHORTCUTS
 #include "globalshortcuts/globalshortcuts.h"
@@ -96,6 +100,7 @@ BaseGuiPlus::BaseGuiPlus( QWidget * parent, Qt::WindowFlags flags)
 	mainwindow_pos = pos();
 
 	quitAct = new MyAction(QKeySequence("Ctrl+Q"), this, "quit");
+	quitAct->setMenuRole(QAction::QuitRole);
 	connect( quitAct, SIGNAL(triggered()), this, SLOT(quit()) );
 
 #ifdef USE_SYSTRAY
@@ -158,7 +163,7 @@ BaseGuiPlus::BaseGuiPlus( QWidget * parent, Qt::WindowFlags flags)
                 showPlaylistAct, SLOT(setChecked(bool)) );
 	}
 
-#ifdef DETACH_VIDEO_OPTION
+#if defined(DETACH_VIDEO_LAYER) && defined(DETACH_VIDEO_OPTION)
 	detachVideoAct = new MyAction(this, "detach_video");
 	detachVideoAct->setCheckable(true);
 	connect(detachVideoAct, SIGNAL(toggled(bool)), this, SLOT(detachVideo(bool)));
@@ -268,7 +273,7 @@ void BaseGuiPlus::populateMainMenu() {
 		#endif
 	}
 
-#ifdef DETACH_VIDEO_OPTION
+#if defined(DETACH_VIDEO_LAYER) && defined(DETACH_VIDEO_OPTION)
 	optionsMenu->addAction(detachVideoAct);
 #endif
 
@@ -373,7 +378,7 @@ void BaseGuiPlus::retranslateStrings() {
 	updateShowAllAct();
 #endif
 
-#ifdef DETACH_VIDEO_OPTION
+#if defined(DETACH_VIDEO_LAYER) && defined(DETACH_VIDEO_OPTION)
 	detachVideoAct->change("Detach video");
 #endif
 
@@ -632,7 +637,7 @@ void BaseGuiPlus::aboutToEnterFullscreen() {
 		if ((playlist_screen == mainwindow_screen) /* || 
 	        (!fullscreen_playlist_was_floating) */ ) 
 		{
-			#if QT_VERSION < 0x050000 || !defined(Q_OS_LINUX)
+			#if QT_VERSION < 0x050000 || !defined(OS_UNIX_NOT_MAC)
 			playlistdock->setFloating(true);
 			#endif
 			playlistdock->hide();
@@ -1015,20 +1020,31 @@ void BaseGuiPlus::updateSendToScreen() {
 
 	sendToScreen_menu->clear();
 	sendToScreen_menu->addActions(sendToScreenGroup->actions());
-	
+
+#ifdef DETACH_VIDEO_LAYER
 	if (n_screens == 1 && isVideoDetached()) detachVideo(false);
+#endif
 }
 
 void BaseGuiPlus::sendVideoToScreen(int screen) {
 	qDebug() << "BaseGuiPlus::sendVideoToScreen:" << screen;
 
-#if QT_VERSION >= 0x050000
+#ifndef DETACH_VIDEO_LAYER
+	if (core->displayScreen() == screen) return;
+
+	mplayerwindow->setVisible(screen == 0);
+	detached_label->setVisible(screen != 0);
+	fullscreenAct->setEnabled(screen == 0);
+	core->setDisplayScreen(screen);
+	core->restart();
+#else
+	#if QT_VERSION >= 0x050000
 	QList<QScreen *> screen_list = qApp->screens();
 	int n_screens = screen_list.count();
-#else
+	#else
 	QDesktopWidget * dw = qApp->desktop();
 	int n_screens = dw->screenCount();
-#endif
+	#endif
 
 	if (screen < n_screens) {
 		#if QT_VERSION >= 0x050000
@@ -1043,7 +1059,7 @@ void BaseGuiPlus::sendVideoToScreen(int screen) {
 		//is_primary_screen = false;
 		if (is_primary_screen) {
 			mplayerwindow->showNormal();
-			#if QT_VERSION >= 0x050000 && defined(Q_OS_LINUX)
+			#if QT_VERSION >= 0x050000 && defined(OS_UNIX_NOT_MAC)
 			qApp->processEvents();
 			#endif
 			detachVideo(false);
@@ -1062,10 +1078,14 @@ void BaseGuiPlus::sendVideoToScreen(int screen) {
 		// Error
 		qWarning() << "BaseGuiPlus::sendVideoToScreen: screen" << screen << "is not valid";
 	}
+#endif
 }
+#endif // SCREENS_SUPPORT
 
+#ifdef DETACH_VIDEO_LAYER
 bool BaseGuiPlus::isVideoDetached() {
-	return (mplayerwindow->parent() == 0);
+	//return (mplayerwindow->parent() == 0);
+	return (mplayerwindow->windowFlags() & Qt::Window);
 }
 
 void BaseGuiPlus::detachVideo(bool detach) {
@@ -1077,7 +1097,8 @@ void BaseGuiPlus::detachVideo(bool detach) {
 			fullscreenAct->setEnabled(false);
 
 			panel->layout()->removeWidget(mplayerwindow);
-			mplayerwindow->setParent(0);
+			//mplayerwindow->setParent(0);
+			mplayerwindow->setWindowFlags(Qt::Window);
 			mplayerwindow->setWindowTitle(tr("SMPlayer external screen output"));
 
 			detached_label->show();
@@ -1089,9 +1110,10 @@ void BaseGuiPlus::detachVideo(bool detach) {
 
 			detached_label->hide();
 
-			mplayerwindow->setWindowTitle(QString::null);
-			mplayerwindow->setParent(panel);
-			#if QT_VERSION >= 0x050000 && defined(Q_OS_LINUX)
+			mplayerwindow->setWindowTitle(QString());
+			//mplayerwindow->setParent(panel);
+			mplayerwindow->setWindowFlags(Qt::Widget);
+			#if QT_VERSION >= 0x050000 && defined(OS_UNIX_NOT_MAC)
 			qApp->processEvents();
 			#endif
 			panel->layout()->addWidget(mplayerwindow);
@@ -1132,7 +1154,12 @@ void BaseGuiPlus::updateSendAudioMenu() {
 	sendAudio_menu->addAction(a);
 
 #if USE_PULSEAUDIO_DEVICES
-	addListToSendAudioMenu( DeviceInfo::paDevices(), "pulse");
+	#if USE_MPV_PULSE_DEVICES
+	if (PlayerID::player(pref->mplayer_bin) == PlayerID::MPLAYER)
+	#endif
+	{
+		addListToSendAudioMenu( DeviceInfo::paDevices(), "pulse");
+	}
 #endif
 
 #if USE_ALSA_DEVICES
@@ -1153,8 +1180,16 @@ void BaseGuiPlus::updateSendAudioMenu() {
 		addListToSendAudioMenu( DeviceInfo::mpvAlsaDevices(), "alsa");
 		#endif
 
+		#if USE_MPV_PULSE_DEVICES
+		addListToSendAudioMenu( DeviceInfo::mpvPulseDevices(), "pulse");
+		#endif
+
 		#if USE_MPV_WASAPI_DEVICES
 		addListToSendAudioMenu( DeviceInfo::mpvWasapiDevices(), "wasapi");
+		#endif
+
+		#if USE_MPV_COREAUDIO_DEVICES
+		addListToSendAudioMenu( DeviceInfo::mpvCoreaudioDevices(), "coreaudio");
 		#endif
 	}
 #endif

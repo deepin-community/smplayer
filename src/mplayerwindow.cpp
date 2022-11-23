@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include "global.h"
 #include "desktopinfo.h"
 #include "colorutils.h"
+#include "screenhelper.h"
 
 #ifndef MINILIB
 #include "images.h"
@@ -47,140 +48,18 @@
 #include <QTapGesture>
 #endif
 
-Screen::Screen(QWidget* parent, Qt::WindowFlags f)
-	: QWidget(parent, f )
-	, check_mouse_timer(0)
-	, mouse_last_position(QPoint(0,0))
-	, autohide_cursor(false)
-	, autohide_interval(0)
-{
-	setMouseTracking(true);
-	setFocusPolicy( Qt::NoFocus );
-	setMinimumSize( QSize(0,0) );
-
-	check_mouse_timer = new QTimer(this);
-	connect( check_mouse_timer, SIGNAL(timeout()), this, SLOT(checkMousePos()) );
-
-	setAutoHideInterval(1000);
-	setAutoHideCursor(false);
-}
-
-Screen::~Screen() {
-}
-
-void Screen::setAutoHideCursor(bool b) {
-	qDebug("Screen::setAutoHideCursor: %d", b);
-
-	autohide_cursor = b;
-	if (autohide_cursor) {
-		check_mouse_timer->setInterval(autohide_interval);
-		check_mouse_timer->start();
-	} else {
-		check_mouse_timer->stop();
-	}
-}
-
-void Screen::checkMousePos() {
-	//qDebug("Screen::checkMousePos");
-
-	if (!autohide_cursor) {
-		setCursor(QCursor(Qt::ArrowCursor));
-		return;
-	}
-
-	QPoint pos = mapFromGlobal(QCursor::pos());
-
-	//qDebug("Screen::checkMousePos: x: %d, y: %d", pos.x(), pos.y());
-
-	if (mouse_last_position != pos) {
-		setCursor(QCursor(Qt::ArrowCursor));
-	} else {
-		setCursor(QCursor(Qt::BlankCursor));
-	}
-	mouse_last_position = pos;
-}
-
-void Screen::mouseMoveEvent( QMouseEvent * e ) {
-	//qDebug("Screen::mouseMoveEvent");
-	emit mouseMoved(e->pos());
-
-	if (cursor().shape() != Qt::ArrowCursor) {
-		//qDebug(" showing mouse cursor" );
-		setCursor(QCursor(Qt::ArrowCursor));
-	}
-}
-
-void Screen::playingStarted() {
-	qDebug("Screen::playingStarted");
-	setAutoHideCursor(true);
-}
-
-void Screen::playingStopped() {
-	qDebug("Screen::playingStopped");
-	setAutoHideCursor(false);
-
-#ifdef Q_OS_WIN
-	// For an unknown reason the cursor remains in the wait state after stop
-	// this sets it to normal
-	unsetCursor();
+#if defined(USE_SHM) || defined(USE_COREVIDEO_BUFFER)
+#include "videolayerrender.h"
 #endif
-}
-
-/* ---------------------------------------------------------------------- */
-
-MplayerLayer::MplayerLayer(QWidget* parent, Qt::WindowFlags f)
-	: Screen(parent, f)
-#if REPAINT_BACKGROUND_OPTION
-	, repaint_background(false)
-#endif
-	, playing(false)
-{
-}
-
-MplayerLayer::~MplayerLayer() {
-}
-
-#if REPAINT_BACKGROUND_OPTION
-void MplayerLayer::setRepaintBackground(bool b) {
-	qDebug("MplayerLayer::setRepaintBackground: %d", b);
-	repaint_background = b;
-}
-#endif
-
-void MplayerLayer::playingStarted() {
-	qDebug("MplayerLayer::playingStarted");
-//	repaint();
-	playing = true;
-
-#ifndef Q_OS_WIN
-	if (!repaint_background) setUpdatesEnabled(false);
-#endif
-
-	Screen::playingStarted();
-}
-
-void MplayerLayer::playingStopped() {
-	qDebug("MplayerLayer::playingStopped");
-	playing = false;
-
-#ifndef Q_OS_WIN
-	setUpdatesEnabled(true);
-#endif
-
-//	repaint();
-	Screen::playingStopped();
-}
-
-/* ---------------------------------------------------------------------- */
 
 MplayerWindow::MplayerWindow(QWidget* parent, Qt::WindowFlags f)
-	: Screen(parent, f)
+	: QWidget(parent, f)
 	, video_width(0)
 	, video_height(0)
 	, aspect((double) 4/3)
 	, monitoraspect(0)
-	, mplayerlayer(0)
 	, logo(0)
+	, videolayer(0)
 	, offset_x(0)
 	, offset_y(0)
 	, zoom_factor(1.0)
@@ -203,36 +82,42 @@ MplayerWindow::MplayerWindow(QWidget* parent, Qt::WindowFlags f)
     , start_drag(QPoint(0,0))
     , mouse_drag_tracking(false)
 {
-	mplayerlayer = new MplayerLayer(this);
-	mplayerlayer->setObjectName("mplayerlayer");
+	helper = new ScreenHelper(this);
+	connect(helper, SIGNAL(mouseMoved(QPoint)), this, SIGNAL(mouseMoved(QPoint)));
 
-	logo = new QLabel( mplayerlayer );
+#if defined(USE_SHM) || defined(USE_COREVIDEO_BUFFER)
+	videolayer = new VideoLayerRender(this);
+#else
+	videolayer = new VideoLayer(this);
+#endif
+
+	logo = new QLabel( this );
 	logo->setObjectName("mplayerwindowlogo");
 
 	// Set colors
 #ifdef CHANGE_WIDGET_COLOR
 	setAutoFillBackground(true);
 	ColorUtils::setBackgroundColor( this, QColor(0,0,0) );
-	mplayerlayer->setAutoFillBackground(true);
+	videolayer->setAutoFillBackground(true);
 	logo->setAutoFillBackground(true);
 	ColorUtils::setBackgroundColor( logo, QColor(0,0,0) );
 #else
 	setStyleSheet("MplayerWindow { background-color: black;}");
-	mplayerlayer->setStyleSheet("background-color: black;");
+	videolayer->setStyleSheet("background-color: black;");
 #endif
 
-	QVBoxLayout * mplayerlayerLayout = new QVBoxLayout( mplayerlayer );
-	mplayerlayerLayout->addWidget( logo, 0, Qt::AlignHCenter | Qt::AlignVCenter );
+	QVBoxLayout * videolayerLayout = new QVBoxLayout( this );
+	videolayerLayout->addWidget( logo, 0, Qt::AlignHCenter | Qt::AlignVCenter );
 
 	setSizePolicy( QSizePolicy::Expanding , QSizePolicy::Expanding );
 	setFocusPolicy( Qt::StrongFocus );
-	
+
 //#ifdef HANDLE_GESTURES
 	grabGesture(Qt::TapGesture);
 //#endif
 
 	installEventFilter(this);
-	mplayerlayer->installEventFilter(this);
+	//videolayer->installEventFilter(this);
 	//logo->installEventFilter(this);
 
 #if DELAYED_RESIZE
@@ -268,7 +153,7 @@ void MplayerWindow::setCornerWidget(QWidget * w) {
 #if USE_COLORKEY
 void MplayerWindow::setColorKey( QColor c ) {
 	#ifdef CHANGE_WIDGET_COLOR
-	ColorUtils::setBackgroundColor( mplayerlayer, c );
+	ColorUtils::setBackgroundColor( videolayer, c );
 	#endif
 }
 #endif
@@ -280,11 +165,32 @@ void MplayerWindow::retranslateStrings() {
 #endif
 }
 
+void MplayerWindow::playingStarted() {
+	helper->playingStarted();
+	videolayer->playingStarted();
+}
+
+void MplayerWindow::playingStopped() {
+	helper->playingStopped();
+	videolayer->playingStopped();
+}
+
+void MplayerWindow::gotVO(QString vo) {
+	videolayer->gotVO(vo);
+}
+
+#if REPAINT_BACKGROUND_OPTION
+void MplayerWindow::setRepaintBackground(bool b) {
+	repaint_background = b;
+	videolayer->setRepaintBackground(b);
+}
+#endif
+
 void MplayerWindow::setLogoVisible( bool b) {
 	qDebug() << "MplayerWindow::setLogoVisible:" << b;
 
 #if REPAINT_BACKGROUND_OPTION
-	if (b) mplayerlayer->setUpdatesEnabled(true);
+	if (b) videolayer->setUpdatesEnabled(true);
 #endif
 
 	if (corner_widget) {
@@ -329,8 +235,8 @@ void MplayerWindow::setResolution( int w, int h)
 {
     video_width = w;
     video_height = h;
-    
-    //mplayerlayer->move(1,1);
+
+    //videolayer->move(1,1);
     updateVideoWindow();
 }
 
@@ -413,8 +319,8 @@ void MplayerWindow::updateVideoWindow()
 	    }
 	}
 
-    mplayerlayer->move(x,y);
-    mplayerlayer->resize(w, h);
+    videolayer->move(x,y);
+    videolayer->resize(w, h);
 
 	orig_x = x;
 	orig_y = y;
@@ -439,7 +345,7 @@ void MplayerWindow::mouseReleaseEvent( QMouseEvent * e) {
 		}
 	}
 	else
-	if (e->button() == Qt::MidButton) {
+	if (e->button() == Qt::MiddleButton) {
 		e->accept();
 		emit middleClicked();
 	}
@@ -478,17 +384,17 @@ void MplayerWindow::mouseDoubleClickEvent( QMouseEvent * e ) {
 }
 
 void MplayerWindow::wheelEvent( QWheelEvent * e ) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0))
+	qDebug("MplayerWindow::wheelEvent: delta: %d", e->angleDelta().y());
+	e->accept();
+	if (e->angleDelta().y() >= 0) emit wheelUp(); else emit wheelDown();
+#else
 	qDebug("MplayerWindow::wheelEvent: delta: %d", e->delta());
 	e->accept();
-
 	if (e->orientation() == Qt::Vertical) {
-	    if (e->delta() >= 0)
-	        emit wheelUp();
-	    else
-	        emit wheelDown();
-	} else {
-		qDebug("MplayerWindow::wheelEvent: horizontal event received, doing nothing");
+		if (e->delta() >= 0) emit wheelUp(); else emit wheelDown();
 	}
+#endif
 }
 
 bool MplayerWindow::eventFilter( QObject * object, QEvent * event ) {
@@ -587,14 +493,14 @@ QSize MplayerWindow::minimumSizeHint () const {
 
 void MplayerWindow::setOffsetX( int d) {
 	offset_x = d;
-	mplayerlayer->move( orig_x + offset_x, mplayerlayer->y() );
+	videolayer->move( orig_x + offset_x, videolayer->y() );
 }
 
 int MplayerWindow::offsetX() { return offset_x; }
 
 void MplayerWindow::setOffsetY( int d) {
 	offset_y = d;
-	mplayerlayer->move( mplayerlayer->x(), orig_y + offset_y );
+	videolayer->move( videolayer->x(), orig_y + offset_y );
 }
 
 int MplayerWindow::offsetY() { return offset_y; }
@@ -618,36 +524,36 @@ void MplayerWindow::setZoom( double d) {
 		y = (height() -h) / 2;
 	}
 
-	mplayerlayer->move(x,y);
-	mplayerlayer->resize(w,h);
+	videolayer->move(x,y);
+	videolayer->resize(w,h);
 }
 
 double MplayerWindow::zoom() { return zoom_factor; }
 
 void MplayerWindow::moveLayer( int offset_x, int offset_y ) {
-	int x = mplayerlayer->x();
-	int y = mplayerlayer->y();
+	int x = videolayer->x();
+	int y = videolayer->y();
 
-	mplayerlayer->move( x + offset_x, y + offset_y );
+	videolayer->move( x + offset_x, y + offset_y );
 }
 
 void MplayerWindow::moveLeft() {
-	if ((allow_video_movement) || (mplayerlayer->x()+mplayerlayer->width() > width() ))
+	if ((allow_video_movement) || (videolayer->x()+videolayer->width() > width() ))
 		moveLayer( -16, 0 );
 }
 
 void MplayerWindow::moveRight() {
-	if ((allow_video_movement) || ( mplayerlayer->x() < 0 ))
+	if ((allow_video_movement) || ( videolayer->x() < 0 ))
 		moveLayer( +16, 0 );
 }
 
 void MplayerWindow::moveUp() {
-	if ((allow_video_movement) || (mplayerlayer->y()+mplayerlayer->height() > height() ))
+	if ((allow_video_movement) || (videolayer->y()+videolayer->height() > height() ))
 		moveLayer( 0, -16 );
 }
 
 void MplayerWindow::moveDown() {
-	if ((allow_video_movement) || ( mplayerlayer->y() < 0 ))
+	if ((allow_video_movement) || ( videolayer->y() < 0 ))
 		moveLayer( 0, +16 );
 }
 
@@ -666,7 +572,7 @@ void MplayerWindow::changeEvent(QEvent *e) {
 	if (e->type() == QEvent::LanguageChange) {
 		retranslateStrings();
 	} else {
-		Screen::changeEvent(e);
+		QWidget::changeEvent(e);
 	}
 }
 

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ class DefaultGui : public BaseGuiPlus
 	Q_OBJECT
 
 public:
-	DefaultGui( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+	DefaultGui( QWidget* parent = 0, Qt::WindowFlags flags = QFlag(0) );
 	~DefaultGui();
 
 #if USE_MINIMUMSIZE
@@ -154,6 +154,10 @@ protected:
 	MyAction * viewFormatInfoAct;
 	MyAction * viewBitrateInfoAct;
 	MyAction * useMillisecondsAct;
+
+	QActionGroup * timeGroup;
+	MyAction * displayTotalTimeAct;
+	MyAction * displayRemainingTimeAct;
 
 #if USE_CONFIGURABLE_TOOLBARS
 	MyAction * editToolbar1Act;

@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Sérgio Marques <smarquespt@gmail.com>, 2014-2016
+# Sérgio Marques <smarquespt@gmail.com>, 2014-2016,2021
+# Sérgio Marques <smarquespt@gmail.com>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: smplayer\n"
-"PO-Revision-Date: 2016-11-09 15:55+0000\n"
+"PO-Revision-Date: 2021-07-19 21:38+0000\n"
 "Last-Translator: Sérgio Marques <smarquespt@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/rvm/smplayer/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -130,6 +131,14 @@ msgstr "Codificadores opcionais para o MPlayer. (Precisa de uma ligação à Int
 # Section_MPV_Desc
 msgid "A feature-rich fork of MPlayer && MPlayer2"
 msgstr "Um reprodutor baseado no MPlayer e no MPlayer2"
+
+# Section_YTDL
+msgid "Youtube support (download required)"
+msgstr "Suporte ao Youtube (requer descarga)"
+
+# Section_YTDL_Desc
+msgid "Provides the possibility to play Youtube videos."
+msgstr "Disponibiliza a possibilidade de reproduzir vídeos do Youtube."
 
 # Section_MEncoder_Desc
 msgid ""
@@ -354,6 +363,24 @@ msgstr "Falha ao descarregar a youtube-dl: '$R0'."
 msgid "Checking for youtube-dl updates..."
 msgstr "A procurar atualizações para youtube-dl..."
 
+# YTDL_Error_Msg1
+msgid "Warning: youtube-dl exited abnormally with exit code: $YTDL_Exit_code"
+msgstr "Aviso: youtube-dl terminou com o seguinte erro: $YTDL_Exit_code"
+
+# YTDL_Error_Msg2
+msgid "Visual C++ 2010 Runtime (x86) is required for youtube-dl."
+msgstr "Necessita de Visual C++ 2010 Runtime (x86) para youtube-dl."
+
+# SMTube_Incompatible_Msg1
+msgid ""
+"The current SMTube installation is incompatible with this version of "
+"SMPlayer."
+msgstr "A atual instalação SMTube não é compatível com esta versão do SMPlayer."
+
+# SMTube_Incompatible_Msg2
+msgid "Please upgrade to a newer version of SMTube."
+msgstr "Deve atualizar SMTube para uma versão mais recente."
+
 # Info_Cleaning_Fontconfig
 msgid "Cleaning fontconfig cache..."
 msgstr "A limpar cache de fontes..."
@@ -364,4 +391,4 @@ msgstr "A limpar definições do SMPlayer..."
 
 # Section_MPlayerCodecs_Desc
 msgid "Binary codecs are not supported in this version."
-msgstr "Esta versão não tem suporte a codificadores binários."
+msgstr "Codificadores binários não são permitidos nesta versão."

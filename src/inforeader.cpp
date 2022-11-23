@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include "preferences.h"
 #include "playerprocess.h"
 #include "paths.h"
+#include "filehash.h"
 #include <QFileInfo>
 #include <QDateTime>
 #include <QSettings>
@@ -34,7 +35,7 @@
 #include "inforeadermplayer.h"
 #endif
 
-#define INFOREADER_SAVE_VERSION 2
+#define INFOREADER_SAVE_VERSION 4
 
 using namespace Global;
 
@@ -72,12 +73,14 @@ void InfoReader::setPlayerBin(const QString & bin) {
 	if (fi.exists() && fi.isExecutable() && !fi.isDir()) {
 		// mplayerbin = fi.absoluteFilePath();
 	}
-#ifdef Q_OS_LINUX
+#ifdef OS_UNIX_NOT_MAC
+	/*
 	else {
 		QString fplayer = Helper::findExecutable(mplayerbin);
 		qDebug() << "InfoReader::setPlayerBin: fplayer:" << fplayer;
 		if (!fplayer.isEmpty()) mplayerbin = fplayer;
 	}
+	*/
 #endif
 	qDebug() << "InfoReader::setPlayerBin: mplayerbin:" << mplayerbin;
 }
@@ -88,11 +91,13 @@ void InfoReader::getInfo() {
 
 	QString version_group = "version_" + QString::number(INFOREADER_SAVE_VERSION);
 
-	QString sname = mplayerbin;
-	sname = sname.replace("/", "_").replace("\\", "_").replace(".", "_").replace(":", "_");
+	//QString sname = mplayerbin;
+	//sname = sname.replace("/", "_").replace("\\", "_").replace(".", "_").replace(":", "_");
+	QString sname = QFileInfo(mplayerbin).fileName();
 	QFileInfo fi(mplayerbin);
 	if (fi.exists()) {
-		sname += "_" + QString::number(fi.size());
+		//sname += "_" + QString::number(fi.size());
+		sname += "_" + FileHash::calculateHash(mplayerbin);
 
 		qDebug() << "InfoReader::getInfo: sname:" << sname;
 

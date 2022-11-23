@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -194,6 +194,16 @@ void DefaultGui::createActions() {
 	useMillisecondsAct = new MyAction( this, "use_milliseconds" );
 	useMillisecondsAct->setCheckable( true );
 
+	displayTotalTimeAct = new MyAction( this, "statusbar_total_time" );
+	displayTotalTimeAct->setCheckable( true );
+
+	displayRemainingTimeAct = new MyAction( this, "statusbar_remaining_time" );
+	displayRemainingTimeAct->setCheckable( true );
+
+	timeGroup = new QActionGroup(this);
+	timeGroup->addAction(displayTotalTimeAct);
+	timeGroup->addAction(displayRemainingTimeAct);
+
 #if USE_CONFIGURABLE_TOOLBARS
 	editToolbar1Act = new MyAction( this, "edit_main_toolbar" );
 	editControl1Act = new MyAction( this, "edit_control1" );
@@ -251,6 +261,8 @@ void DefaultGui::createMenus() {
 	statusbar_menu->addAction(viewFormatInfoAct);
 	statusbar_menu->addAction(viewBitrateInfoAct);
 	statusbar_menu->addAction(viewFrameCounterAct);
+	statusbar_menu->addSeparator()->setText(tr("Time format"));
+	statusbar_menu->addActions(timeGroup->actions());
 	statusbar_menu->addAction(useMillisecondsAct);
 
 	populateMainMenu();
@@ -706,6 +718,9 @@ void DefaultGui::retranslateStrings() {
 	viewBitrateInfoAct->change( Images::icon("view_bitrate_info"), tr("&Bitrate info") );
 	useMillisecondsAct->change( Images::icon("use_milliseconds"), tr("&Show the current time with milliseconds") );
 
+	displayTotalTimeAct->change( Images::icon("statusbar_total_time"), tr("Display &total time") );
+	displayRemainingTimeAct->change( Images::icon("status_remaining_time"), tr("Display &remaining time") );
+
 #if USE_CONFIGURABLE_TOOLBARS
 	editToolbar1Act->change( tr("Edit main &toolbar") );
 	editControl1Act->change( tr("Edit &control bar") );
@@ -725,13 +740,12 @@ void DefaultGui::displayTime(double sec) {
 	static int last_second = 0;
 	QString time;
 
-	if (useMillisecondsAct->isChecked()) {
-		time = Helper::formatTime2(sec) + " / " + Helper::formatTime( (int) core->mdat.duration );
-	} else {
+	if (!useMillisecondsAct->isChecked()) {
 		if (qFloor(sec) == last_second) return; // Update only once per second
 		last_second = qFloor(sec);
-		time = Helper::formatTime( (int) sec ) + " / " + Helper::formatTime( (int) core->mdat.duration );
 	}
+
+	time = Helper::formatTimes(sec, core->mdat.duration, useMillisecondsAct->isChecked(), displayRemainingTimeAct->isChecked());
 	time_display->setText(time);
 }
 
@@ -769,7 +783,7 @@ void DefaultGui::displayVideoInfo(int width, int height, double fps) {
 }
 
 void DefaultGui::displayBitrateInfo(int vbitrate, int abitrate) {
-	bitrate_info_display->setText(tr("V: %1 kbps A: %2 kbps").arg(vbitrate/1000).arg(abitrate/1000));
+	bitrate_info_display->setText(tr("V: %1 kbps A: %2 kbps").arg(qRound(vbitrate/1000.0)).arg(qRound(abitrate/1000.0)));
 }
 
 void DefaultGui::updateWidgets() {
@@ -978,6 +992,7 @@ void DefaultGui::saveConfig() {
 	set->setValue("format_info", viewFormatInfoAct->isChecked());
 	set->setValue("bitrate_info", viewBitrateInfoAct->isChecked());
 	set->setValue("use_milliseconds", useMillisecondsAct->isChecked());
+	set->setValue("display_remaining_time", displayRemainingTimeAct->isChecked());
 
 	set->setValue("fullscreen_toolbar1_was_visible", fullscreen_toolbar1_was_visible);
 	set->setValue("compact_toolbar1_was_visible", compact_toolbar1_was_visible);
@@ -1027,6 +1042,8 @@ void DefaultGui::loadConfig() {
 	viewFormatInfoAct->setChecked(set->value("format_info", false).toBool());
 	viewBitrateInfoAct->setChecked(set->value("bitrate_info", false).toBool());
 	useMillisecondsAct->setChecked(set->value("use_milliseconds", false).toBool());
+	displayRemainingTimeAct->setChecked(set->value("display_remaining_time", false).toBool());
+	displayTotalTimeAct->setChecked(!displayRemainingTimeAct->isChecked());
 
 	fullscreen_toolbar1_was_visible = set->value("fullscreen_toolbar1_was_visible", fullscreen_toolbar1_was_visible).toBool();
 	compact_toolbar1_was_visible = set->value("compact_toolbar1_was_visible", compact_toolbar1_was_visible).toBool();

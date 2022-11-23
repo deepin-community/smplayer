@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ PrefPerformance::PrefPerformance(QWidget * parent, Qt::WindowFlags f)
 	hwdec_combo->addItem(tr("None"), "no");
 	hwdec_combo->addItem(tr("Auto"), "auto");
 	hwdec_combo->addItem("auto-copy", "auto-copy");
-	#ifdef Q_OS_LINUX
+	#ifdef OS_UNIX_NOT_MAC
 	hwdec_combo->addItem("vdpau", "vdpau");
 	hwdec_combo->addItem("vdpau-copy", "vdpau-copy");
 	hwdec_combo->addItem("vaapi", "vaapi");
@@ -327,7 +327,7 @@ void PrefPerformance::createHelp() {
 			"<ul>"
 			"<li>" + tr("None: only software decoding will be used.") + "</li>"
 			"<li>" + tr("Auto: it tries to automatically enable hardware decoding using the first available method.") + "</li>"
-			#ifdef Q_OS_LINUX
+			#ifdef OS_UNIX_NOT_MAC
 			"<li>" + tr("vdpau: for the vdpau and opengl video outputs.") + "</li>"
 			"<li>" + tr("vaapi: for the opengl and vaapi video outputs. For Intel GPUs only.") + "</li>"
 			"<li>" + tr("vaapi-copy: it copies video back into system RAM. For Intel GPUs only.") + "</li>"
