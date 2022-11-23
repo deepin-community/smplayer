@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Andrei Stepanov, 2014-2017
-# angry_snake <inactive+angry_snake@transifex.com>, 2014
+# Andrei Stepanov, 2014-2017,2021-2022
+# 28532b02ca9d20d69a31703daeea0bda_3873b52 <a8117a72c21fe4a094910f3a12007a5f_154053>, 2014
 # Simple88, 2016
 # Andrei Stepanov, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: smplayer\n"
-"PO-Revision-Date: 2017-12-25 08:32+0000\n"
-"Last-Translator: Andrei Stepanov\n"
+"PO-Revision-Date: 2014-02-24 03:07+0000\n"
+"Last-Translator: Andrei Stepanov, 2014-2017,2021-2022\n"
 "Language-Team: Russian (http://www.transifex.com/rvm/smplayer/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +62,7 @@ msgstr "Существует 32-битная установка SMPlayer. Сна
 msgid ""
 "An existing 64-bit installation of SMPlayer exists. You must uninstall "
 "64-bit SMPlayer first."
-msgstr "Существует 64-битная установка SMPlayer. Сначала далите 64-битный SMPlayer."
+msgstr "Существует 64-битная установка SMPlayer. Сначала удалите 64-битный SMPlayer."
 
 # WelcomePage_Title
 msgid "$(^NameDA) Setup"
@@ -91,7 +91,7 @@ msgstr "Движок воспроизведения"
 
 # Section_SMPlayer
 msgid "SMPlayer (required)"
-msgstr "SMPlayer (необходимо)"
+msgstr "SMPlayer (требуется)"
 
 # Section_SMPlayer_Desc
 msgid "SMPlayer, shared libraries, and documentation."
@@ -133,6 +133,14 @@ msgstr "Дополнительные кодеки для MPlayer. (Для уст
 # Section_MPV_Desc
 msgid "A feature-rich fork of MPlayer && MPlayer2"
 msgstr "Богатый возможностями форк MPlayer и MPlayer2."
+
+# Section_YTDL
+msgid "Youtube support (download required)"
+msgstr "Поддержка Youtube (требуется загрузка)"
+
+# Section_YTDL_Desc
+msgid "Provides the possibility to play Youtube videos."
+msgstr "Позволяет воспроизводить видео с Youtube."
 
 # Section_MEncoder_Desc
 msgid ""
@@ -194,15 +202,15 @@ msgstr "Удалить существующую установку"
 
 # Reinstall_Msg3_1
 msgid "Click Start when ready to proceed."
-msgstr "Нажмите Старт для продолжения."
+msgstr "Нажмите «Старт» для продолжения."
 
 # Reinstall_Msg3_2
 msgid "Click Next when ready to proceed."
-msgstr "Нажмите Далее для продолжения."
+msgstr "Нажмите «Далее» для продолжения."
 
 # Reinstall_Msg3_3
 msgid "Click Uninstall when ready to proceed."
-msgstr "Нажмите Удалить для продолжения."
+msgstr "Нажмите «Удалить» для продолжения."
 
 # Reinstall_Msg4
 msgid "Change Installation Settings"
@@ -279,11 +287,11 @@ msgid ""
 "SMPlayer is a complete front-end for MPlayer, from basic features like "
 "playing videos, DVDs, VCDs to more advanced features like support for "
 "MPlayer filters, edl lists, and more."
-msgstr "SMPlayer - полноценная оболочка для MPlayer, начиная от базовых функций вроде воспроизведения видеофайлов, DVD, VCD и заканчивая более продвинутыми вроде поддержки фильтров MPlayer, списков и т.д."
+msgstr "SMPlayer — полноценная оболочка для MPlayer, начиная от базовых функций вроде воспроизведения видеофайлов, DVD, VCD и заканчивая более продвинутыми вроде поддержки фильтров MPlayer, списков и т.д."
 
 # Info_Codecs_Backup
 msgid "Backing up codecs from previous installation..."
-msgstr "Выполняется резервное копирование кодеков из предыдущей установки..."
+msgstr "Создание резервной копии кодеков из предыдущей установки..."
 
 # Info_Codecs_Restore
 msgid "Restoring codecs from previous installation..."
@@ -315,7 +323,7 @@ msgstr "Извлечение файлов..."
 
 # Info_SMTube_Backup
 msgid "Backing up SMTube..."
-msgstr "Резервируется SMTube..."
+msgstr "Создание резервной копии SMTube..."
 
 # Info_SMTube_Restore
 msgid "Restoring SMTube from previous installation..."
@@ -347,15 +355,33 @@ msgstr "Ошибка при установке MPV."
 
 # YTDL_DL_Retry
 msgid "youtube-dl was not successfully installed. Retry?"
-msgstr "Не удалось установить YouTube-DL. Попытаться ещё раз?"
+msgstr "Не удалось установить youtube-dl. Попытаться ещё раз?"
 
 # YTDL_DL_Failed
 msgid "Failed to download youtube-dl: '$R0'."
-msgstr "Не удалось загрузить Youtube-DL: '$R0'."
+msgstr "Не удалось загрузить youtube-dl: '$R0'."
 
 # YTDL_Update_Check
 msgid "Checking for youtube-dl updates..."
-msgstr "Проверка наличия обновлений Youtube-DL..."
+msgstr "Проверка наличия обновлений youtube-dl..."
+
+# YTDL_Error_Msg1
+msgid "Warning: youtube-dl exited abnormally with exit code: $YTDL_Exit_code"
+msgstr "Предупреждение: ненормальный выход youtube-dl с кодом: $YTDL_Exit_code"
+
+# YTDL_Error_Msg2
+msgid "Visual C++ 2010 Runtime (x86) is required for youtube-dl."
+msgstr "Для youtube-dl требуется Visual C++ 2010 Runtime (x86)."
+
+# SMTube_Incompatible_Msg1
+msgid ""
+"The current SMTube installation is incompatible with this version of "
+"SMPlayer."
+msgstr "Текущая установка SMTube несовместима с этой версией SMPlayer."
+
+# SMTube_Incompatible_Msg2
+msgid "Please upgrade to a newer version of SMTube."
+msgstr "Пожалуйста, обновитесь до свежей версии SMTube."
 
 # Info_Cleaning_Fontconfig
 msgid "Cleaning fontconfig cache..."

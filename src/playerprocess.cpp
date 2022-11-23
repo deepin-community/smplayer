@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,9 +46,9 @@ PlayerProcess::PlayerProcess(QObject * parent)
 #endif
 }
 
-void PlayerProcess::writeToStdin(QString text) {
+void PlayerProcess::sendCommand(QString text) {
 	if (isRunning()) {
-		qDebug("PlayerProcess::writeToStdin: %s", text.toUtf8().constData());
+		qDebug() << "PlayerProcess::sendCommand:" << text;
 		#ifdef Q_OS_WIN
 		write( text.toUtf8() + "\n");
 		#else

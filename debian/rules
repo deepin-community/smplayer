@@ -1,7 +1,6 @@
 #!/usr/bin/make -f
 
 export LC_ALL=C.UTF-8
-export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 include /usr/share/dpkg/architecture.mk
@@ -14,8 +13,7 @@ endif
 
 export QT_SELECT=5
 QMAKE_OPTS = DEFINES+=NO_DEBUG_ON_CONSOLE DEFINES-=MPLAYER2_SUPPORT
-MAKE_OPTS  = PREFIX=/usr QMAKE=qmake LRELEASE=lrelease QMAKE_OPTS="$(QMAKE_OPTS)"
-
+MAKE_OPTS  = PREFIX=/usr QMAKE=$(QMAKE) LRELEASE=lrelease QMAKE_OPTS="$(QMAKE_OPTS)"
 
 %:
 	dh $@

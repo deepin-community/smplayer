@@ -6,3 +6,4 @@ usr/share/smplayer/input.conf
 usr/share/smplayer/shortcuts
 usr/share/applications/smplayer.desktop
 usr/share/applications/smplayer_enqueue.desktop
+usr/share/metainfo/smplayer.appdata.xml

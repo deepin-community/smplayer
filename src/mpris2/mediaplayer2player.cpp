@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ bool MediaPlayer2Player::CanPause() const {
 
 void MediaPlayer2Player::Pause() const {
 	qDebug("MediaPlayer2Player::Pause");
-	m_core->pause();
+	m_core->setPause(true);
 }
 
 void MediaPlayer2Player::PlayPause() const {
@@ -115,7 +115,7 @@ void MediaPlayer2Player::Play() const {
 }
 
 void MediaPlayer2Player::SetPosition(const QDBusObjectPath& TrackId, qlonglong Position) const {
-	double secs = Position / 1000000;
+	double secs = (double) Position / 1000000.0;
 	qDebug() << "MediaPlayer2Player::SetPosition: TrackId:" << TrackId.path() << "Position:" << Position << "(secs:" << secs << ")";
 	if (TrackId.path().toLocal8Bit() == makeTrackId(m_core->mdat.filename)) {
 		m_core->goToSec(secs);
@@ -166,10 +166,8 @@ QVariantMap MediaPlayer2Player::Metadata() const {
 	metaData["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(makeTrackId(m_core->mdat.filename).constData()));
 	metaData["mpris:length"] = m_core->mdat.duration * 1000000;
 
-	if (m_core->mdat.type == TYPE_STREAM)
-		metaData["xesam:url"] = m_core->mdat.stream_url;
-	else
-		metaData["xesam:url"] = m_core->mdat.filename;
+	// m_core->mdat.stream_url is never set
+	metaData["xesam:url"] = m_core->mdat.filename;
 
 	if (!m_core->mdat.clip_album.isEmpty())
 		metaData["xesam:album"] = m_core->mdat.clip_album;
@@ -188,7 +186,7 @@ QVariantMap MediaPlayer2Player::Metadata() const {
 }
 
 double MediaPlayer2Player::Volume() const {
-	return static_cast<double>(m_core->mset.volume / 100.0);
+	return static_cast<double>(m_core->currentVolume() / 100.0);
 }
 
 void MediaPlayer2Player::setVolume(double volume) const {

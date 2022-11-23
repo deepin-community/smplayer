@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ class FindSubtitlesConfigDialog : public QDialog, public Ui::FindSubtitlesConfig
 	Q_OBJECT
 
 public:
-	FindSubtitlesConfigDialog( QWidget* parent = 0, Qt::WindowFlags f = 0 );
+	FindSubtitlesConfigDialog( QWidget* parent = 0, Qt::WindowFlags f = QFlag(0) );
 	~FindSubtitlesConfigDialog();
 
 #ifdef FS_USE_SERVER_CONFIG
@@ -37,6 +37,12 @@ public:
 
 	void setSearchMethod(int m);
 	int searchMethod();
+
+	void setUsername(QString username);
+	QString username();
+
+	void setPassword(QString password);
+	QString password();
 
 #ifdef OS_SEARCH_WORKAROUND
 	void setRetries(int n);

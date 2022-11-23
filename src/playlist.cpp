@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -53,6 +53,10 @@
 #include "myscroller.h"
 #endif
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+#include <QRandomGenerator>
+#endif
+
 #include "myaction.h"
 #include "mylineedit.h"
 #include "filedialog.h"
@@ -94,6 +98,7 @@
 #define COL_NAME 1
 #define COL_TIME 2
 #define COL_FILENAME 3
+#define COL_SHUFFLE 4
 
 #if USE_ITEM_DELEGATE
 class PlaylistDelegate : public QStyledItemDelegate {
@@ -125,6 +130,7 @@ PLItem::PLItem() : QStandardItem() {
 	col_num = new QStandardItem();
 	col_duration = new QStandardItem();
 	col_filename = new QStandardItem();
+	col_shuffle = new QStandardItem();
 
 	setDuration(0);
 	setPlayed(false);
@@ -137,6 +143,7 @@ PLItem::PLItem(const QString filename, const QString name, double duration) : QS
 	col_num = new QStandardItem();
 	col_duration = new QStandardItem();
 	col_filename = new QStandardItem();
+	col_shuffle = new QStandardItem();
 
 	setFilename(filename);
 	setName(name);
@@ -193,6 +200,11 @@ void PLItem::setPosition(int position) {
 	col_num->setData(position);
 }
 
+void PLItem::setShufflePosition(int position) {
+	col_shuffle->setText(QString::number(position));
+	col_shuffle->setData(position);
+}
+
 void PLItem::setCurrent(bool b) {
 	setData(b, Role_Current);
 #if !USE_ITEM_DELEGATE
@@ -223,13 +235,17 @@ int PLItem::position() {
 	return col_num->data().toInt();
 }
 
+int PLItem::shufflePosition() {
+	return col_shuffle->data().toInt();
+}
+
 bool PLItem::isCurrent() {
 	return data(Role_Current).toBool();
 }
 
 QList<QStandardItem *> PLItem::items() {
 	QList<QStandardItem *> l;
-	l << col_num << this << col_duration << col_filename;
+	l << col_num << this << col_duration << col_filename << col_shuffle;
 	return l;
 }
 
@@ -318,9 +334,11 @@ Playlist::Playlist(QWidget * parent, Qt::WindowFlags f)
 	setAcceptDrops(true);
 	setAttribute(Qt::WA_NoMousePropagation);
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 10, 0))
 	// Random seed
 	QTime now = QTime::currentTime();
 	qsrand(now.msec());
+#endif
 
 	//loadSettings();
 
@@ -337,6 +355,15 @@ Playlist::Playlist(QWidget * parent, Qt::WindowFlags f)
 
 	history_urls = new URLHistory;
 	history_urls->addUrl("http://smplayer.info/sample.m3u8");
+#endif
+
+#ifdef DELAYED_PLAY
+	last_timestamp = 0;
+	play_later.seek = -1;
+	play_later_timer = new QTimer(this);
+	play_later_timer->setInterval(1000);
+	play_later_timer->setSingleShot(true);
+	connect(play_later_timer, SIGNAL(timeout()), this, SLOT(playItemLater()));
 #endif
 }
 
@@ -393,7 +420,7 @@ void Playlist::setModified(bool mod) {
 
 void Playlist::createTable() {
 	table = new QStandardItemModel(this);
-	table->setColumnCount(COL_FILENAME + 1);
+	table->setColumnCount(COL_SHUFFLE + 1);
 	//table->setSortRole(Qt::UserRole + 1);
 
 	proxy = new QSortFilterProxyModel(this);
@@ -460,6 +487,7 @@ void Playlist::createTable() {
             this, SLOT(itemActivated(const QModelIndex &)) );
 
 	setFilenameColumnVisible(false);
+	setShuffleColumnVisible(false);
 }
 
 void Playlist::createActions() {
@@ -497,6 +525,7 @@ void Playlist::createActions() {
 
 	shuffleAct = new MyAction(this, "pl_shuffle", false);
 	shuffleAct->setCheckable(true);
+	connect( shuffleAct, SIGNAL(toggled(bool)), this, SLOT(shuffle(bool)) );
 
 	// Add actions
 	addCurrentAct = new MyAction(this, "pl_add_current", false);
@@ -560,6 +589,10 @@ void Playlist::createActions() {
 	showFilenameColumnAct = new MyAction(this, "pl_show_filename_column");
 	showFilenameColumnAct->setCheckable(true);
 	connect(showFilenameColumnAct, SIGNAL(toggled(bool)), this, SLOT(setFilenameColumnVisible(bool)));
+
+	showShuffleColumnAct = new MyAction(this, "pl_show_shuffle_column");
+	showShuffleColumnAct->setCheckable(true);
+	connect(showShuffleColumnAct, SIGNAL(toggled(bool)), this, SLOT(setShuffleColumnVisible(bool)));
 }
 
 void Playlist::createToolbar() {
@@ -677,13 +710,14 @@ void Playlist::createToolbar() {
 	popup->addAction(showNameColumnAct);
 	popup->addAction(showDurationColumnAct);
 	popup->addAction(showFilenameColumnAct);
+	popup->addAction(showShuffleColumnAct);
 
 	connect( listView, SIGNAL(customContextMenuRequested(const QPoint &)),
              this, SLOT(showPopup(const QPoint &)) );
 }
 
 void Playlist::retranslateStrings() {
-	table->setHorizontalHeaderLabels(QStringList() << " " << tr("Name") << tr("Length") << tr("Filename / URL") );
+	table->setHorizontalHeaderLabels(QStringList() << " " << tr("Name") << tr("Length") << tr("Filename / URL") << tr("Shuffle order") );
 
 	openAct->change( Images::icon("open"), tr("&Load...") );
 #ifdef PLAYLIST_DOWNLOAD
@@ -737,6 +771,7 @@ void Playlist::retranslateStrings() {
 	showNameColumnAct->change(tr("Show name column"));
 	showDurationColumnAct->change(tr("Show length column"));
 	showFilenameColumnAct->change(tr("Show filename column"));
+	showShuffleColumnAct->change(tr("Show shuffle column"));
 
 	// Edit
 	editAct->change( tr("&Edit") );
@@ -769,7 +804,7 @@ void Playlist::list() {
 }
 
 void Playlist::setFilter(const QString & filter) {
-	proxy->setFilterWildcard(filter);
+	proxy->setFilterWildcard(filter.trimmed());
 }
 
 void Playlist::filterEditChanged(const QString & text) {
@@ -874,7 +909,7 @@ void Playlist::changeItem(int row, const QString & filename, const QString name,
 }
 */
 
-void Playlist::addItem(QString filename, QString name, double duration, QStringList params, QString video_url, QString icon_url) {
+void Playlist::addItem(QString filename, QString name, double duration, QStringList params, QString video_url, QString icon_url, int shuffle_pos) {
 	//qDebug() << "Playlist::addItem:" << filename;
 
 	#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
@@ -898,6 +933,7 @@ void Playlist::addItem(QString filename, QString name, double duration, QStringL
 	i->setVideoURL(video_url);
 	i->setIconURL(icon_url);
 	i->setPosition(count()+1);
+	i->setShufflePosition(shuffle_pos);
 	table->appendRow(i->items());
 
 	if (findCurrentItem() == -1) setCurrentItem(0);
@@ -1036,6 +1072,7 @@ void Playlist::load_m3u(QString file, M3UFormat format) {
 		setPlaylistFilename(file);
 		setModified( false );
 
+		if (shuffleAct->isChecked()) shuffle(true);
 		if (start_play_on_load) startPlay();
 	}
 }
@@ -1091,6 +1128,7 @@ void Playlist::load_pls(QString file) {
 	setPlaylistFilename(file);
 	setModified( false );
 
+	if (shuffleAct->isChecked()) shuffle(true);
 	if (set.status() == QSettings::NoError && start_play_on_load) startPlay();
 }
 
@@ -1133,49 +1171,23 @@ void Playlist::loadXSPF(const QString & filename) {
 		//list();
 		setPlaylistFilename(filename);
 		setModified( false );
+
+		if (shuffleAct->isChecked()) shuffle(true);
 		if (start_play_on_load) startPlay();
 	}
 }
 
 #ifdef YT_PLAYLIST_SUPPORT
-/// youtube list support
-void Playlist::loadYoutubeList(QByteArray & data) {
-	qDebug() << "Playlist::loadYoutubeList:";
-
-	QDomDocument dom_document;
-	bool ok = dom_document.setContent(data);
-	qDebug() << "Playlist::loadYoutubeList: success:" << ok;
-	if (!ok) return;
-
-	QDomNode root = dom_document.documentElement();
-	if (!root.isNull()) {
-		clear();
-
-		QDomNode track = root.firstChildElement("video");
-		while (!track.isNull()) {
-			QString filename;
-			QStringList extra_params;
-
-			QString title = track.firstChildElement("title").text(); // toCDATASection().data();
-			QString video_url = QString("https://www.youtube.com/watch?v=").append(track.firstChildElement("encrypted_id").text().toLatin1());
-			QString icon_url  = track.firstChildElement("thumbnail").text().toLatin1();
-			int duration = track.firstChildElement("length_seconds").text().toInt();
-
-			qDebug() << "Playlist::loadYoutubeList: title:" << title;
-			qDebug() << "Playlist::loadYoutubeList: video_url:" << video_url;
-			qDebug() << "Playlist::loadYoutubeList: icon_url:" << icon_url;
-			qDebug() << "Playlist::loadYoutubeList: duration:" << duration;
-
-			addItem( video_url, title, duration, extra_params, video_url, icon_url );
-
-			track = track.nextSiblingElement("video");
-		}
-
-		//list();
-		setPlaylistFilename(root.firstChildElement("title").text());
-		setModified( false );
-		if (start_play_on_load) startPlay();
+void Playlist::loadYoutubeList(QList<itemMap> list) {
+	qDebug() << "Playlist::loadYoutubeList: list:" << list;
+	clear();
+	foreach(itemMap item, list) {
+		addItem(item["url"], item["title"], item["duration"].toDouble());
 	}
+	setModified( false );
+
+	if (shuffleAct->isChecked()) shuffle(true);
+	if (start_play_on_load) startPlay();
 }
 
 bool Playlist::isYTPlaylist(const QString & url) {
@@ -1538,14 +1550,10 @@ void Playlist::showPopup(const QPoint & pos) {
 }
 
 void Playlist::startPlay() {
-	// Start to play
-	if ( shuffleAct->isChecked() ) 
-		playItem( chooseRandomItem() );
-	else
-		playItem(0);
+	playItem(0);
 }
 
-void Playlist::playItem( int n ) {
+void Playlist::playItem(int n, bool later) {
 	qDebug("Playlist::playItem: %d (count: %d)", n, proxy->rowCount());
 
 	if ( (n >= proxy->rowCount()) || (n < 0) ) {
@@ -1562,12 +1570,30 @@ void Playlist::playItem( int n ) {
 		setCurrentItem(n);
 
 		if (!params.isEmpty()) {
-			emit requestToPlayStream(filename, params);
+			#ifdef DELAYED_PLAY
+			if (later) {
+				play_later.filename = filename;
+				play_later.seek = -1;
+				play_later.params = params;
+				play_later_timer->start();
+			} else
+			#endif
+			{
+				emit requestToPlayStream(filename, params);
+			}
 		} else {
-			if (play_files_from_start) {
-				emit requestToPlayFile(filename, 0);
-			} else {
-				emit requestToPlayFile(filename);
+			int seek = -1;
+			if (play_files_from_start) seek = 0;
+			#ifdef DELAYED_PLAY
+			if (later) {
+				play_later.filename = filename;
+				play_later.seek = seek;
+				play_later.params.clear();
+				play_later_timer->start();
+			} else
+			#endif
+			{
+				emit requestToPlayFile(filename, seek);
 			}
 		}
 	}
@@ -1576,38 +1602,43 @@ void Playlist::playItem( int n ) {
 void Playlist::playNext() {
 	qDebug("Playlist::playNext");
 
-	if (shuffleAct->isChecked()) {
-		// Shuffle
-		int chosen_item = chooseRandomItem();
-		qDebug("Playlist::playNext: chosen_item: %d", chosen_item);
-		if (chosen_item == -1) {
-			clearPlayedTag();
-			if (repeatAct->isChecked()) {
-				chosen_item = chooseRandomItem();
-				if (chosen_item == -1) chosen_item = 0;
-			}
-		}
-		playItem(chosen_item);
-	} else {
-		int current = findCurrentItem();
-		bool finished_list = (current + 1 >= proxy->rowCount());
-		if (finished_list) clearPlayedTag();
+	bool delayed_play = false;
+	#ifdef DELAYED_PLAY
+	qint64 t_now = QDateTime::currentMSecsSinceEpoch();
+	qint64 diff_time = t_now - last_timestamp;
+	if (diff_time < 1000) delayed_play = true;
+	last_timestamp = t_now;
+	//qDebug() << "Playlist::playNext: diff:" << diff_time << "delayed_play:" << delayed_play;
+	#endif
 
-		if (repeatAct->isChecked() && finished_list) {
-			playItem(0);
-		} else {
-			playItem(current + 1);
-		}
+	int current = findCurrentItem();
+	bool finished_list = (current + 1 >= proxy->rowCount());
+	if (finished_list) clearPlayedTag();
+
+	if (repeatAct->isChecked() && finished_list) {
+		playItem(0, delayed_play);
+	} else {
+		playItem(current + 1, delayed_play);
 	}
 }
 
 void Playlist::playPrev() {
 	qDebug("Playlist::playPrev");
+
+	bool delayed_play = false;
+	#ifdef DELAYED_PLAY
+	qint64 t_now = QDateTime::currentMSecsSinceEpoch();
+	qint64 diff_time = t_now - last_timestamp;
+	if (diff_time < 1000) delayed_play = true;
+	last_timestamp = t_now;
+	//qDebug() << "Playlist::playPrev: diff:" << diff_time << "delayed_play:" << delayed_play;
+	#endif
+
 	int current = findCurrentItem() - 1;
 	if (current >= 0) {
-		playItem(current);
+		playItem(current, delayed_play);
 	} else {
-		if (proxy->rowCount() > 1) playItem(proxy->rowCount() - 1);
+		if (proxy->rowCount() > 1) playItem(proxy->rowCount() - 1, delayed_play);
 	}
 }
 
@@ -1619,6 +1650,17 @@ void Playlist::playNextAuto() {
 		emit playlistEnded();
 	}
 }
+
+#ifdef DELAYED_PLAY
+void Playlist::playItemLater() {
+	qDebug() << "Playlist::playItemLater" << play_later.filename << play_later.seek << play_later.params;
+	if (!play_later.params.isEmpty()) {
+		emit requestToPlayStream(play_later.filename, play_later.params);
+	} else {
+		emit requestToPlayFile(play_later.filename, play_later.seek);
+	}
+}
+#endif
 
 void Playlist::resumePlay() {
 	qDebug("Playlist::resumePlay");
@@ -1715,8 +1757,14 @@ void Playlist::addFiles(QStringList files, AutoGetInfo auto_get_info) {
 	#endif
 
 	QString initial_file;
-	if (count() == 1) initial_file = itemData(0)->filename();
 	int new_current_item = -1;
+	if (count() == 1) {
+		initial_file = itemData(0)->filename();
+		for (int n = 0; n < files.count(); n++) {
+			if (files[n] == initial_file) new_current_item = n;
+		}
+		if (new_current_item != -1) clear();
+	}
 
 	for (int n = 0; n < files.count(); n++) {
 		QString name = "";
@@ -1724,7 +1772,7 @@ void Playlist::addFiles(QStringList files, AutoGetInfo auto_get_info) {
 		#if USE_INFOPROVIDER
 		if ( (get_info) && (QFile::exists(files[n])) ) {
 			data = InfoProvider::getInfo(files[n]);
-			name = data.displayName();
+			name = data.displayName(change_name);
 			duration = data.duration;
 			//qApp->processEvents();
 		}
@@ -1732,13 +1780,6 @@ void Playlist::addFiles(QStringList files, AutoGetInfo auto_get_info) {
 
 		//qDebug() << "Playlist::addFiles: comparing:" << initial_file << "with" << files[n];
 
-		if (!initial_file.isEmpty() && files[n] == initial_file) {
-			PLItem * first_item = itemData(0);
-			name = first_item->name();
-			duration = first_item->duration();
-			table->removeRow(0);
-			new_current_item = n;
-		}
 		addItem(files[n], name, duration);
 
 		if (QFile::exists(files[n])) {
@@ -1750,7 +1791,7 @@ void Playlist::addFiles(QStringList files, AutoGetInfo auto_get_info) {
 	#endif
 
 	if (new_current_item != -1) setCurrentItem(new_current_item);
-
+	if (shuffleAct->isChecked()) shuffle(true);
 	qDebug() << "Playlist::addFiles: latest_dir:" << latest_dir;
 }
 
@@ -1777,6 +1818,7 @@ void Playlist::addUrls() {
 			if (!u.isEmpty()) addItem( u, "", 0 );
 		}
 		setModified(true);
+		if (shuffleAct->isChecked()) shuffle(true);
 	}
 }
 
@@ -1831,11 +1873,15 @@ void Playlist::removeSelected() {
 	qDebug() << "Playlist::removeSelected: count:" << count;
 	if (count < 1) return;
 
-	for (int n = count; n > 0; n--) {
-		QModelIndex s_index = proxy->mapToSource(indexes.at(n-1));
-		table->removeRow(s_index.row());
-		setModified(true);
+	std::sort(indexes.begin(), indexes.end());
+	for (int n = indexes.count() - 1; n > -1; --n) {
+		QModelIndex s_index = proxy->mapToSource(indexes.at(n));
+		int selected_row = indexes.at(n).row();
+		int actual_row = s_index.row();
+		qDebug() << "Playlist::removeSelected: selected row:" << selected_row << "actual row:" << actual_row;
+		table->removeRow(actual_row);
 	}
+	setModified(true);
 
 	if (isEmpty()) setModified(false);
 
@@ -1857,26 +1903,20 @@ void Playlist::clearPlayedTag() {
 	}
 }
 
-int Playlist::chooseRandomItem() {
-	qDebug( "Playlist::chooseRandomItem");
-
-	QList<int> fi; //List of not played items (free items)
-	for (int n = 0; n < proxy->rowCount(); n++) {
-		if (!itemFromProxy(n)->played()) fi.append(n);
+void Playlist::shuffle(bool enable) {
+	if (enable) {
+		for (int n = 0; n < count(); n++) {
+			PLItem * i = itemData(n);
+			#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+			i->setShufflePosition( QRandomGenerator::global()->generate() % 1000000 );
+			#else
+			i->setShufflePosition( qrand() % 1000000 );
+			#endif
+		}
+		listView->sortByColumn(COL_SHUFFLE, Qt::AscendingOrder);
+	} else {
+		listView->sortByColumn(COL_NUM, Qt::AscendingOrder);
 	}
-
-	qDebug("Playlist::chooseRandomItem: free items: %d", fi.count() );
-
-	if (fi.count() == 0) return -1; // none free
-
-	qDebug("Playlist::chooseRandomItem: items: ");
-	for (int i = 0; i < fi.count(); i++) {
-		qDebug("Playlist::chooseRandomItem: * item: %d", fi[i]);
-	}
-
-	int selected = (qrand() % fi.count());
-	qDebug("Playlist::chooseRandomItem: selected item: %d (%d)", selected, fi[selected]);
-	return fi[selected];
 }
 
 void Playlist::upItem() {
@@ -2271,6 +2311,7 @@ void Playlist::saveSettings() {
 			set->setValue( QString("item_%1_params").arg(n), i->extraParams() );
 			set->setValue( QString("item_%1_video_url").arg(n), i->videoURL() );
 			set->setValue( QString("item_%1_icon_url").arg(n), i->iconURL() );
+			set->setValue( QString("item_%1_shuffle").arg(n), i->shufflePosition() );
 		}
 		set->endArray();
 		set->setValue( "current_item", findCurrentItem() );
@@ -2356,7 +2397,8 @@ void Playlist::loadSettings() {
 			QStringList params = set->value( QString("item_%1_params").arg(n), QStringList()).toStringList();
 			QString video_url = set->value( QString("item_%1_video_url").arg(n), "").toString();
 			QString icon_url = set->value( QString("item_%1_icon_url").arg(n), "").toString();
-			addItem( filename, name, duration, params, video_url, icon_url );
+			int shuffle_pos = set->value( QString("item_%1_shuffle").arg(n), n).toInt();
+			addItem( filename, name, duration, params, video_url, icon_url, shuffle_pos );
 		}
 		set->endArray();
 		setCurrentItem( set->value( "current_item", -1 ).toInt() );
@@ -2384,6 +2426,7 @@ void Playlist::loadSettings() {
 	if (!listView->isColumnHidden(COL_NAME)) showNameColumnAct->setChecked(true);
 	if (!listView->isColumnHidden(COL_TIME)) showDurationColumnAct->setChecked(true);
 	if (!listView->isColumnHidden(COL_FILENAME)) showFilenameColumnAct->setChecked(true);
+	if (!listView->isColumnHidden(COL_SHUFFLE)) showShuffleColumnAct->setChecked(true);
 }
 
 QString Playlist::lastDir() {
@@ -2405,6 +2448,10 @@ void Playlist::setDurationColumnVisible(bool b) {
 
 void Playlist::setFilenameColumnVisible(bool b) {
 	listView->setColumnHidden(COL_FILENAME, !b);
+}
+
+void Playlist::setShuffleColumnVisible(bool b) {
+	listView->setColumnHidden(COL_SHUFFLE, !b);
 }
 
 void Playlist::setAutoSort(bool b) {
@@ -2464,16 +2511,13 @@ void Playlist::openUrl(const QString & orig_url) {
 	qDebug() << "Playlist::openUrl:" << url;
 
 #ifdef YT_PLAYLIST_SUPPORT
-	// if youtube list then convert to ajax call
 	if (isYTPlaylist(url)) {
-		QUrl qurl = QUrl(url);
-		#if QT_VERSION >= 0x050000
-		QUrlQuery query = QUrlQuery(qurl);
-		QString lst = query.queryItemValue("list"); // QString("RDQ4DphMfcOOM"); // todo
-		#else
-		QString lst = qurl.queryItemValue("list");
-		#endif
-		url = QString("https://www.youtube.com/list_ajax?action_get_list=1&style=xml&list=").append(lst);
+		setCursor(QCursor(Qt::WaitCursor));
+		RetrieveYoutubeUrl yt(this);
+		QList<itemMap> list = yt.getPlaylistItems(url);
+		loadYoutubeList(list);
+		unsetCursor();
+		return;
 	}
 #endif
 
@@ -2491,12 +2535,6 @@ void Playlist::playlistDownloaded(QByteArray data) {
 	QString tfile = tf.fileName();
 	qDebug() << "Playlist::playlistDownloaded: tfile:" << tfile;
 
-#ifdef YT_PLAYLIST_SUPPORT
-	if (data.contains("<?xml")) {
-		loadYoutubeList(data);
-	}
-	else
-#endif
 	if (data.contains("#EXTM3U")) {
 		load_m3u(tfile, M3U8);
 		setPlaylistFilename("");

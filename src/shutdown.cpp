@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,17 +19,17 @@
 #include "shutdown.h"
 #include <QProcess>
 
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_UNIX
 #include <QtDBus>
 #include <QDebug>
 #endif
 
 void Shutdown::shutdown() {
 #ifdef Q_OS_WIN
-	QProcess::startDetached("shutdown -s -f -t 10");
+	QProcess::startDetached("shutdown", QStringList() << "-s" << "-f" << "-t" << "10");
 #endif
 
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_UNIX
 	bool works = false;
 
 	QDBusMessage response;

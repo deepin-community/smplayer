@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QPushButton>
+#include <algorithm> // std::sort
 #include "images.h"
 #include "infofile.h"
 #include "playerid.h"
@@ -122,9 +123,9 @@ void FilePropertiesDialog::setCodecs(InfoList vc, InfoList ac, InfoList demuxer)
 	aclist = ac;
 	demuxerlist = demuxer;
 
-	qSort(vclist);
-	qSort(aclist);
-	qSort(demuxerlist);
+	std::sort(vclist.begin(), vclist.end());
+	std::sort(aclist.begin(), aclist.end());
+	std::sort(demuxerlist.begin(), demuxerlist.end());
 
 	vc_listbox->clear();
 	ac_listbox->clear();

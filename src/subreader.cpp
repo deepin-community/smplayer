@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include <QDebug>
 
 #define NL QString("\r\n")
+#define BNL QByteArray("\r\n")
 #define BOM QString(0xFEFF)
 
 SubReader::SubReader() {
@@ -73,7 +74,7 @@ void SubReader::parseSRT(const QString & filename) {
 				do {
 					line2 = file.readLine().trimmed();
 					//qDebug() << "line2:" << line2;
-					if (!text.isEmpty() && !line2.isEmpty()) text += NL;
+					if (!text.isEmpty() && !line2.isEmpty()) text += BNL;
 					if (!line2.isEmpty()) text += line2;
 				} while (!file.atEnd() && !line2.isEmpty());
 				//qDebug() << "text:" << text;

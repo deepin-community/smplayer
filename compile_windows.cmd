@@ -16,9 +16,11 @@ if [%1]==[] (
 
 ) else if [%1]==[pe] (
 
-  set qmake_defs=PORTABLE_APP
+  set qmake_defs=PORTABLE_APP %qmake_defs%
   set smtube_params=pe
 
+) else if [%1]==[smtubelib] (
+  set qmake_defs=USE_SMTUBE_LIB %qmake_defs%
 ) else if [%1]==[nosmtube] (
 
   set build_smtube=false
@@ -50,16 +52,18 @@ goto arg_loop
 
 call getrev.cmd
 
-cd zlib
-mingw32-make -fwin32\makefile.gcc
+rem cd zlib
+rem mingw32-make -fwin32\makefile.gcc
+rem cd ..
 
-cd ..\webserver
+cd webserver
 mingw32-make
+cd ..
 
-cd ..\src
+cd src
 lrelease smplayer.pro
 qmake "DEFINES += %qmake_defs%"
-mingw32-make
+mingw32-make -j%NUMBER_OF_PROCESSORS%
 
 if [%errorlevel%]==[0] (
   if [%build_smtube%]==[true] (

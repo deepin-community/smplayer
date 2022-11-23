@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -145,19 +145,17 @@ int TimeSlider::pos() {
 }
 
 void TimeSlider::wheelEvent(QWheelEvent * e) {
-	//e->ignore();
-
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0))
+	qDebug("TimeSlider::wheelEvent: delta: %d", e->angleDelta().y());
+	e->accept();
+	if (e->angleDelta().y() >= 0) emit wheelUp(); else emit wheelDown();
+#else
 	qDebug("TimeSlider::wheelEvent: delta: %d", e->delta());
 	e->accept();
-
 	if (e->orientation() == Qt::Vertical) {
-		if (e->delta() >= 0)
-			emit wheelUp();
-		else
-			emit wheelDown();
-	} else {
-		qDebug("Timeslider::wheelEvent: horizontal event received, doing nothing");
+		if (e->delta() >= 0) emit wheelUp(); else emit wheelDown();
 	}
+#endif
 }
 
 bool TimeSlider::event(QEvent *event) {

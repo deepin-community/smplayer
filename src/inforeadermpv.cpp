@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -44,15 +44,15 @@ void InfoReaderMPV::getInfo() {
 	vf_list.clear();
 	mplayer_svn = -1;
 
-	vo_list = getList(run("--vo help"));
-	ao_list = getList(run("--ao help"));
+	vo_list = getList(run("--vo=help"));
+	ao_list = getList(run("--ao=help"));
 #if ALLOW_DEMUXER_CODEC_CHANGE
-	demuxer_list = getList(run("--demuxer help"));
-	vc_list = getList(run("--vd help"));
-	ac_list = getList(run("--ad help"));
+	demuxer_list = getList(run("--demuxer=help"));
+	vc_list = getList(run("--vd=help"));
+	ac_list = getList(run("--ad=help"));
 #endif
 	{
-		InfoList list = getList(run("--vf help"));
+		InfoList list = getList(run("--vf=help"));
 		for (int n = 0; n < list.count(); n++) {
 			vf_list.append(list[n].name());
 		}
@@ -109,7 +109,7 @@ void InfoReaderMPV::list() {
 }
 
 QList<QByteArray> InfoReaderMPV::run(QString options) {
-	qDebug("InfoReaderMPV::run: '%s'", options.toUtf8().data());
+	qDebug() << "InfoReaderMPV::run:" << options;
 
 	QList<QByteArray> r;
 
@@ -117,6 +117,9 @@ QList<QByteArray> InfoReaderMPV::run(QString options) {
 	proc.setProcessChannelMode( QProcess::MergedChannels );
 
 	QStringList args = options.split(" ");
+	args << "--no-config";
+
+	qDebug() << "InfoReaderMPV::run: command:" << mplayerbin + " " + args.join(" ");
 
 	proc.start(mplayerbin, args);
 	if (!proc.waitForStarted()) {
@@ -172,9 +175,14 @@ QStringList InfoReaderMPV::getOptionsList(const QList<QByteArray> & lines) {
 		line.replace("\n", "");
 		line = line.simplified();
 		if (line.startsWith("--")) {
+			QString option_name;
 			int pos = line.indexOf(' ');
 			if (pos > -1) {
-				QString option_name = line.left(pos);
+				option_name = line.left(pos);
+			} else {
+				option_name = line;
+			}
+			if (!option_name.isEmpty()) {
 				//qDebug() << "InfoReaderMPV::getOptionsList: option:" << option_name;
 				l << option_name;
 			}

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,6 +26,11 @@
 
 #define OSD_WITH_TIMER
 //#define USE_OLD_VIDEO_EQ
+#define USE_MPV_STATS
+
+#define USE_FILTER_LABELS
+
+#define USE_IPC
 
 #ifndef USE_OLD_VIDEO_EQ
 class SoftVideoEq
@@ -40,6 +45,7 @@ public:
 #endif
 
 class QStringList;
+class QLocalSocket;
 
 class MPVProcess : public PlayerProcess
 {
@@ -51,17 +57,22 @@ public:
 
 	bool start();
 
+#ifdef USE_IPC
+	virtual void sendCommand(QString text);
+#endif
+
 	// Command line options
 	void addArgument(const QString & a);
 	void setMedia(const QString & media, bool is_playlist = false);
 	void disableInput();
-	void setFixedOptions();
+	void setPredefinedOptions();
+	void disableConfig();
 	void setOption(const QString & option_name, const QVariant & value = QVariant());
 	void addUserOption(const QString & option);
 	void addVF(const QString & filter_name, const QVariant & value = QVariant());
 	void addAF(const QString & filter_name, const QVariant & value = QVariant());
 	void addStereo3DFilter(const QString & in, const QString & out);
-	void setSubStyles(const AssStyles & styles, const QString & assStylesFile = QString::null);
+	void setSubStyles(const AssStyles & styles, const QString & assStylesFile = QString());
 	void setSubEncoding(const QString & codepage, const QString & enca_lang);
 	void setVideoEqualizerOptions(int contrast, int brightness, int hue, int saturation, int gamma, bool soft_eq);
 
@@ -136,7 +147,7 @@ public:
 	void setOSDFractions(bool active);
 	void setChannelsFile(const QString &);
 
-	void enableScreenshots(const QString & dir, const QString & templ = QString::null, const QString & format = QString::null);
+	void enableScreenshots(const QString & dir, const QString & templ = QString(), const QString & format = QString());
 
 	void enableOSDInCommands(bool b) { use_osd_in_commands = b; };
 	bool isOSDInCommandsEnabled() { return use_osd_in_commands; };
@@ -145,7 +156,7 @@ public:
 
 protected:
 	bool isOptionAvailable(const QString & option);
-	void addVFIfAvailable(const QString & vf, const QString & value = QString::null);
+	void addVFIfAvailable(const QString & vf, const QString & value = QString());
 	void messageFilterNotSupported(const QString & filter_name);
 	QString lavfi(const QString & filter_name, const QVariant & option = QVariant());
 	QString audioEqualizerFilter(AudioEqualizerList);
@@ -157,6 +168,9 @@ protected:
 #ifdef OSD_WITH_TIMER
 	void toggleInfoOnOSD();
 #endif
+
+	QString VFDeleteCmd();
+	QString AFDeleteCmd();
 
 protected slots:
 	void parseLine(QByteArray ba);
@@ -180,6 +194,11 @@ protected:
 #endif
 #if NOTIFY_SUB_CHANGES
 	void updateSubtitleTrack(int ID, const QString & name, const QString & lang, bool selected);
+#endif
+
+#ifdef USE_IPC
+	void setSocketName(const QString & name);
+	QString socketName() { return socket_name; }
 #endif
 
 private:
@@ -245,13 +264,17 @@ private:
 	int dvd_current_title;
 	int br_current_title;
 
+	#ifndef USE_FILTER_LABELS
 	QString previous_eq;
 	AudioEqualizerList previous_eq_list;
+	#endif
 
 #ifndef USE_OLD_VIDEO_EQ
 	bool use_soft_eq;
 	SoftVideoEq current_soft_eq;
+	#ifndef USE_FILTER_LABELS
 	SoftVideoEq previous_soft_eq;
+	#endif
 #endif
 
 #ifdef CAPTURE_STREAM
@@ -260,6 +283,9 @@ private:
 
 #ifdef OSD_WITH_TIMER
 	QTimer * osd_timer;
+	#ifdef USE_MPV_STATS
+	int stats_page;
+	#endif
 #endif
 
 	bool use_osd_in_commands;
@@ -296,6 +322,11 @@ private:
 	QRegExp rx_debug;
 
 	void initializeRX();
+
+#ifdef USE_IPC
+	QLocalSocket * socket;
+	QString socket_name;
+#endif
 };
 
 #endif

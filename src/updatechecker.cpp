@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -69,7 +69,13 @@ UpdateChecker::UpdateChecker(QWidget * parent, UpdateCheckerData * data) : QObje
 
 	QDate now = QDate::currentDate();
 	//now = now.addDays(27);
+	//d->last_checked = d->last_checked.addDays(-10);
+
+	#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+	int days = d->last_checked.startOfDay().daysTo(now.startOfDay());
+	#else
 	int days = QDateTime(d->last_checked).daysTo(QDateTime(now));
+	#endif
 
 	qDebug() << "UpdateChecker::UpdateChecker: enabled:" << d->enabled;
 	qDebug() << "UpdateChecker::UpdateChecker: days_to_check:" << d->days_to_check;
@@ -185,7 +191,7 @@ QString UpdateChecker::formattedVersion(const QString & version) {
 	QString res = QString("%1.%2.%3.%4").arg(n1, 2, 10, QChar('0'))
 										.arg(n2, 2, 10, QChar('0'))
 										.arg(n3, 2, 10, QChar('0'))
-										.arg(n4, 4, 10, QChar('0'));
+										.arg(n4, 5, 10, QChar('0'));
 	//qDebug() << "UpdateChecker::formattedVersion:" << res;
 	return res;
 }

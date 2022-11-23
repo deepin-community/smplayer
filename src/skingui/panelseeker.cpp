@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
     umplayer, Copyright (C) 2010 Ori Rejwan
 
     This program is free software; you can redistribute it and/or modify
@@ -360,17 +360,17 @@ void PanelSeeker::wheelEvent(QWheelEvent *e)
 }
 
 void PanelTimeSeeker::wheelEvent(QWheelEvent *e) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0))
+	qDebug("PanelTimeSeeker::wheelEvent: delta: %d", e->angleDelta().y());
+	e->accept();
+	if (e->angleDelta().y() >= 0) emit wheelUp(); else emit wheelDown();
+#else
 	qDebug("PanelTimeSeeker::wheelEvent: delta: %d", e->delta());
 	e->accept();
-
 	if (e->orientation() == Qt::Vertical) {
-		if (e->delta() >= 0)
-			emit wheelUp();
-		else
-			emit wheelDown();
-	} else {
-		qDebug("PanelTimeSeeker::wheelEvent: horizontal event received, doing nothing");
+		if (e->delta() >= 0) emit wheelUp(); else emit wheelDown();
 	}
+#endif
 }
 
 #include "moc_panelseeker.cpp"

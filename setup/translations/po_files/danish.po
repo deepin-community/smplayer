@@ -3,12 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Michael Larsen <m_e_larsen@hotmail.com>, 2015
-# scootergrisen, 2015-2017
+# Michael Larsen <m_e_larsen@hotmail.com>, 2015,2021
+# scootergrisen, 2015-2017,2019,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: smplayer\n"
-"PO-Revision-Date: 2017-08-23 20:46+0000\n"
+"PO-Revision-Date: 2021-07-28 14:57+0000\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish (http://www.transifex.com/rvm/smplayer/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -132,6 +132,14 @@ msgstr "Yderligere codecs til MPlayer. (kræver internetforbindelse for at insta
 msgid "A feature-rich fork of MPlayer && MPlayer2"
 msgstr "En funktionsrig fork af MPlayer og MPlayer2"
 
+# Section_YTDL
+msgid "Youtube support (download required)"
+msgstr "Understøttelse af Youtube (kræver download)"
+
+# Section_YTDL_Desc
+msgid "Provides the possibility to play Youtube videos."
+msgstr "Tilføjer muligheden for at afspiller Youtube videos"
+
 # Section_MEncoder_Desc
 msgid ""
 "A companion program to MPlayer that can be used to encode or transform "
@@ -234,7 +242,7 @@ msgstr "Start"
 
 # Codecs_DL_Msg
 msgid "Downloading MPlayer Codecs..."
-msgstr "Downloader MPlayer-codecs..."
+msgstr "Downloader MPlayer-codecs ..."
 
 # Codecs_DL_Retry
 msgid "MPlayer codecs were not successfully installed. Retry?"
@@ -281,55 +289,55 @@ msgstr "SMPlayer er en komplet front-end til MPlayer, fra grundlæggende funktio
 
 # Info_Codecs_Backup
 msgid "Backing up codecs from previous installation..."
-msgstr "Foretager backup af codecs fra tidligere installation..."
+msgstr "Foretager backup af codecs fra tidligere installation ..."
 
 # Info_Codecs_Restore
 msgid "Restoring codecs from previous installation..."
-msgstr "Gendanner codecs fra tidligere installation..."
+msgstr "Gendanner codecs fra tidligere installation ..."
 
 # Info_Del_Files
 msgid "Deleting Files..."
-msgstr "Sletter filer..."
+msgstr "Sletter filer ..."
 
 # Info_Del_Registry
 msgid "Deleting Registry Keys..."
-msgstr "Sletter nøgler i registreringsdatabase..."
+msgstr "Sletter nøgler i registreringsdatabase ..."
 
 # Info_Del_Shortcuts
 msgid "Deleting Shortcuts..."
-msgstr "Sletter genveje..."
+msgstr "Sletter genveje ..."
 
 # Info_Rest_Assoc
 msgid "Restoring file associations..."
-msgstr "Gendanner filtilknytninger..."
+msgstr "Gendanner filtilknytninger ..."
 
 # Info_RollBack
 msgid "Rolling back changes..."
-msgstr "Gendanner ændringer..."
+msgstr "Gendanner ændringer ..."
 
 # Info_Files_Extract
 msgid "Extracting files..."
-msgstr "Udpakker filer..."
+msgstr "Udpakker filer ..."
 
 # Info_SMTube_Backup
 msgid "Backing up SMTube..."
-msgstr "Opretter backup af SMTube..."
+msgstr "Opretter backup af SMTube ..."
 
 # Info_SMTube_Restore
 msgid "Restoring SMTube from previous installation..."
-msgstr "Gendanner SMTube fra tidligere installation..."
+msgstr "Gendanner SMTube fra tidligere installation ..."
 
 # Info_MPV_Backup
 msgid "Backing up mpv..."
-msgstr "Opretter backup af mpv..."
+msgstr "Opretter backup af mpv ..."
 
 # Info_MPV_Restore
 msgid "Restoring mpv from previous installation..."
-msgstr "Genskaber mpv fra tidligere installation..."
+msgstr "Genskaber mpv fra tidligere installation ..."
 
 # MPV_DL_Msg
 msgid "Downloading mpv..."
-msgstr "Downloader mpv..."
+msgstr "Downloader mpv ..."
 
 # MPV_DL_Retry
 msgid "mpv was not successfully installed. Retry?"
@@ -353,16 +361,34 @@ msgstr "Kunne ikke downloade youtube-dl: '$R0'."
 
 # YTDL_Update_Check
 msgid "Checking for youtube-dl updates..."
-msgstr "Søger efter opdateringer til youtube-dl..."
+msgstr "Søger efter opdateringer til youtube-dl ..."
+
+# YTDL_Error_Msg1
+msgid "Warning: youtube-dl exited abnormally with exit code: $YTDL_Exit_code"
+msgstr "Advarsel: youtube-dk afsluttede unormalt med kode: $YTDL_Exit_code"
+
+# YTDL_Error_Msg2
+msgid "Visual C++ 2010 Runtime (x86) is required for youtube-dl."
+msgstr "Visual C++ 2010 Runtime (x86) er nødvendig for youtube-dl."
+
+# SMTube_Incompatible_Msg1
+msgid ""
+"The current SMTube installation is incompatible with this version of "
+"SMPlayer."
+msgstr "Den nuværende SMTube installation er ikke kompatibel  med denne version af SMPlayer"
+
+# SMTube_Incompatible_Msg2
+msgid "Please upgrade to a newer version of SMTube."
+msgstr "Venligst opdater til en nyere version af SMTube"
 
 # Info_Cleaning_Fontconfig
 msgid "Cleaning fontconfig cache..."
-msgstr "Rydder op i skrifttypekonfigurations-mellemlager..."
+msgstr "Rydder op i skrifttypekonfigurations-mellemlager ..."
 
 # Info_Cleaning_SMPlayer
 msgid "Cleaning SMPlayer settings..."
-msgstr "Rydder op i SMPlayer-indstillinger..."
+msgstr "Rydder op i SMPlayer-indstillinger ..."
 
 # Section_MPlayerCodecs_Desc
 msgid "Binary codecs are not supported in this version."
-msgstr "Binære-codecs er ikke understøttet i denne version."
+msgstr "Binary codecs er ikke understøttet i denne udgave."

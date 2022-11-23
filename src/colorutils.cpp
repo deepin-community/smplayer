@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #include "colorutils.h"
 #include <QWidget>
 #include <QDebug>
+#include "qtcompat.h"
 
 #if 0
 QString ColorUtils::colorToRGB(unsigned int color) {
@@ -48,27 +49,27 @@ QString ColorUtils::colorToAABBGGRR(unsigned int color) {
 
 QString ColorUtils::colorToRGB(QColor c) {
 	QString s;
-	return s.sprintf("0x%02x%02x%02x", c.blue(), c.green(), c.red() );
+	return s.QTC_SPRINTF("0x%02x%02x%02x", c.blue(), c.green(), c.red() );
 }
 
 QString ColorUtils::colorToRRGGBBAA(QColor c) {
 	QString s;
-	return s.sprintf("%02x%02x%02x%02x", c.red(), c.green(), c.blue(), c.alpha());
+	return s.QTC_SPRINTF("%02x%02x%02x%02x", c.red(), c.green(), c.blue(), c.alpha());
 }
 
 QString ColorUtils::colorToRRGGBB(QColor c) {
 	QString s;
-	return s.sprintf("%02x%02x%02x", c.red(), c.green(), c.blue());
+	return s.QTC_SPRINTF("%02x%02x%02x", c.red(), c.green(), c.blue());
 }
 
 QString ColorUtils::colorToAABBGGRR(QColor c) {
 	QString s;
-	return s.sprintf("%02x%02x%02x%02x", 255 - c.alpha(), c.blue(), c.green(), c.red() );
+	return s.QTC_SPRINTF("%02x%02x%02x%02x", 255 - c.alpha(), c.blue(), c.green(), c.red() );
 }
 
 QString ColorUtils::colorToAARRGGBB(QColor c) {
 	QString s;
-	return s.sprintf("%02x%02x%02x%02x", c.alpha(), c.red(), c.green(), c.blue());
+	return s.QTC_SPRINTF("%02x%02x%02x%02x", c.alpha(), c.red(), c.green(), c.blue());
 }
 
 QColor ColorUtils::AARRGGBBToColor(const QString & s) {

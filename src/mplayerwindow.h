@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,12 +30,16 @@
 #include <QKeyEvent>
 #include <QPaintEvent>
 
+#include "videolayer.h"
 #include "config.h"
 
 class QWidget;
 class QLabel;
 class QKeyEvent;
 class QTimer;
+class ScreenHelper;
+class VideoLayerShm;
+class VideoLayerCV;
 
 #define ZOOM_STEP 0.05
 #define ZOOM_MIN 0.5
@@ -47,88 +51,15 @@ class QTimer;
 
 enum TDragState {NOT_DRAGGING, START_DRAGGING, DRAGGING};
 
-//! Screen is a widget that hides the mouse cursor after some seconds if not moved.
-
-class Screen : public QWidget
+class MplayerWindow : public QWidget
 {
 	Q_OBJECT
 
 public:
-	Screen(QWidget* parent = 0, Qt::WindowFlags f = 0);
-	~Screen();
-
-	void setAutoHideCursor(bool b);
-	bool autoHideCursor() { return autohide_cursor; };
-
-	void setAutoHideInterval(int milliseconds) { autohide_interval = milliseconds; };
-	int autoHideInterval() { return autohide_interval; };
-
-public slots:
-	//! Should be called when a file has started. 
-	virtual void playingStarted();
-
-	//! Should be called when a file has stopped.
-	virtual void playingStopped();
-
-signals:
-	void mouseMoved(QPoint);
-
-protected:
-	virtual void mouseMoveEvent( QMouseEvent * e );
-
-protected slots:
-	virtual void checkMousePos();
-
-private:
-	QTimer * check_mouse_timer;
-	QPoint mouse_last_position;
-	bool autohide_cursor;
-	int autohide_interval;
-};
-
-//! MplayerLayer can be instructed to not delete the background.
-
-class MplayerLayer : public Screen
-{
-	Q_OBJECT
-
-public:
-	MplayerLayer(QWidget* parent = 0, Qt::WindowFlags f = 0);
-	~MplayerLayer();
-
-#if REPAINT_BACKGROUND_OPTION
-	//! If b is true, the background of the widget will be repainted as usual.
-	/*! Otherwise the background will not repainted when a video is playing. */
-	void setRepaintBackground(bool b);
-
-	//! Return true if repainting the background is allowed.
-	bool repaintBackground() { return repaint_background; };
-#endif
-
-public slots:
-	//! Should be called when a file has started. 
-	/*! It's needed to know if the background has to be cleared or not. */
-	virtual void playingStarted();
-	//! Should be called when a file has stopped.
-	virtual void playingStopped();
-
-private:
-#if REPAINT_BACKGROUND_OPTION
-	bool repaint_background;
-#endif
-	bool playing;
-};
-
-
-class MplayerWindow : public Screen
-{
-	Q_OBJECT
-
-public:
-	MplayerWindow(QWidget* parent = 0, Qt::WindowFlags f = 0);
+	MplayerWindow(QWidget* parent = 0, Qt::WindowFlags f = QFlag(0));
 	~MplayerWindow();
 
-	MplayerLayer * videoLayer() { return mplayerlayer; };
+	QWidget * videoLayer() { return videolayer; };
 
 	void setResolution( int w, int h);
 	void setAspect( double asp);
@@ -166,7 +97,20 @@ public:
 	void setCornerWidget(QWidget * w);
 	QWidget * cornerWidget() { return corner_widget; };
 
+#if REPAINT_BACKGROUND_OPTION
+	void setRepaintBackground(bool b);
+	bool repaintBackground() { return repaint_background; }
+#endif
+
 public slots:
+	//! Should be called when a file has started.
+	virtual void playingStarted();
+
+	//! Should be called when a file has stopped.
+	virtual void playingStopped();
+
+	virtual void gotVO(QString);
+
 	void setLogoVisible(bool b);
 	void showLogo() { setLogoVisible(true); };
 	void hideLogo() { setLogoVisible(false); };
@@ -211,20 +155,23 @@ signals:
 	void wheelUp();
 	void wheelDown();
 	void mouseMovedDiff(QPoint);
+	void mouseMoved(QPoint);
 
 protected:
 	int video_width, video_height;
 	double aspect;
 	double monitoraspect;
 
-	MplayerLayer * mplayerlayer;
+	ScreenHelper * helper;
 	QLabel * logo;
+
+	VideoLayer * videolayer;
 
 	// Zoom and moving
 	int offset_x, offset_y;
 	double zoom_factor;
 
-	// Original pos and dimensions of the mplayerlayer
+	// Original pos and dimensions of the videolayer
 	// before zooming or moving
 	int orig_x, orig_y;
 	int orig_width, orig_height;
@@ -245,6 +192,10 @@ protected:
 #endif
 
 	QWidget * corner_widget;
+
+#if REPAINT_BACKGROUND_OPTION
+	bool repaint_background;
+#endif
 
 private:
 	TDragState drag_state;

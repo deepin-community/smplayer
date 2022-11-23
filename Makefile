@@ -12,6 +12,7 @@ SHORTCUTS_PATH=$(PREFIX)/share/smplayer/shortcuts
 
 ICONS_DIR=$(PREFIX)/share/icons/hicolor/
 APPLNK_DIR=$(PREFIX)/share/applications/
+METAINFO_DIR=$(PREFIX)/share/metainfo/
 
 QMAKE=qmake
 LRELEASE=lrelease
@@ -44,7 +45,7 @@ install: all
 	-install -d $(DESTDIR)$(TRANSLATION_PATH)
 	install -m 644 src/translations/*.qm $(DESTDIR)$(TRANSLATION_PATH)
 	-install -d $(DESTDIR)$(DOC_PATH)
-	install -m 644 Changelog *.txt $(DESTDIR)$(DOC_PATH)
+	install -m 644 Release_notes.md *.txt $(DESTDIR)$(DOC_PATH)
 
 	install -m 755 webserver/simple_web_server $(DESTDIR)$(PREFIX)/bin/
 
@@ -78,6 +79,10 @@ install: all
 	-install -d $(DESTDIR)$(APPLNK_DIR)
 	install -m 644 smplayer.desktop $(DESTDIR)$(APPLNK_DIR)
 	install -m 644 smplayer_enqueue.desktop $(DESTDIR)$(APPLNK_DIR)
+
+	-install -d $(DESTDIR)$(METAINFO_DIR)
+	./install_appdata.sh $(DESTDIR)$(METAINFO_DIR)/smplayer.appdata.xml
+
 	-install -d $(DESTDIR)$(PREFIX)/share/man/man1/
 	install -m 644 man/smplayer.1 $(DESTDIR)$(PREFIX)/share/man/man1/
 	gzip -9 -f $(DESTDIR)$(PREFIX)/share/man/man1/smplayer.1
@@ -94,6 +99,7 @@ uninstall:
 	-rm -f $(ICONS_DIR)/22x22/apps/smplayer.png
 	-rm -f $(ICONS_DIR)/16x16/apps/smplayer.png
 	-rm -f $(APPLNK_DIR)/smplayer.desktop
+	-rm -f $(METAINFO_DIR)/smplayer.appdata.xml
 	-rm -f $(PREFIX)/share/man/man1/smplayer.1.gz
 	-rmdir $(SHORTCUTS_PATH)/
 	-rmdir $(TRANSLATION_PATH)/

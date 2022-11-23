@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,6 +26,18 @@
 #include "preferences.h"
 #include "mplayerversion.h"
 #include "colorutils.h"
+
+#ifdef USE_IPC
+#include <QLocalSocket>
+#endif
+
+#ifdef USE_IPC
+ #if QT_VERSION >= 0x050000
+ #include <QStandardPaths>
+ #else
+ #include <QDesktopServices>
+ #endif
+#endif
 
 using namespace Global;
 
@@ -75,10 +87,37 @@ MPVProcess::MPVProcess(QObject * parent)
 
 	initializeOptionVars();
 	initializeRX();
+
+#ifdef USE_IPC
+	socket = new QLocalSocket(this);
+	#if QT_VERSION >= 0x050000
+	QString temp_dir = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+	#else
+	QString temp_dir = QDesktopServices::storageLocation(QDesktopServices::TempLocation);
+	#endif
+	socket_name = temp_dir + "/smplayer-mpv-" + QString::number(QCoreApplication::applicationPid(), 16);
+	qDebug() << "MPVProcess::MPVProcess: socket_name:" << socket_name;
+#endif
 }
 
 MPVProcess::~MPVProcess() {
+#ifdef USE_IPC
+	if (QFile::exists(socket_name)) {
+		QFile::remove(socket_name);
+	}
+#endif
 }
+
+#ifdef USE_IPC
+void MPVProcess::setSocketName(const QString & name) {
+	// Remove old socket
+	if (!socket_name.isEmpty() && QFile::exists(socket_name)) {
+		QFile::remove(socket_name);
+	}
+	socket_name = name;
+	qDebug() << "MPVProcess::setSocketName:" << socket_name;
+}
+#endif
 
 bool MPVProcess::start() {
 	md.reset();
@@ -122,9 +161,9 @@ bool MPVProcess::start() {
 
 void MPVProcess::initializeRX() {
 #ifdef CUSTOM_STATUS
-	rx_av.setPattern("^STATUS: ([0-9\\.-]+) / ([0-9\\.-]+) P: (yes|no) B: (yes|no) I: (yes|no) VB: ([0-9\\.-]+) AB: ([0-9\\.-]+)");
+	rx_av.setPattern("STATUS: ([0-9\\.-]+) / ([0-9\\.-]+) P: (yes|no) B: (yes|no) I: (yes|no) VB: ([0-9\\.-]+) AB: ([0-9\\.-]+)");
 #else
-	rx_av.setPattern("^(\\((.*)\\) |)(AV|V|A): ([0-9]+):([0-9]+):([0-9]+) / ([0-9]+):([0-9]+):([0-9]+)"); //AV: 00:02:15 / 00:09:56
+	rx_av.setPattern("(\\((.*)\\) |)(AV|V|A): ([0-9]+):([0-9]+):([0-9]+) / ([0-9]+):([0-9]+):([0-9]+)"); //AV: 00:02:15 / 00:09:56
 #endif
 
 	rx_dsize.setPattern("^INFO_VIDEO_DSIZE=(\\d+)x(\\d+)");
@@ -157,7 +196,7 @@ void MPVProcess::initializeRX() {
 
 	rx_playing.setPattern("^Playing:.*|^\\[ytdl_hook\\].*");
 	rx_generic.setPattern("^([A-Z_]+)=(.*)");
-	rx_stream_title.setPattern("icy-title: (.*)");
+	rx_stream_title.setPattern("(?:icy-title: |^ Title: )(.*)");
 	rx_debug.setPattern("^(INFO|METADATA)_.*=\\$.*");
 
 	#if 0
@@ -197,7 +236,7 @@ void MPVProcess::parseLine(QByteArray ba) {
 	static double last_sec = -1;
 
 	// Parse A: V: line
-	//qDebug("MPVProcess::parseLine: %s", line.toUtf8().data());
+	//qDebug() << "MPVProcess::parseLine:" << line;
 	if (rx_av.indexIn(line) > -1) {
 		#ifdef CUSTOM_STATUS
 		double sec = rx_av.cap(1).toDouble();
@@ -273,7 +312,9 @@ void MPVProcess::parseLine(QByteArray ba) {
 		double length = h * 3600 + m * 60 + s;
 		if (length != md.duration) {
 			md.duration = length;
+			#if DVDNAV_SUPPORT
 			emit receivedDuration(length);
+			#endif
 		}
 
 		if (status == "Paused") {
@@ -417,7 +458,7 @@ void MPVProcess::parseLine(QByteArray ba) {
 		if (rx_vo.indexIn(line) > -1) {
 			emit receivedVO( rx_vo.cap(1) );
 			// Ask for window resolution
-			writeToStdin("print_text INFO_VIDEO_DSIZE=${=dwidth}x${=dheight}");
+			sendCommand("print_text INFO_VIDEO_DSIZE=${=dwidth}x${=dheight}");
 		}
 		else
 		
@@ -649,6 +690,10 @@ void MPVProcess::parseLine(QByteArray ba) {
 			}
 			else
 			*/
+			if (tag == "INFO_DEMUX_ROTATION") {
+				emit receivedDemuxRotation(value.toInt());
+			}
+			else
 			if (tag == "INFO_AUDIO_BITRATE") {
 				int bitrate = value.toInt();
 				emit receivedAudioBitrate(bitrate);
@@ -676,7 +721,7 @@ void MPVProcess::parseLine(QByteArray ba) {
 				}
 				#endif
 				for (int n = 0; n < md.n_chapters; n++) {
-					writeToStdin(QString("print_text INFO_CHAPTER_%1_NAME=${chapter-list/%1/title}").arg(n));
+					sendCommand(QString("print_text INFO_CHAPTER_%1_NAME=${chapter-list/%1/title}").arg(n));
 				}
 			}
 			else
@@ -741,7 +786,7 @@ void MPVProcess::parseLine(QByteArray ba) {
 			if (tag == "INFO_TRACKS_COUNT") {
 				int tracks = value.toInt();
 				for (int n = 0; n < tracks; n++) {
-					writeToStdin(QString("print_text \"INFO_TRACK_%1: "
+					sendCommand(QString("print_text \"INFO_TRACK_%1: "
 						"${track-list/%1/type} "
 						"${track-list/%1/id} "
 						"'${track-list/%1/lang:}' "
@@ -755,13 +800,13 @@ void MPVProcess::parseLine(QByteArray ba) {
 }
 
 void MPVProcess::requestChapterInfo() {
-	writeToStdin("print_text \"INFO_CHAPTERS=${=chapters}\"");
+	sendCommand("print_text \"INFO_CHAPTERS=${=chapters}\"");
 }
 
 /*
 void MPVProcess::requestBitrateInfo() {
-	writeToStdin("print_text INFO_VIDEO_BITRATE=${=video-bitrate}");
-	writeToStdin("print_text INFO_AUDIO_BITRATE=${=audio-bitrate}");
+	sendCommand("print_text INFO_VIDEO_BITRATE=${=video-bitrate}");
+	sendCommand("print_text INFO_AUDIO_BITRATE=${=audio-bitrate}");
 }
 */
 
@@ -864,6 +909,28 @@ void MPVProcess::processFinished(int exitCode, QProcess::ExitStatus exitStatus) 
 void MPVProcess::gotError(QProcess::ProcessError error) {
 	qDebug("MPVProcess::gotError: %d", (int) error);
 }
+
+#ifdef USE_IPC
+void MPVProcess::sendCommand(QString text) {
+	qDebug() << "MPVProcess::sendCommand:" << text;
+
+	if (!isRunning()) {
+		qWarning("MPVProcess::sendCommand: mpv is not running. Command ignored.");
+		return;
+	}
+
+	if (socket->state() != QLocalSocket::ConnectedState) {
+		qDebug() << "MPVProcess::sendCommand: state:" << socket->state();
+		qDebug() << "MPVProcess::sendCommand: error:" << socket->errorString();
+		socket->close();
+		socket->connectToServer(socket_name, QIODevice::ReadWrite | QIODevice::Text);
+		socket->waitForConnected();
+		qDebug() << "MPVProcess::sendCommand: state:" << socket->state();
+	}
+	socket->write(text.toUtf8() +"\n");
+	socket->flush();
+}
+#endif
 
 #include "mpvoptions.cpp"
 #include "moc_mpvprocess.cpp"

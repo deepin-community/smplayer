@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -122,14 +122,22 @@
 #include <QSysInfo>
 #endif
 
+#ifdef OS_UNIX_NOT_MAC
+#include "myapplication.h"
+#endif
+
 #ifdef UPDATE_CHECKER
 #include "updatechecker.h"
 #endif
 
 #ifdef YOUTUBE_SUPPORT
-  #ifdef YT_USE_YTSIG
+  #ifdef YT_CODEDOWNLOADER
   #include "codedownloader.h"
   #endif
+#endif
+
+#ifdef USE_SMTUBE_LIB
+#include "../smtube/browserwindow.h"
 #endif
 
 #ifdef SHARE_ACTIONS
@@ -171,6 +179,9 @@ BaseGui::BaseGui( QWidget* parent, Qt::WindowFlags flags )
 	, delayed_seek_timer(0)
 	, delayed_seek_value(0)
 #endif
+#ifdef USE_SMTUBE_LIB
+	, browser_window(0)
+#endif
 	, was_maximized(false)
 #ifdef AVOID_SCREENSAVER
 	, just_stopped(false)
@@ -205,7 +216,7 @@ BaseGui::BaseGui( QWidget* parent, Qt::WindowFlags flags )
 	qApp->setStyleSheet("");
 	default_style = qApp->style()->objectName();
 
-	#ifdef Q_OS_LINUX
+	#ifdef OS_UNIX_NOT_MAC
 	// Some controls aren't displayed correctly with the adwaita style
 	// so try to prevent to use it as the default style
 	if (default_style.toLower() == "adwaita") default_style = "gtk+";
@@ -333,6 +344,10 @@ void BaseGui::handleMessageFromOtherInstances(const QString& message) {
 				core->loadSub(arg);
 			}
 		}
+		else
+		if (command == "start_second") {
+			setInitialSecond(arg.toInt());
+		}
 	}
 }
 #endif
@@ -369,6 +384,10 @@ BaseGui::~BaseGui() {
 	if (video_preview) {
 		delete video_preview;
 	}
+#endif
+
+#if defined(YOUTUBE_SUPPORT) && defined(USE_SMTUBE_LIB)
+	if (browser_window) delete browser_window;
 #endif
 
 	if (mplayerwindow) {
@@ -591,6 +610,15 @@ void BaseGui::createActions() {
 	connect( incSpeed1Act, SIGNAL(triggered()),
              core, SLOT(incSpeed1()) );
 
+	for (double speed = 0.25; speed < 2; speed += 0.25) {
+		if (speed == 1.0) continue;
+		QByteArray action_name = "speed_" + QByteArray::number(speed) + "x";
+		MyAction * a = new MyAction(this, action_name.constData());
+		a->setText(QString::number(speed) + "x");
+		a->setData(speed);
+		connect(a, SIGNAL(triggered()), this, SLOT(setSpeed()));
+		speed_acts.append(a);
+	}
 
 	// Menu Video
 	fullscreenAct = new MyAction( Qt::Key_F, this, "fullscreen" );
@@ -860,6 +888,7 @@ void BaseGui::createActions() {
              this, SLOT(showFilePropertiesDialog()) );
 
 	showPreferencesAct = new MyAction( QKeySequence("Ctrl+P"), this, "show_preferences" );
+	showPreferencesAct->setMenuRole(QAction::PreferencesRole);
 	connect( showPreferencesAct, SIGNAL(triggered()),
              this, SLOT(showPreferencesDialog()) );
 
@@ -904,10 +933,10 @@ void BaseGui::createActions() {
 	connect( showCheckUpdatesAct, SIGNAL(triggered()),
              this, SLOT(helpCheckUpdates()) );
 
-#if defined(YOUTUBE_SUPPORT) && defined(YT_USE_YTSIG)
+#ifdef YT_CODEDOWNLOADER
 	updateYTAct = new MyAction( this, "update_youtube" );
 	connect( updateYTAct, SIGNAL(triggered()),
-             this, SLOT(YTUpdateScript()) );
+             this, SLOT(YTUpdate()) );
 #endif
 
 	showConfigAct = new MyAction( this, "show_config" );
@@ -919,6 +948,7 @@ void BaseGui::createActions() {
              this, SLOT(helpDonate()) );
 
 	aboutThisAct = new MyAction( this, "about_smplayer" );
+	aboutThisAct->setMenuRole(QAction::AboutRole);
 	connect( aboutThisAct, SIGNAL(triggered()),
              this, SLOT(helpAbout()) );
 
@@ -1042,11 +1072,20 @@ void BaseGui::createActions() {
 	incGammaAct = new MyAction( this, "inc_gamma");
 	connect( incGammaAct, SIGNAL(triggered()), core, SLOT(incGamma()) );
 
+	prevVideoAct = new MyAction( this, "previous_video");
+	connect( prevVideoAct, SIGNAL(triggered()), core, SLOT(prevVideo()) );
+
 	nextVideoAct = new MyAction( this, "next_video");
 	connect( nextVideoAct, SIGNAL(triggered()), core, SLOT(nextVideo()) );
 
+	prevAudioAct = new MyAction( Qt::SHIFT | Qt::Key_K, this, "previous_audio");
+	connect( prevAudioAct, SIGNAL(triggered()), core, SLOT(prevAudio()) );
+
 	nextAudioAct = new MyAction( Qt::Key_K, this, "next_audio");
 	connect( nextAudioAct, SIGNAL(triggered()), core, SLOT(nextAudio()) );
+
+	prevSubtitleAct = new MyAction( Qt::SHIFT | Qt::Key_J, this, "previous_subtitle");
+	connect( prevSubtitleAct, SIGNAL(triggered()), core, SLOT(prevSubtitle()) );
 
 	nextSubtitleAct = new MyAction( Qt::Key_J, this, "next_subtitle");
 	connect( nextSubtitleAct, SIGNAL(triggered()), core, SLOT(nextSubtitle()) );
@@ -1196,6 +1235,7 @@ void BaseGui::createActions() {
 	rotateClockwiseAct = new MyActionGroupItem(this, rotateGroup, "rotate_clockwise", MediaSettings::Clockwise);
 	rotateCounterclockwiseAct = new MyActionGroupItem(this, rotateGroup, "rotate_counterclockwise", MediaSettings::Counterclockwise);
 	rotateCounterclockwiseFlipAct = new MyActionGroupItem(this, rotateGroup, "rotate_counterclockwise_flip", MediaSettings::Counterclockwise_flip);
+	rotate180Act = new MyActionGroupItem(this, rotateGroup, "rotate_180", MediaSettings::Rotate_180);
 	connect( rotateGroup, SIGNAL(activated(int)),
              core, SLOT(changeRotate(int)) );
 
@@ -1375,6 +1415,7 @@ void BaseGui::setActionsEnabled(bool b) {
 	incSpeed4Act->setEnabled(b);
 	decSpeed1Act->setEnabled(b);
 	incSpeed1Act->setEnabled(b);
+	foreach(QAction *a, speed_acts) a->setEnabled(b);
 
 	// Menu Video
 	videoEqualizerAct->setEnabled(b);
@@ -1446,8 +1487,11 @@ void BaseGui::setActionsEnabled(bool b) {
 	incSaturationAct->setEnabled(b);
 	decGammaAct->setEnabled(b);
 	incGammaAct->setEnabled(b);
+	prevVideoAct->setEnabled(b);
 	nextVideoAct->setEnabled(b);
+	prevAudioAct->setEnabled(b);
 	nextAudioAct->setEnabled(b);
+	prevSubtitleAct->setEnabled(b);
 	nextSubtitleAct->setEnabled(b);
 	nextChapterAct->setEnabled(b);
 	prevChapterAct->setEnabled(b);
@@ -1586,7 +1630,7 @@ void BaseGui::enableActionsOnPlaying() {
 	screenGroup->setActionsEnabled(pref->vo.startsWith(OVERLAY_VO));
 #endif
 
-#ifndef Q_OS_WIN
+#ifdef OS_UNIX_NOT_MAC
 	// Disable video filters if using vdpau
 	if ((pref->vdpau.disable_video_filters) && (pref->vo.startsWith("vdpau"))) {
 		/*
@@ -1863,8 +1907,12 @@ void BaseGui::retranslateStrings() {
 	showCLOptionsAct->change( Images::icon("cl_help"), tr("&Command line options") );
 	showCheckUpdatesAct->change( Images::icon("check_updates"), tr("Check for &updates") );
 
-#if defined(YOUTUBE_SUPPORT) && defined(YT_USE_YTSIG)
-	updateYTAct->change( Images::icon("update_youtube"), tr("Update the &YouTube code") );
+#ifdef YT_CODEDOWNLOADER
+	#if defined(Q_OS_WIN) && !defined(PORTABLE_APP) && !defined(YT_BIN_ON_CONFIG_DIR)
+	updateYTAct->change( Images::icon("update_youtube"), tr("Update &YouTube support") );
+	#else
+	updateYTAct->change( Images::icon("update_youtube"), tr("Install / Update &YouTube support") );
+	#endif
 #endif
 
 	showConfigAct->change( Images::icon("show_config"), tr("&Open configuration folder") );
@@ -1919,8 +1967,11 @@ void BaseGui::retranslateStrings() {
 	incSaturationAct->change( tr("Inc saturation") );
 	decGammaAct->change( tr("Dec gamma") );
 	incGammaAct->change( tr("Inc gamma") );
+	prevVideoAct->change( tr("Previous video") );
 	nextVideoAct->change( tr("Next video") );
+	prevAudioAct->change( tr("Previous audio") );
 	nextAudioAct->change( tr("Next audio") );
+	prevSubtitleAct->change( tr("Previous subtitle") );
 	nextSubtitleAct->change( tr("Next subtitle") );
 	nextChapterAct->change( tr("Next chapter") );
 	prevChapterAct->change( tr("Previous chapter") );
@@ -1939,6 +1990,7 @@ void BaseGui::retranslateStrings() {
 
 
 	// Action groups
+
 	osdNoneAct->change( tr("Subtitles onl&y") );
 	osdSeekAct->change( tr("Volume + &Seek") );
 	osdTimerAct->change( tr("Volume + Seek + &Timer") );
@@ -2067,6 +2119,7 @@ void BaseGui::retranslateStrings() {
 	rotateClockwiseAct->change( tr("Rotate by 90 degrees &clockwise") );
 	rotateCounterclockwiseAct->change( tr("Rotate by 90 degrees counterclock&wise") );
 	rotateCounterclockwiseFlipAct->change( tr("Rotate by 90 degrees counterclockwise and &flip") );
+	rotate180Act->change( tr("Rotate by 1&80 degrees") );
 
 	onTopAlwaysAct->change( tr("&Always") );
 	onTopNeverAct->change( tr("&Never") );
@@ -2329,10 +2382,13 @@ void BaseGui::createCore() {
 #endif
 
 #ifdef YOUTUBE_SUPPORT
-	connect(core, SIGNAL(signatureNotFound(const QString &)),
-            this, SLOT(YTNoSignature(const QString &)));
-	connect(core, SIGNAL(noSslSupport()),
-            this, SLOT(YTNoSslSupport()));
+	#ifdef YT_CODEDOWNLOADER
+	connect(core, SIGNAL(YTprocessFailedToStart()), this, SLOT(YTFailedToStart()));
+	connect(core, SIGNAL(YTUrlNotFound()), this, SLOT(YTUrlNotFound()));
+	#ifdef Q_OS_WIN
+	connect(core, SIGNAL(YTDLLNotFound()), this, SLOT(YTDLLNotFound()));
+	#endif
+	#endif
 #endif
 	connect(core, SIGNAL(receivedForbidden()), this, SLOT(gotForbidden()));
 }
@@ -2542,6 +2598,7 @@ void BaseGui::createMenus() {
 	speed_menu = new QMenu(this);
 	speed_menu->menuAction()->setObjectName("speed_menu");
 	speed_menu->addAction(normalSpeedAct);
+	foreach(QAction *a, speed_acts) speed_menu->addAction(a);
 	speed_menu->addSeparator();
 	speed_menu->addAction(halveSpeedAct);
 	speed_menu->addAction(doubleSpeedAct);
@@ -3015,7 +3072,7 @@ void BaseGui::populateMainMenu() {
 		helpMenu->addSeparator();
 	}
 	helpMenu->addAction(showCheckUpdatesAct);
-	#if defined(YOUTUBE_SUPPORT) && defined(YT_USE_YTSIG)
+	#ifdef YT_CODEDOWNLOADER
 	helpMenu->addAction(updateYTAct);
 	#endif
 	helpMenu->addSeparator();
@@ -3149,6 +3206,7 @@ void BaseGui::showPreferencesDialog() {
 	pl->setIgnorePlayerErrors(playlist->ignorePlayerErrors());
 	pl->setAutoSort(playlist->autoSort());
 	pl->setFilterCaseSensitive(playlist->filterCaseSensitive());
+	pl->setChangeName(playlist->allowChangeName());
 
 #ifdef PLAYLIST_DELETE_FROM_DISK
 	pl->allowDeleteFromDisk(playlist->isDeleteFromDiskAllowed());
@@ -3216,7 +3274,7 @@ void BaseGui::applyNewPreferences() {
 	PrefAdvanced *advanced = pref_dialog->mod_advanced();
 #if REPAINT_BACKGROUND_OPTION
 	if (advanced->repaintVideoBackgroundChanged()) {
-		mplayerwindow->videoLayer()->setRepaintBackground(pref->repaint_video_background);
+		mplayerwindow->setRepaintBackground(pref->repaint_video_background);
 	}
 #endif
 #if USE_COLORKEY
@@ -3244,6 +3302,7 @@ void BaseGui::applyNewPreferences() {
 	playlist->setIgnorePlayerErrors(pl->ignorePlayerErrors());
 	playlist->setAutoSort(pl->autoSort());
 	playlist->setFilterCaseSensitive(pl->filterCaseSensitive());
+	playlist->setAllowChangeName(pl->changeName());
 
 #ifdef PLAYLIST_DELETE_FROM_DISK
 	playlist->allowDeleteFromDisk(pl->isDeleteFromDiskAllowed());
@@ -4039,6 +4098,14 @@ void BaseGui::changeVideoEqualizerBySoftware(bool b) {
 	}
 }
 
+void BaseGui::setSpeed() {
+	QAction *a = qobject_cast<QAction *> (sender());
+	if (a) {
+		double speed = a->data().toDouble();
+		core->setSpeed(speed);
+	}
+}
+
 /*
 void BaseGui::openRecent(int item) {
 	qDebug("BaseGui::openRecent: %d", item);
@@ -4461,6 +4528,11 @@ void BaseGui::setInitialSubtitle(const QString & subtitle_file) {
 	core->setInitialSubtitle(subtitle_file);
 }
 
+void BaseGui::setInitialSecond(int second) {
+	qDebug("BaseGui::setInitialSecond: %d", second);
+	core->setInitialSecond(second);
+}
+
 void BaseGui::loadAudioFile() {
 	qDebug("BaseGui::loadAudioFile");
 
@@ -4557,8 +4629,13 @@ void BaseGui::showHelpDonateDialog(bool * accepted) {
 	d.setIconPixmap(Images::icon("donate"));
 	d.setWindowTitle(tr("Support SMPlayer"));
 
-	QPushButton * ok_button = d.addButton(tr("Donate"), QMessageBox::YesRole);
-	d.addButton(tr("No"), QMessageBox::NoRole);
+	#if 0
+	QPushButton * ok_button = d.addButton(tr("&Donate with PayPal"), QMessageBox::YesRole);
+	d.addButton(tr("&Not now"), QMessageBox::NoRole);
+	#else
+	QPushButton * ok_button = d.addButton(tr("&Donate"), QMessageBox::YesRole);
+	d.addButton(tr("&No"), QMessageBox::NoRole);
+	#endif
 	d.setDefaultButton(ok_button);
 
 	d.setText("<h1>" + tr("SMPlayer needs you") + "</h1><p>" +
@@ -4566,6 +4643,11 @@ void BaseGui::showHelpDonateDialog(bool * accepted) {
 		tr("In order to keep developing SMPlayer with new features we need your help.") + "<p>" +
 		tr("Please consider to support the SMPlayer project by sending a donation.") + " " +
 		tr("Even the smallest amount will help a lot.")
+		#if 0
+		+
+		"<p><a href=\"" URL_CONTRIBUTE "\">" +
+		tr("It's also possible to donate with cryptocurrencies.") + "</a>"
+		#endif
 	);
 	d.exec();
 	if (d.clickedButton() == ok_button) {
@@ -5010,7 +5092,8 @@ void BaseGui::checkReminder() {
 	set->beginGroup("reminder");
 	int count = set->value("count", 0).toInt();
 	count++;
-	set->setValue("count", count);
+	if (count > 51) count = 50;
+	if (count <= 50) set->setValue("count", count);
 	int action = set->value("action", 0).toInt();
 	bool dont_show = set->value("dont_show_anymore", false).toBool();
 	set->endGroup();
@@ -5051,54 +5134,43 @@ void BaseGui::checkReminder() {
 }
 #endif
 
-#ifdef YOUTUBE_SUPPORT
-void BaseGui::YTNoSslSupport() {
-	qDebug("BaseGui::YTNoSslSupport");
-	QMessageBox::warning(this, tr("Connection failed"),
-		tr("The video you requested needs to open a HTTPS connection.") +"<br>"+
-		tr("Unfortunately the OpenSSL component, required for it, is not available in your system.") +"<br>"+
-		tr("Please, visit %1 to know how to fix this problem.")
-			.arg("<a href=\"" URL_OPENSSL_INFO "\">" + tr("this link") + "</a>") );
-}
-
-void BaseGui::YTNoSignature(const QString & title) {
-	qDebug("BaseGui::YTNoSignature: %s", title.toUtf8().constData());
-
-	QString t = title;
-
-	QString info_text;
-	if (title.isEmpty()) {
-		info_text = tr("Unfortunately due to changes in the Youtube page, this video can't be played.");
-	} else {
-		t.replace(" - YouTube", "");
-		info_text = tr("Unfortunately due to changes in the Youtube page, the video '%1' can't be played.").arg(t);
-	}
-
-	#ifdef YT_USE_YTSIG
-	int ret = QMessageBox::question(this, tr("Problems with Youtube"),
-				info_text + "<br><br>" +
-				tr("Do you want to update the Youtube code? This may fix the problem."),
-				QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
-	if (ret == QMessageBox::Yes) {
-		YTUpdateScript();
-	}
-	#else
-	QMessageBox::warning(this, tr("Problems with Youtube"),
-		info_text + "<br><br>" +
-		tr("Maybe updating SMPlayer could fix the problem."));
+#ifdef YT_CODEDOWNLOADER
+void BaseGui::YTUpdate() {
+	QString path;
+	#ifdef YT_BIN_ON_CONFIG_DIR
+	path = Paths::configPath();
 	#endif
+	CodeDownloader::askAndDownload(this, CodeDownloader::NoError, path, pref->yt_ytdl_bin);
 }
 
-#ifdef YT_USE_YTSIG
-void BaseGui::YTUpdateScript() {
-	static CodeDownloader * downloader = 0;
-	if (!downloader) downloader = new CodeDownloader(this);
-	downloader->saveAs(Paths::configPath() + "/yt.js");
-	downloader->show();
-	downloader->download(QUrl(URL_YT_CODE));
+void BaseGui::YTFailedToStart() {
+	QString path;
+	#ifdef YT_BIN_ON_CONFIG_DIR
+	path = Paths::configPath();
+	#endif
+	CodeDownloader::askAndDownload(this, CodeDownloader::FailedToRun, path, pref->yt_ytdl_bin);
 }
-#endif // YT_USE_YTSIG
-#endif //YOUTUBE_SUPPORT
+
+void BaseGui::YTUrlNotFound() {
+	QString path;
+	#ifdef YT_BIN_ON_CONFIG_DIR
+	path = Paths::configPath();
+	#endif
+	CodeDownloader::askAndDownload(this, CodeDownloader::UrlNotFound, path, pref->yt_ytdl_bin);
+}
+
+#ifdef Q_OS_WIN
+void BaseGui::YTDLLNotFound() {
+	qDebug("BaseGui::YTDLLNotFound");
+	QMessageBox::warning(this, tr("Error detected"), 
+		tr("The youtube-dl process failed because of missing libraries.") +"<br>"+
+		tr("You'll probably need to install %1.").
+		arg("<a href=\"https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe\">%1</a>").
+		arg(tr("the Microsoft Visual C++ 2010 Redistributable Package"))
+		);
+}
+#endif
+#endif
 
 void BaseGui::gotForbidden() {
 	qDebug("BaseGui::gotForbidden");
@@ -5113,7 +5185,7 @@ void BaseGui::gotForbidden() {
 	if (busy) return;
 
 	busy = true;
-#ifdef YOUTUBE_SUPPORT
+#if defined(YOUTUBE_SUPPORT) && defined(YT_OBSOLETE)
 	if (core->mdat.filename.contains("youtube.com")) {
 		YTNoSignature("");
 	} else
@@ -5303,7 +5375,7 @@ void BaseGui::enterFullscreenOnPlay() {
 	qDebug("BaseGui::enterFullscreenOnPlay: arg_start_in_fullscreen: %d, pref->start_in_fullscreen: %d", arg_start_in_fullscreen, pref->start_in_fullscreen);
 
 	if (arg_start_in_fullscreen != 0) {
-		if ( (arg_start_in_fullscreen == 1) || (pref->start_in_fullscreen) ) {
+		if ((arg_start_in_fullscreen == 1 || pref->start_in_fullscreen) && !core->mdat.novideo) {
 			if (!pref->fullscreen) toggleFullscreen(true);
 		}
 	}
@@ -5453,6 +5525,28 @@ void BaseGui::resizeMainWindow(int w, int h) {
 	int diff_width = this->width() - panel->width();
 	int diff_height = this->height() - panel->height();
 
+#if 1
+	QRect desktop_rect = QApplication::desktop()->availableGeometry(this);
+	QSize desktop_size = QSize(desktop_rect.width(), desktop_rect.height());
+
+	if (w + diff_width > desktop_size.width() || h + diff_height > desktop_size.height()) {
+		qDebug("BaseGui::resizeWindow: video size is larger than desktop");
+		qDebug() << "BaseGui::resizeWindow: desktop size:" << desktop_size;
+		int spacing =  desktop_size.width() * 0.05;
+		int max_width = desktop_size.width() - diff_width - spacing;
+		int max_height = desktop_size.height() - diff_height - spacing;
+		qDebug("BaseGui::resizeWindow: max_size: %d %d", max_width, max_height);
+		double wr = (double) w / max_width;
+		double hr = (double) h / max_height;
+		double m = wr;
+		if (hr > wr) m = hr;
+		qDebug("BaseGui::resizeWindow: wr: %f hr: %f m: %f", wr, hr, m);
+		w =  w / m;
+		h = h / m;
+		qDebug("BaseGui::resizeWindow: new size to scale: %d, %d", w, h);
+	}
+#endif
+
 	int new_width = w + diff_width;
 	int new_height = h + diff_height;
 
@@ -5467,7 +5561,7 @@ void BaseGui::resizeMainWindow(int w, int h) {
 
 	qDebug("BaseGui::resizeWindow: new_width: %d new_height: %d", new_width, new_height);
 
-#ifdef Q_OS_WIN
+#if 0
 	QRect desktop_rect = QApplication::desktop()->availableGeometry(this);
 	QSize desktop_size = QSize(desktop_rect.width(), desktop_rect.height());
 	//desktop_size.setWidth(1000); desktop_size.setHeight(1000); // test
@@ -5490,10 +5584,10 @@ void BaseGui::resizeMainWindow(int w, int h) {
 	resize(new_width, new_height);
 
 	qDebug("BaseGui::resizeWindow: done: window size: %d, %d", this->width(), this->height());
-	qDebug("BaseGui::resizeWindow: done: panel->size: %d, %d", 
-           panel->size().width(),  
+	qDebug("BaseGui::resizeWindow: done: panel->size: %d, %d",
+           panel->size().width(),
            panel->size().height() );
-	qDebug("BaseGui::resizeWindow: done: mplayerwindow->size: %d, %d", 
+	qDebug("BaseGui::resizeWindow: done: mplayerwindow->size: %d, %d",
            mplayerwindow->size().width(),
            mplayerwindow->size().height() );
 
@@ -5802,7 +5896,12 @@ void BaseGui::applyStyles() {
 	if (style.isEmpty()) style = default_style;
 	qDebug() << "BaseGui::applyStyles: style:" << style;
 	if (!style.isEmpty()) {
+		#ifdef OS_UNIX_NOT_MAC
+		MyApplication * app = static_cast<MyApplication *>(qApp);
+		app->changeStyle(style);
+		#else
 		qApp->setStyle(style);
+		#endif
 		#ifdef Q_OS_WIN
 		qApp->setPalette(qApp->style()->standardPalette());
 		#endif
@@ -6195,10 +6294,23 @@ void BaseGui::showVideoPreviewDialog() {
 #ifdef YOUTUBE_SUPPORT
 void BaseGui::showTubeBrowser() {
 	qDebug("BaseGui::showTubeBrowser");
+#ifdef USE_SMTUBE_LIB
+	if (browser_window == 0) {
+		browser_window = new BrowserWindow(Paths::configPath(), 0);
+		connect(browser_window, SIGNAL(requestOpenUrl(const QString &)),
+                this, SLOT(open(QString)));
+		browser_window->loadHomePage();
+	}
+	browser_window->show();
+#else
 	#ifdef Q_OS_WIN
 	QString exec = Paths::appPath() + "/smtube.exe";
 	#else
+	#ifdef Q_OS_MACX
+	QString exec = Paths::appPath() + "/smtube";
+	#else
 	QString exec = Helper::findExecutable("smtube");
+	#endif
 	#endif
 
 	if (exec.isEmpty() || !QFile::exists(exec)) {
@@ -6218,6 +6330,7 @@ void BaseGui::showTubeBrowser() {
 			tr("Be sure it's installed correctly.") +"<br>"+
 			tr("Visit %1 to get it.").arg("<a href=http://www.smtube.org>http://www.smtube.org</a>"));
 	}
+#endif
 }
 #endif
 

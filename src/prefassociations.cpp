@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -149,7 +149,7 @@ void PrefAssociations::refreshList()
 				//Don't allow de-selection in windows VISTA if extension is registered.
 				//VISTA doesn't seem to support extension 'restoration' in the API.
 				if (QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA) {
-					pItem->setFlags(0);
+					pItem->setFlags(QFlag(0));
 				}
 			}
 			else

@@ -1,18 +1,20 @@
+%if 0%{?suse_version}
+ %define dist .opensuse
+%endif
+
 Name:           smplayer
-Version:        18.10.0
-%global smplayer_themes_ver 18.6.0
-%global smplayer_skins_ver 15.2.0
-#%global webfs_ver 1.21
+Version:        22.7.0
+%global smplayer_themes_ver 20.11.0
+%global smplayer_skins_ver 20.11.0
 Release:        1%{?dist}
 Summary:        A great media player
 
 Group:          Applications/Multimedia
 License:        GPL-2.0+
-URL:            http://smplayer.sourceforge.net/
+URL:            https://smplayer.info/
 Source0:        http://downloads.sourceforge.net/smplayer/smplayer-%{version}.tar.bz2
 Source3:        http://downloads.sourceforge.net/smplayer/smplayer-themes-%{smplayer_themes_ver}.tar.bz2
 Source4:        http://downloads.sourceforge.net/smplayer/smplayer-skins-%{smplayer_skins_ver}.tar.bz2
-#Source5:        https://www.kraxel.org/releases/webfs/webfs-%{webfs_ver}.tar.gz
 
 %if 0%{?suse_version}
 BuildRequires:  hicolor-icon-theme
@@ -21,17 +23,17 @@ BuildRequires:  libQt5Gui-private-headers-devel
 %else
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qttools-devel
+BuildRequires:  qt5-qtbase-private-devel
 %endif
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc-c++
-#BuildRequires:  pkgconfig(libpulse) >= 0.9
+BuildRequires:  libXext-devel
 BuildRequires:  pkgconfig(Qt5Concurrent)
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5DBus)
 BuildRequires:  pkgconfig(Qt5Gui)
 BuildRequires:  pkgconfig(Qt5Network)
 BuildRequires:  pkgconfig(Qt5PrintSupport)
-BuildRequires:  pkgconfig(Qt5Script)
 BuildRequires:  pkgconfig(Qt5Sql)
 BuildRequires:  pkgconfig(Qt5WebKitWidgets)
 BuildRequires:  pkgconfig(Qt5Widgets)
@@ -57,9 +59,6 @@ and with the same settings.
 
 # correction for wrong-file-end-of-line-encoding
 %{__sed} -i 's/\r//' *.txt
-# fix files which are not UTF-8 
-iconv -f Latin1 -t UTF-8 -o Changelog.utf8 Changelog
-mv Changelog.utf8 Changelog
 
 # change rcc binary
 %{__sed} -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-themes-%{smplayer_themes_ver}/themes/Makefile
@@ -71,7 +70,7 @@ make \
 	LRELEASE=%{_bindir}/lrelease-qt5 \
 	PREFIX=%{_prefix} \
 	DOC_PATH="\\\"%{_docdir}/%{name}/\\\"" \
-	QMAKE_OPTS=DEFINES+=NO_DEBUG_ON_CONSOLE
+	QMAKE_OPTS=
 
 #touch src/smplayer
 #touch src/translations/smplayer_es.qm
@@ -84,10 +83,6 @@ pushd smplayer-skins-%{smplayer_skins_ver}
 make
 popd
 
-#pushd webfs-%{webfs_ver}
-#make
-#popd
-
 %install
 make PREFIX=%{_prefix} DESTDIR=%{buildroot}/ DOC_PATH=%{_docdir}/%{name}/ install
 
@@ -99,9 +94,7 @@ pushd smplayer-skins-%{smplayer_skins_ver}
 make install PREFIX=%{_prefix} DESTDIR=%{buildroot}
 popd
 
-#pushd webfs-%{webfs_ver}
-#cp webfsd %{buildroot}/usr/bin/webfsd
-#popd
+install -m 0644 -D %{name}.appdata.xml %{buildroot}%{_datadir}/metainfo/%{name}.appdata.xml
 
 %post
 touch --no-create %{_datadir}/icons/hicolor
@@ -127,11 +120,12 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/smplayer/
 %{_mandir}/man1/smplayer.1.gz
 %{_docdir}/%{name}/
-#%{_bindir}/webfsd
 %{_bindir}/simple_web_server
+%dir %{_datadir}/metainfo
+%{_datadir}/metainfo/%{name}.appdata.xml 
 
 %changelog
-* Thu Feb 25 2016 Ricardo Villalba <rvm@users.sourceforge.net> - 16.1.0
+* Thu Feb 25 2016 Ricardo Villalba <ricardo@smplayer.info> - 16.1.0
 - Remove smtube
 - Remove some patches
 - Install smplayer-themes and smplayer-skins

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -65,7 +65,8 @@ using namespace Global;
 BaseGui * SMPlayer::main_window = 0;
 
 SMPlayer::SMPlayer(const QString & config_path, QObject * parent )
-	: QObject(parent) 
+	: QObject(parent)
+	, initial_second(0)
 {
 #ifdef LOG_SMPLAYER
 	#if QT_VERSION >= 0x050000
@@ -189,8 +190,11 @@ BaseGui * SMPlayer::createGUI(QString gui_name) {
 	connect(gui, SIGNAL(guiChanged(QString)), this, SLOT(changeGUI(QString)));
 #endif
 
-#if SINGLE_INSTANCE
 	MyApplication * app = MyApplication::instance();
+#ifdef Q_OS_MACX
+	connect(app, SIGNAL(openFiles(QStringList)), gui, SLOT(openFiles(QStringList)));
+#endif
+#if SINGLE_INSTANCE
 	connect(app, SIGNAL(messageReceived(const QString&)),
             gui, SLOT(handleMessageFromOtherInstances(const QString&)));
 	app->setActivationWindow(gui);
@@ -291,6 +295,35 @@ SMPlayer::ExitCode SMPlayer::processArgs(QStringList args) {
 				}
 			} else {
 				printf("Error: expected parameter for -sub\r\n");
+				return ErrorArgument;
+			}
+		}
+		else
+		if (argument == "-start") {
+			if (n+1 < args.count()) {
+				n++;
+				QString str_pos = args[n];
+				int h = 0;
+				int m = 0;
+				int s = 0;
+				QRegExp rx("(\\d+):(\\d+):(\\d+)");
+				if (rx.indexIn(str_pos) != -1) {
+					h = rx.cap(1).toInt();
+					m = rx.cap(2).toInt();
+					s = rx.cap(3).toInt();
+				} else {
+					rx.setPattern("(\\d+):(\\d+)");
+					if (rx.indexIn(str_pos) != -1) {
+						m = rx.cap(1).toInt();
+						s = rx.cap(2).toInt();
+					}
+					else s = str_pos.toInt();
+				}
+				//qDebug("SMPlayer::processArgs: %d:%d:%d", h, m, s);
+				initial_second = (h * 60 * 60) + (m * 60) + s;
+				qDebug("SMPlayer::processArgs: initial_second: %d", initial_second);
+			} else {
+				printf("Error: expected parameter for -start\r\n");
 				return ErrorArgument;
 			}
 		}
@@ -421,6 +454,10 @@ SMPlayer::ExitCode SMPlayer::processArgs(QStringList args) {
 					a->sendMessage("load_sub " + subtitle_file);
 				}
 
+				if (initial_second != 0) {
+					a->sendMessage("start_second " + QString::number(initial_second));
+				}
+
 				if (!media_title.isEmpty()) {
 					a->sendMessage("media_title " + files_to_play[0] + " <<sep>> " + media_title);
 				}
@@ -464,6 +501,7 @@ void SMPlayer::start() {
 	if (!files_to_play.isEmpty()) {
 		if (!subtitle_file.isEmpty()) gui()->setInitialSubtitle(subtitle_file);
 		if (!media_title.isEmpty()) gui()->getCore()->addForcedTitle(files_to_play[0], media_title);
+		gui()->setInitialSecond(initial_second);
 		gui()->openFiles(files_to_play);
 	}
 
@@ -565,7 +603,7 @@ void SMPlayer::showInfo() {
 	}
 #endif
 	QString s = QObject::tr("This is SMPlayer v. %1 running on %2")
-            .arg(Version::printable())
+           .arg(Version::printable())
 #ifdef Q_OS_LINUX
            .arg("Linux")
 #else
@@ -575,7 +613,15 @@ void SMPlayer::showInfo() {
 #ifdef Q_OS_OS2
            .arg("eCS (OS/2)")
 #else
-		   .arg("Other OS")
+#ifdef Q_OS_MACX
+           .arg("Mac OS")
+#else
+#ifdef Q_OS_FREEBSD
+           .arg("FreeBSD")
+#else
+           .arg("Another OS")
+#endif
+#endif
 #endif
 #endif
 #endif
@@ -653,7 +699,7 @@ void SMPlayer::myMessageOutput( QtMsgType type, const char *msg ) {
 			fprintf( stderr, "Fatal: %s\n", orig_line.toLocal8Bit().data() );
 			#endif
 			line2 = "FATAL: " + orig_line;
-			abort();                    // deliberately core dump
+			break;
 		case QtCriticalMsg:
 			#ifndef NO_DEBUG_ON_CONSOLE
 			fprintf( stderr, "Critical: %s\n", orig_line.toLocal8Bit().data() );

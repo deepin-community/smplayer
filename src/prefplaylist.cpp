@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -178,6 +178,14 @@ bool PrefPlaylist::isDeleteFromDiskAllowed() {
 }
 #endif
 
+void PrefPlaylist::setChangeName(bool b) {
+	changename_check->setChecked(b);
+}
+
+bool PrefPlaylist::changeName() {
+	return changename_check->isChecked();
+}
+
 void PrefPlaylist::createHelp() {
 	clearHelp();
 
@@ -222,6 +230,9 @@ void PrefPlaylist::createHelp() {
         "length of the files. Otherwise this info won't be available until "
         "the file is actually played. Beware: this option can be slow, "
         "specially if you add many files."));
+
+	setWhatsThis(changename_check, tr("Display title name instead of filename"),
+		tr("The playlist will display the title (if any) instead of the filename."));
 
 	setWhatsThis(dockable_check, tr("The playlist window is dockable"),
 		tr("If this option is checked, the playlist window can be docked inside the main window. "

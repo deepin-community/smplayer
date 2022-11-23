@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,11 +27,16 @@
 #include <QProcess>
 #include "mediadata.h"
 
+#ifdef YOUTUBE_SUPPORT
 #define PLAYLIST_DOWNLOAD
+#define YT_PLAYLIST_SUPPORT
+#include "youtube/retrieveyoutubeurl.h"
+#endif
+
 //#define PLAYLIST_DOUBLE_TOOLBAR
 #define PLAYLIST_DELETE_FROM_DISK
 
-#define YT_PLAYLIST_SUPPORT
+#define DELAYED_PLAY
 
 class PLItem : public QStandardItem {
 public:
@@ -50,6 +55,7 @@ public:
 	void setIconURL(const QString & url);
 	void setPlayed(bool played);
 	void setPosition(int position);
+	void setShufflePosition(int position);
 	void setCurrent(bool b);
 
 	QString filename();
@@ -60,6 +66,7 @@ public:
 	QString iconURL();
 	bool played();
 	int position();
+	int shufflePosition();
 	bool isCurrent();
 
 	QList<QStandardItem *> items();
@@ -68,6 +75,7 @@ protected:
 	QStandardItem * col_num;
 	QStandardItem * col_duration;
 	QStandardItem * col_filename;
+	QStandardItem * col_shuffle;
 };
 
 
@@ -117,13 +125,13 @@ public:
 
 public slots:
 	void addItem(QString filename, QString name, double duration, QStringList params = QStringList(),
-                 QString video_url = QString::null, QString icon_url = QString::null);
+                 QString video_url = QString(), QString icon_url = QString(), int shuffle_pos = 0);
 
 	// Start playing, from item 0 if shuffle is off, or from
 	// a random item otherwise
 	void startPlay();
 
-	void playItem(int n);
+	void playItem(int n, bool later = false);
 
 	void playNext();
 	void playPrev();
@@ -157,7 +165,7 @@ public slots:
 	void load();
 
 	bool saveCurrentPlaylist();
-	bool save(const QString & filename = QString::null);
+	bool save(const QString & filename = QString());
 
 #ifdef PLAYLIST_DOWNLOAD
 	void openUrl();
@@ -174,12 +182,14 @@ public slots:
 	bool saveXSPF(const QString & filename);
 
 #ifdef YT_PLAYLIST_SUPPORT
-	void loadYoutubeList(QByteArray & data);
+	void loadYoutubeList(QList<itemMap> list);
 #endif
 
 	void setModified(bool);
 
 	void setFilter(const QString & filter);
+
+	void shuffle(bool enable);
 
 	// Slots to connect from basegui
 	void getMediaInfo(const MediaData &);
@@ -198,6 +208,7 @@ public:
 	void setAutoSort(bool b);
 	void setSortCaseSensitive(bool b);
 	void setFilterCaseSensitive(bool b);
+	void setAllowChangeName(bool b) { change_name = b; };
 
 	bool directoryRecursion() { return recursive_add_directory; };
 	bool autoGetInfo() { return automatically_get_info; };
@@ -209,6 +220,7 @@ public:
 	bool autoSort();
 	bool sortCaseSensitive();
 	bool filterCaseSensitive();
+	bool allowChangeName() { return change_name; };
 
 #ifdef PLAYLIST_DOWNLOAD
 	void setMaxItemsUrlHistory(int max_items);
@@ -244,7 +256,6 @@ protected:
 	void setCurrentItem(int current);
 	int findCurrentItem();
 	void clearPlayedTag();
-	int chooseRandomItem();
 	QString lastDir();
 
 	void setPlaylistFilename(const QString &);
@@ -287,6 +298,11 @@ protected slots:
 	void setNameColumnVisible(bool b);
 	void setDurationColumnVisible(bool b);
 	void setFilenameColumnVisible(bool b);
+	void setShuffleColumnVisible(bool b);
+
+#ifdef DELAYED_PLAY
+	void playItemLater();
+#endif
 
 protected:
 	void createTable();
@@ -369,6 +385,7 @@ protected:
 	MyAction * showNameColumnAct;
 	MyAction * showDurationColumnAct;
 	MyAction * showFilenameColumnAct;
+	MyAction * showShuffleColumnAct;
 
 	QSettings * set;
 
@@ -377,6 +394,16 @@ protected:
 	URLHistory * history_urls;
 	QMovie * animation;
 	QAction * loading_label_action;
+#endif
+
+#ifdef DELAYED_PLAY
+	QTimer * play_later_timer;
+	qint64 last_timestamp;
+	struct {
+		QString filename;
+		QStringList params;
+		int seek;
+	} play_later;
 #endif
 
 private:

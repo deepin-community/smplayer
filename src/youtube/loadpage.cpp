@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ void LoadPage::fetchPage(const QString & url) {
 
 	QNetworkRequest req(url);
 	req.setRawHeader("User-Agent", userAgent().toLatin1());
-	req.setRawHeader("Accept-Language", "en-us,en;q=0.5");
+	//req.setRawHeader("Accept-Language", "en-us,en;q=0.5");
 	reply = manager->get(req);
 	connect(reply, SIGNAL(finished()), this, SLOT(gotResponse()));
 }

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -88,6 +88,7 @@ QString CLHelp::help(bool html) {
                         "[-close-at-end] [-no-close-at-end] [-fullscreen] [-no-fullscreen] "
                         "[-ontop] [-no-ontop] "
                         "[-sub %5] [-pos x y] [-size %6 %7] "
+                        "[-start %9] "
                         "[-add-to-playlist] [-help|--help|-h|-?] "
                         "[%8] [%8]...")
                         .arg(app_name)
@@ -96,7 +97,8 @@ QString CLHelp::help(bool html) {
                         .arg(QObject::tr("action_list"))
                         .arg(QObject::tr("subtitle_file"))
                         .arg(QObject::tr("width")).arg(QObject::tr("height"))
-                        .arg(QObject::tr("media"));
+                        .arg(QObject::tr("media"))
+                        .arg(QObject::tr("time"));
 
 	QString s;
 
@@ -174,6 +176,9 @@ QString CLHelp::help(bool html) {
 
 	s += formatHelp( "-size", QObject::tr(
 		"specifies the size of the main window."), html );
+
+	s += formatHelp( "-start", QObject::tr(
+		"specifies the start time (in seconds) of the first file to be played. Also valid h:m:s and m:s"), html );
 
 	s += formatHelp( "-help", QObject::tr(
 		"will show this message and then will exit."), html );

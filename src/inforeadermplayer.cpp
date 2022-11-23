@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QRegExp>
 #include <QProcess>
+#include <QDebug>
 
 #include "colorutils.h"
 #include "global.h"
@@ -229,7 +230,7 @@ void InfoReaderMplayer::readLine(QByteArray ba) {
 }
 
 bool InfoReaderMplayer::run(QString options) {
-	qDebug("InfoReaderMplayer::run: '%s'", options.toUtf8().data());
+	qDebug() << "InfoReaderMplayer::run:" << options;
 
 	if (proc->state() == QProcess::Running) {
 		qWarning("InfoReaderMplayer::run: process already running");
@@ -237,6 +238,9 @@ bool InfoReaderMplayer::run(QString options) {
 	}
 
 	QStringList args = options.split(" ");
+	args << "-noconfig" << "all";
+
+	qDebug() << "InfoReaderMplayer::run: command:" << mplayerbin + " " + args.join(" ");
 
 	proc->start(mplayerbin, args);
 	if (!proc->waitForStarted()) {

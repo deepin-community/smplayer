@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,121 +16,46 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include <Qt>
-#include <QSysInfo>
 #include "screensaver.h"
-#ifndef Q_OS_OS2
-#include <windows.h>
+
+#ifdef Q_OS_WIN
+#include "winscreensaver.h"
+#endif
+#ifdef OS_UNIX_NOT_MAC
+#include "powersaving.h"
+#endif
+#ifdef Q_OS_MACX
+#include "powersaving_mac.h"
 #endif
 
-WinScreenSaver::WinScreenSaver() {
-#ifndef Q_OS_OS2
-	lowpower = poweroff = screensaver = 0;
+ScreenSaver::ScreenSaver(QObject * parent) : QObject(parent) {
+#ifdef Q_OS_WIN
+	win_screensaver = new WinScreenSaver();
 #else
-	SSaver = new QLibrary("SSCORE");
-	SSaver->load();
-	SSCore_TempDisable = SSCore_TempEnable = NULL;
-	if (SSaver->isLoaded()) {
-		SSCore_TempDisable = (FuncPtr) SSaver->resolve("SSCore_TempDisable");
-		SSCore_TempEnable = (FuncPtr) SSaver->resolve("SSCore_TempEnable");
-	}
-#endif
-	state_saved = false;
-	modified = false;
-	
-	retrieveState();
-}
-
-WinScreenSaver::~WinScreenSaver() {
-	restoreState();
-#ifdef Q_OS_OS2
-	unload();
+	power_saving = new PowerSaving(this);
 #endif
 }
 
-void WinScreenSaver::retrieveState() {
-	qDebug("WinScreenSaver::retrieveState");
-	
-	if (!state_saved) {
-#ifndef Q_OS_OS2
-		if (QSysInfo::WindowsVersion < QSysInfo::WV_VISTA) {
-			// Not supported on Windows Vista
-			SystemParametersInfo(SPI_GETLOWPOWERTIMEOUT, 0, &lowpower, 0);
-			SystemParametersInfo(SPI_GETPOWEROFFTIMEOUT, 0, &poweroff, 0);
-		}
-		SystemParametersInfo(SPI_GETSCREENSAVETIMEOUT, 0, &screensaver, 0);
-		state_saved = true;
-		
-		qDebug("WinScreenSaver::retrieveState: lowpower: %d, poweroff: %d, screensaver: %d", lowpower, poweroff, screensaver);
+ScreenSaver::~ScreenSaver() {
+#ifdef Q_OS_WIN
+	delete win_screensaver;
+#endif
+}
+
+void ScreenSaver::enable() {
+#ifdef Q_OS_WIN
+	win_screensaver->enable();
 #else
-		state_saved = true;
-		qDebug("WinScreensaver::retrieveState: init done %s", SSCore_TempDisable ?"succesfully":"failed");
+	power_saving->uninhibit();
 #endif
-	} else {
-		qDebug("WinScreenSaver::retrieveState: state already saved previously, doing nothing");
-	}
 }
 
-void WinScreenSaver::restoreState() {
-	if (!modified) {
-		qDebug("WinScreenSaver::restoreState: state did not change, doing nothing");
-		return;
-	}
-	
-	if (state_saved) {
-#ifndef Q_OS_OS2
-		if (QSysInfo::WindowsVersion < QSysInfo::WV_VISTA) {
-			// Not supported on Windows Vista
-			SystemParametersInfo(SPI_SETLOWPOWERTIMEOUT, lowpower, NULL, 0);
-			SystemParametersInfo(SPI_SETPOWEROFFTIMEOUT, poweroff, NULL, 0);
-		}
-		SystemParametersInfo(SPI_SETSCREENSAVETIMEOUT, screensaver, NULL, 0);
-		SetThreadExecutionState(ES_CONTINUOUS);
-
-		qDebug("WinScreenSaver::restoreState: lowpower: %d, poweroff: %d, screensaver: %d", lowpower, poweroff, screensaver);
+void ScreenSaver::disable() {
+#ifdef Q_OS_WIN
+	win_screensaver->disable();
 #else
-		if (SSCore_TempEnable) {
-			SSCore_TempEnable();
-		}
-		qDebug("WinScreenSaver::restoreState done");
+	power_saving->inhibit();
 #endif
-	} else {
-		qWarning("WinScreenSaver::restoreState: no data, doing nothing");
-	}
 }
 
-#ifdef Q_OS_OS2
-void WinScreenSaver::unload() {
-	if (SSaver->isLoaded()) {
-		SSaver->unload();
-		delete SSaver;
-	}
-}
-#endif
-	
-void WinScreenSaver::disable() {
-	qDebug("WinScreenSaver::disable");
-
-#ifndef Q_OS_OS2
-	if (QSysInfo::WindowsVersion < QSysInfo::WV_VISTA) {
-		// Not supported on Windows Vista
-		SystemParametersInfo(SPI_SETLOWPOWERTIMEOUT, 0, NULL, 0);
-		SystemParametersInfo(SPI_SETPOWEROFFTIMEOUT, 0, NULL, 0);
-	}
-	SystemParametersInfo(SPI_SETSCREENSAVETIMEOUT, 0, NULL, 0);
-	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED);
-#else
-	if (SSCore_TempDisable) {
-		SSCore_TempDisable();
-	}
-#endif
-
-	modified = true;
-}
-
-void WinScreenSaver::enable() {
-	qDebug("WinScreenSaver::enable");
-
-	restoreState();
-}
-
+#include "moc_screensaver.cpp"

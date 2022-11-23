@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ QString Images::last_resource_loaded;
 bool Images::has_rcc = false;
 
 QString Images::resourceFilename() {
-	QString filename = QString::null;
+	QString filename = QString();
 
 	if ((!themes_path.isEmpty()) && (!current_theme.isEmpty())) {
 		filename = themes_path +"/"+ current_theme +"/"+ current_theme +".rcc";
@@ -79,7 +79,7 @@ void Images::setTheme(const QString & name) {
 	if (!last_resource_loaded.isEmpty()) {
 		qDebug() << "Images::setTheme: unloading" << last_resource_loaded;
 		QResource::unregisterResource(last_resource_loaded);
-		last_resource_loaded = QString::null;
+		last_resource_loaded = QString();
 	}
 
 	QString rs_file = resourceFilename();

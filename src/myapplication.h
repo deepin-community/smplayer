@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,8 +23,19 @@
 
 #ifdef SINGLE_INSTANCE
 #include "QtSingleApplication"
+#else
+#include <QApplication>
+#endif
 
-class MyApplication : public QtSingleApplication
+class QEvent;
+class QProxyStyle;
+
+class MyApplication
+#ifdef SINGLE_INSTANCE
+	: public QtSingleApplication
+#else
+	: public QApplication
+#endif
 {
 	Q_OBJECT
 
@@ -35,44 +46,39 @@ public:
 	virtual void commitData(QSessionManager & manager);
 	#endif
 
+	//#ifdef SINGLE_INSTANCE
 	inline static MyApplication * instance() {
 		return qobject_cast<MyApplication*>(QApplication::instance());
 	}
-	
-#ifdef Q_OS_WIN
+	//#endif
+
+	#ifdef Q_OS_WIN
 	QStringList winArguments();
-#endif
-	
-#if QT_VERSION >= 0x050000
-protected slots:
-	void commitData(QSessionManager & manager);
-#endif
-};
-
-#else // SINGLE_INSTANCE
-#include <QApplication>
-
-class MyApplication : public QApplication
-{
-	Q_OBJECT
-
-public:
-	MyApplication (const QString & appId, int & argc, char ** argv);
-
-	#if QT_VERSION < 0x050000
-	virtual void commitData(QSessionManager & manager);
 	#endif
 
-#ifdef Q_OS_WIN
-	QStringList winArguments();
+#ifdef OS_UNIX_NOT_MAC
+	void changeStyle(const QString & style_name);
+
+protected:
+	QProxyStyle * proxy_style;
 #endif
 
 #if QT_VERSION >= 0x050000
 protected slots:
 	void commitData(QSessionManager & manager);
 #endif
+
+#ifdef Q_OS_MACX
+signals:
+	void openFiles(QStringList);
+
+protected slots:
+	void sendFilesToOpen();
+
+protected:
+	virtual bool event(QEvent *e);
+	QStringList files_to_open;
+#endif
 };
-#endif // SINGLE_INSTANCE
 
 #endif
-

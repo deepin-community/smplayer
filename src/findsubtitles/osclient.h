@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,9 +49,15 @@ public:
 	void setSearchMethod(SearchMethod m) { search_method = m; };
 	int searchMethod() { return search_method; };
 
+	void setUsername(QString username) { os_username = username; };
+	QString username() { return os_username; };
+
+	void setPassword(QString password) { os_password = password; };
+	QString password() { return os_password; };
+
 public slots:
 	void setServer(const QString & server);
-	void search(const QString & hash, qint64 file_size, const QString & filename = QString::null);
+	void search(const QString & hash, qint64 file_size, const QString & filename = QString());
 
 private slots:
 	void login();
@@ -87,6 +93,8 @@ private:
 	QList <OSSubtitle> s_list;
 
 	int search_method;
+	QString os_username;
+	QString os_password;
 };
 
 #endif

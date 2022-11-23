@@ -1,5 +1,543 @@
-smplayer (18.10.1.1-1+deepin) stable; urgency=medium
+smplayer (22.7.0~ds0-1) unstable; urgency=medium
 
-  * ['Rebuild  against by  current gcc 11.2']
+  * New upstream release.
+  * Bumped Standards-Version to 4.6.1, no changes needed
 
- -- Deepin Packages Builder <packages@deepin.org>  Wed, 14 Sep 2022 15:25:09 +0800
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Fri, 14 Oct 2022 09:53:04 +0200
+
+smplayer (22.2.0~ds0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Wed, 15 Jun 2022 09:59:47 +0200
+
+smplayer (21.10.0~ds0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bumped Standards-Version to 4.6.0, no changes needed
+  * Update debian/copyright.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Sun, 30 Jan 2022 17:35:51 +0100
+
+smplayer (21.8.0-1) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Remove obsolete field Name from debian/upstream/metadata (already present in
+    machine-readable debian/copyright).
+
+  [ Mateusz Łukasik ]
+  * New upstream release.
+
+  [ Debian Janitor ]
+  * Remove constraints unnecessary since buster:
+    + Build-Depends: Drop versioned constraint on qtbase5-dev.
+    + smplayer: Drop versioned constraint on mpv in Depends.
+    + smplayer-l10n: Drop versioned constraint on smplayer in Replaces.
+  * Remove obsolete field Name from debian/upstream/metadata (already present in
+    machine-readable debian/copyright).
+  * Update standards version to 4.5.1, no changes needed.
+  * Avoid explicitly specifying -Wl,--as-needed linker flag.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Sat, 23 Oct 2021 23:55:43 +0200
+
+smplayer (20.6.0~ds0-1) unstable; urgency=medium
+
+  * New upstream release.
+    + Update and refresh patches.
+  * Bumped Standards-Version to 4.5.0, no changes needed
+  * Add debian/patches/10_drop_DONATE_REMINDER.patch:
+    - drop donate reminder. (Closes: #964359)
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Thu, 13 Aug 2020 12:25:40 +0200
+
+smplayer (19.10.2~ds0-1) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * Use debhelper-compat instead of debian/compat
+
+  [ Alf Gaida ]
+  * New upstream release
+  * Bumped debhelper-compat to 12, no changes needed
+  * Bumped Standards-Version to 4.4.0, no changes needed
+  * Bumped years in copyright to 2019
+  * Reviewed patches, reworked 09-use-https.patch
+
+  [ Mateusz Łukasik ]
+  * New upstream release. (Closes: #943993, #945595)
+  * d/rules: Add missing entry. (Closes: #916096)
+  * d/control: add Rules-Requires-Root
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Tue, 10 Dec 2019 20:00:57 +0100
+
+smplayer (18.10.0~ds0-1) unstable; urgency=medium
+
+  [ Alf Gaida ]
+  * New upstream release
+  * Added myself to uploaders
+  * Patches reviewed
+  * Bumped Standards-Version to 4.2.1, no changes needed
+  * Improved d/rules:
+    - Set language to C.UTF-8
+    - Improved linker flags
+    - Added override_dh_missing
+    - Removed some extra licenses and not wished docs
+  * Install the desktop files from debian/tmp
+  * Added Files-Excluded: zlib to d/copyright
+  * Removed no longer needed repack-scripts
+  * Modified the watch file for the new repack
+  * Added debian/upstream/metadata
+  * Cleaned up d/copyright
+
+  [ Helmut Grohne ]
+  * Fix FTCBFS: (Closes: #916096)
+   + Pass a cross qmake along.
+   + Missing Build-Depends: qt5-qmake:native for lrelease.
+
+  [ Mateusz Łukasik ]
+  * Fix debian/gbp.conf.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Sat, 15 Dec 2018 17:31:04 +0100
+
+smplayer (18.5.0~ds1-2) unstable; urgency=medium
+
+  * Disable downloading potentially insecure javascript from youtube.com
+    (Closes: #870233)
+
+ -- Reinhard Tartler <siretart@tauware.de>  Tue, 19 Jun 2018 13:58:18 -0400
+
+smplayer (18.5.0~ds1-1) unstable; urgency=medium
+
+  [ Reinhard Tartler ]
+  * New upstream release.
+   * Disable chromecast support to workaround security issues in the
+     "simple web server" mongoose (Closes: #898943)
+
+  [ Mateusz Łukasik ]
+  * Add debian/patches/07-fix-ftbfs-gcc8.patch:
+    - Fix FTBFS with gcc-8. (Closes: #897863)
+
+ -- Reinhard Tartler <siretart@tauware.de>  Mon, 18 Jun 2018 14:58:36 -0400
+
+smplayer (18.2.2~ds0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Move VCS to salsa.
+  * Bump Standards-Version to 4.1.3.
+  * Dump dh version to 11.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Mon, 12 Mar 2018 10:45:30 +0100
+
+smplayer (17.11.2~ds0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bump Standards-Version to 4.1.1.
+  * Change smplayer-l10n section to localization.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Mon, 27 Nov 2017 12:26:35 +0100
+
+smplayer (17.8.0~ds0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bump Standards-Version to 4.0.1. (no changes needed)
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Sun, 13 Aug 2017 12:16:18 +0200
+
+smplayer (17.7.0~ds0-1) unstable; urgency=medium
+
+  * New upstream release. (Closes: #869411)
+  * Bump Standards-Version to 4.0.0. (no changes needed)
+  * Upload to unstable.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Sun, 23 Jul 2017 12:06:00 +0200
+
+smplayer (17.3.0~ds0-1) experimental; urgency=medium
+
+  * New upstream release.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Sat, 18 Mar 2017 21:25:44 +0100
+
+smplayer (17.2.0~ds0-1) experimental; urgency=medium
+
+  * New upstream bugfix release.
+  * Update debian/copyright.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Mon, 13 Feb 2017 21:19:07 +0100
+
+smplayer (16.11.0~ds0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Drop all references to mplayer2.
+  * debian/patches:
+    - Add 01-update-mime-types.patch to merge mime types from vlc.
+    (Closes: #842899)
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Tue, 22 Nov 2016 17:31:13 +0100
+
+smplayer (16.9.0~ds0-1) unstable; urgency=medium
+
+  [ Mateusz Łukasik ]
+  * New upstream release. (Closes: #825294)
+  * debian/control:
+    - Add qtbase5-private-dev to B-D.
+    - Remove Maia Kozheva from uploaders. (Closes: #829314)
+  * Bump debhelper version to 10.
+
+  [ Sebastian Ramacher ]
+  * Fix Vcs-* links
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Fri, 14 Oct 2016 13:03:05 +0200
+
+smplayer (16.4.0~ds0-1) unstable; urgency=medium
+
+  * New upstream release. (Closes: #809667, #820431)
+    - Refresh all patches and drop 03-not_define_reminder_actions.patch.
+  * debian/control:
+    - Bump standards version to 3.9.8. (no changes needed)
+    - Update package description. (Closes: #819656)
+    - Use secured links in VCS fields.
+  * debian/rules:
+    - Enable hardening=+all.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Fri, 08 Apr 2016 22:48:57 +0200
+
+smplayer (15.11.0~ds0-1) unstable; urgency=medium
+
+  [ Mateusz Łukasik ]
+  * Repackaging upstream sources to drop included zlib sources.
+  * New upstream release. (Closes: #770357, #798961, #799040, #800533,
+    LP: #1390937)
+    - Build with QT5.
+  * Bump standards version to 3.9.6. (no changes needed)
+  * Patch working: (thanks Alf Gaida <agaida@siduction.org>)
+    - Add 03-not_define_reminder_actions.patch to do not define reminder
+    actions (Closes: #770359)
+    - Add 04_update_desktop_launcher.patch for add Unity Launcher
+    Quicklist and Keywords in desktop file. (LP: #938015)
+    - Refresh 02-disable_updates.patch.
+    - Add 05-add-debian-hardening-flags.patch to using Debian hardening
+      flags.
+    - Add 06-tryfixplaylist.patch to fix playlist that disappear after
+      leaving full-screen with openbox. (Closes: #799385, #799984)
+  * debian/rules:
+    - Remove /usr/share/doc/smplayer/es/gpl.htm
+  * Update debian/copyright.
+  * Add support for mpv: (Closes: #783401)
+    - debian/control: Add mpv instead of mplayer|mplayer2.
+  * debian/repack.local: update for dfsg to remove zlib directory.
+  * Drop depends on mplayer2. It has been removed from Debian repository.
+  * Remove debian/menu -- no longer needed.
+
+  [ Alf Gaida ]
+  * debian/rules:
+    - Make local rebuilds possible. (Closes: #770382)
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Sun, 06 Dec 2015 21:24:40 +0100
+
+smplayer (14.9.0~ds0-1) unstable; urgency=medium
+
+  [ Mateusz Łukasik ]
+  * New upstream release.
+
+  [ Alessio Treglia ]
+  * Repackaging upstream sources to get rid of
+    zlib/contrib/dotzlib/DotZLib.chm.
+  * Enable parallel builds.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Wed, 10 Sep 2014 13:50:48 +0200
+
+smplayer (14.3.0-1) unstable; urgency=medium
+
+  * Add myself to uploaders.
+  * New upstream release. (Closes: #740769, #742685)
+  * debian/control:
+    - bump standards version to 3.9.5. (no changes needed)
+    - rename smplayer-translations to smplayer-l10n. (Closes: #698365)
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Mon, 21 Apr 2014 11:53:59 +0200
+
+smplayer (0.8.6-2) unstable; urgency=low
+
+  * Team upload.
+  * Remove doc-base document, faq.html file is no longer
+    provided. (Closes: #725829)
+  * Disable updates checking mechanism.
+  * Add licensing information on libmaia, split sources stanzas from
+    License ones.
+
+ -- Alessio Treglia <alessio@debian.org>  Wed, 09 Oct 2013 12:02:50 +0100
+
+smplayer (0.8.6-1) unstable; urgency=low
+
+  * Team upload.
+  * Upload to unstable.
+  * New upstream release.
+  * Refresh patches.
+  * Fix VCS urls to meet the canonical form.
+
+ -- Alessio Treglia <alessio@debian.org>  Tue, 08 Oct 2013 12:51:23 +0100
+
+smplayer (0.8.4-1) experimental; urgency=low
+
+  * Imported Upstream version 0.8.4
+    - improved downloading on slow links, closes: #607187.
+    - no longer overwrites previously downloaded subtitles, closes: #607190.
+  * Testing confirms that this version works with both, mplayer and
+    mplayer2, closes: #640889, #641909, #643781, #678315.
+  * Improve mplayer2 auto-detection, closes: #699864.
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sat, 30 Mar 2013 09:15:38 +0100
+
+smplayer (0.8.3-1) experimental; urgency=low
+
+  * Team upload.
+  * New upstream release. (Closes: #698300)
+
+ -- Alessio Treglia <alessio@debian.org>  Tue, 12 Feb 2013 03:00:21 +0000
+
+smplayer (0.8.0-1) unstable; urgency=low
+
+  [ Maia Kozheva ]
+  * New upstream release:
+    - Changes since 0.7.1:
+      + A toolbar editor has been added. Now it's possible to select the
+        buttons and controls that want to appear in the toolbars.
+      + New video filters: gradfun, blur and sharpen.
+      + Now it's possible to change the GUI (default, mini, mpc) at runtime,
+        no restart required.
+      + sub files from opensubtitles should work again.
+      + (Youtube) Recognize short urls (like this one:
+        http://y2u.be/F5OcZBVPwOA)
+      + Better support for chapters in video files.
+      + Bug fix: remote m3u files work from the favorites menu or command line.
+      + Internal changes in the single instance option (switch to
+        QtSingleApplication).
+    - Fixes since 0.7.0:
+      + SMPlayer took more than 10 seconds to show when running for the very
+        first time.
+      + The links to download subtitles from Opensubtitles were wrong.
+      + SMPlayer crashed in the favorite editor when trying to select a file
+        if the KDE open dialog was used.
+    - Changes since 0.7.0:
+      + By default the screenshots are saved in the user's pictures folder
+        instead of the SMPlayer's config folder.
+      + Now it's possible to change the opensubtitles server.
+      + Youtube: seeking is slow with flv videos, so now flv videos have the
+        lowest priority.
+      + Youtube: now it's possible to search and download videos from youtube.
+        This is provided by an external application (in linux you have to
+        install an independent package: smtube).
+  * debian/copyright:
+    - Rewrite according to DEP-5 specification.
+  * debian/control:
+    - Depend on mplayer2 | mplayer. (Closes: #638279)
+    - Update Standards-Version to 3.9.3.
+  * Remove debian/patches/handle_local_urls.diff, merged upstream.
+
+  [ Alessio Treglia ]
+  * Mention smplayer is also a front-end for MPlayer2.
+  * Fix small typo in the description.
+
+ -- Maia Kozheva <sikon@ubuntu.com>  Sat, 14 Apr 2012 12:01:57 +0700
+
+smplayer (0.7.0-1) unstable; urgency=low
+
+  * Team upload.
+  * New upstream release (Closes: #655125):
+    - Changes since 0.6.10:
+      + New favorite menu, where you can add your favorite videos, music,
+         streams, youtube videos... It's also possible to add submenus.
+      + Support for youtube. Now you can open urls like
+        http://www.youtube.com/watch?v=..... using the Open -> URL dialog or
+        dragging a link from a browser to the smplayer window.
+      + Support for mplayer2 (http://www.mplayer2.org). It's a fork of mplayer
+        with interesting features like precise seeking, ordered chapters in
+        mkv videos and better pause handling (e.g. seek works while the video
+        is paused).
+      + New translation: croatian.
+    - Changes since 0.6.9:
+      + New vdpau configuration dialog, which allow to select the vdpau codecs
+        to use. (Closes: #610204)
+      + Port for eCS, OS/2 (by Silvan Scherrer).
+      + New menu to select the closed caption channel (requires mplayer >=
+        r32607).
+      + Possibility to select the seeking method (absolute or relative).
+      + Possibility to sort the items of the playlist.
+  * Remove debian/patches/enable_ffodivxvdpau.diff, the application now
+    provides a configuration dialog for vdpau.
+  * Refresh handle_local_urls.diff.
+  * Update copyright notice.
+
+ -- Alessio Treglia <alessio@debian.org>  Thu, 16 Feb 2012 11:51:44 +0100
+
+smplayer (0.6.9-4) unstable; urgency=low
+
+  * Bump Standards-Version to 3.9.2.
+  * Modify URL parsing patch to handle some corner cases. (Closes: #626324)
+
+ -- Maia Kozheva <sikon@ubuntu.com>  Thu, 12 May 2011 20:38:49 +0700
+
+smplayer (0.6.9-3) unstable; urgency=low
+
+  * Add debian/patches/handle_local_urls.diff. (Closes: #583398)
+
+ -- Maia Kozheva <sikon@ubuntu.com>  Thu, 28 Apr 2011 23:36:22 +0700
+
+smplayer (0.6.9-2) unstable; urgency=low
+
+  [ Maia Kozheva ]
+  * Switch to 3.0 (quilt) format.
+  * debian/control:
+    - Bump Standards-Version to 3.9.1.
+    - Add Vcs-Git and Vcs-Browser fields.
+    - Enable DM-Upload-Allowed.
+
+  [ Reinhard Tartler ]
+  * Bugfix: add support for ffodivxvdpau, Closes: #609815.
+    Thanks to Thibaut VARENE <varenet@debian.org> for the patch.
+
+ -- Maia Kozheva <sikon@ubuntu.com>  Sun, 08 Aug 2010 21:47:58 +0700
+
+smplayer (0.6.9-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/control:
+    - Removed mplayer-nogui from Depends, as it is now a transitional package
+      to mplayer in both Debian and Ubuntu.
+    - Bumped Standards-Version to 3.8.4 (no changes needed).
+
+ -- Maia Kozheva <sikon@ubuntu.com>  Sun, 09 May 2010 21:23:36 +0700
+
+smplayer (0.6.8-2) unstable; urgency=low
+
+  * debian/compat:
+    - Bumped to 7.
+  * debian/control:
+    - Changed maintainer to team.
+    - Build-depend on dh 7, no cdbs.
+  * debian/rules, debian/clean:
+    - Rewritten to use dh 7.
+    - Set DOC_PATH and remove an unneeded upstream file.
+  * debian/smplayer.install, debian/smplayer.doc-base:
+    - Install upstream docs correctly. (Closes: #557069)
+  * Dropped debian/README.source - not using CDBS simple-patchsys anymore.
+
+ -- Maia Kozheva <sikon@ubuntu.com>  Sat, 21 Nov 2009 14:08:08 +0600
+
+smplayer (0.6.8-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #543156)
+  * Added /usr/share/pixmaps to debian/menu. (Closes: #526353)
+  * debian/control: Bumped Standards-Version to 3.8.3.
+  * debian/rules:
+    - Removed VERSION variables, not relevant anymore.
+    - Removed dh_desktop.
+  * Removed 01_gl_translation.patch, fixed upstream.
+
+ -- Maia Kozheva <sikon@ubuntu.com>  Wed, 04 Nov 2009 12:45:38 +0600
+
+smplayer (0.6.7-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #523791)
+    - Reworked subtitle font preferences. (Closes: #503295)
+    - No longer installs qt_fr.qm. (Closes: #486314)
+  * debian/control:
+    - Bumped Standards-Version to 3.8.1.
+    - Changed maintainer name (still the same person and GPG key).
+    - Changed section to video.
+    - Build-depend on zlib1g-dev for findsubtitles.
+    - Require Qt >= 4.3 per readme.
+    - Added ${misc:Depends}.
+    - Make smplayer-translations depend on smplayer and smplayer recommend
+      smplayer-translations, not the other way round. (Closes: #489375)
+  * debian/copyright:
+    - Significantly expanded per-file with new upstream authors.
+  * debian/rules:
+    - Make make use correct uic in install.
+    - Clean svn_revision.
+    - Removed get-orig-source - not needed with uscan --repack.
+  * debian/patches/01_gl_translation.patch:
+    - Added patch to fix lrelease error on smplayer_gl.ts.
+  * Added debian/README.source for simple-patchsys.
+
+ -- Maia Kozheva <sikon@ubuntu.com>  Tue, 31 Mar 2009 23:05:43 +0700
+
+smplayer (0.6.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Updated get-orig-source rule (again).
+
+ -- Matvey Kozhev <sikon@ubuntu.com>  Fri, 30 May 2008 12:52:19 +0700
+
+smplayer (0.6.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Bumped debian/compat to 6.
+  * debian/control:
+    - Require debhelper >= 6.
+    - Relaxed the dependency of smplayer-translations on smplayer
+      to Recommends. (Closes: #478713)
+  * Dropped debian/smplayer.desktop, changes applied upstream.
+
+ -- Matvey Kozhev <sikon@ubuntu.com>  Tue, 13 May 2008 10:12:30 +0700
+
+smplayer (0.6.0~rc4-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Matvey Kozhev <sikon@ubuntu.com>  Wed, 16 Apr 2008 15:11:15 +0700
+
+smplayer (0.6.0~rc3-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/rules:
+    - Disable debug output on console.
+
+ -- Matvey Kozhev <sikon@ubuntu.com>  Mon, 24 Mar 2008 20:40:33 +0600
+
+smplayer (0.6.0~rc2-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/control:
+    - Updated upstream homepage (for real this time).
+  * debian/rules:
+    - Added --no-symlink to uscan in get-orig-source to avoid creating
+      .orig.tar.bz2 symlinks.
+
+ -- Matvey Kozhev <sikon@lucidfox.org>  Fri, 15 Feb 2008 14:58:22 +0600
+
+smplayer (0.6.0~rc1-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/control:
+    - Build-depend on CDBS.
+    - Updated upstream homepage.
+  * debian/copyright:
+    - Updated download address.
+  * debian/rules:
+    - Migrated to CDBS.
+    - Tweaked get-orig-source to work with release candidates.
+  * debian/docs:
+    - Removed Translations.txt, upstream removed it from the tarball.
+    - Added Release_notes.txt.
+  * debian/manpages, debian/smplayer.1:
+    - Deleted, manpage merged upstream.
+  * debian/smplayer.install:
+    - Install usr/share/man.
+
+ -- Matvey Kozhev <sikon@lucidfox.org>  Thu, 31 Jan 2008 13:44:53 +0600
+
+smplayer (0.5.62-1) unstable; urgency=low
+
+  * First upload to Debian. (Closes: #459789)
+  * debian/control:
+    - Set maintainer to myself.
+  * debian/copyright:
+    - Mentioned takeover from Ubuntu.
+  * debian/menu:
+    - Replaced icon name "smplayer" with "smplayer.xpm".
+  * debian/rules:
+    - Replaced "make distclean" (nonexistent rule) with "make clean".
+    - Fixed CONF_PATH.
+    - Additional cleanup through dh_clean.
+
+ -- Matvey Kozhev <sikon@lucidfox.org>  Wed, 09 Jan 2008 00:10:25 +0600

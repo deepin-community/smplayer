@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,6 +39,8 @@ public:
 	// Format a time (hh:mm:ss.cc)
 	static QString formatTime2(double secs);
 
+	static QString formatTimes(double current_sec, double total_time, bool use_milliseconds, bool use_remaining_time);
+
 	static QString timeForJumps(int secs);
 
 	// Give a name for config (group name) based on dvd id
@@ -70,7 +72,7 @@ public:
 
 #ifndef Q_OS_WIN
 	//! Tries to find the executable in the path.
-	//! Returns the path if found or QString::null if not.
+	//! Returns the path if found or QString() if not.
 	static QString findExecutable(const QString & name);
 #endif
 

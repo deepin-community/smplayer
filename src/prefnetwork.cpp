@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include "preferences.h"
 #include "images.h"
 #include <QNetworkProxy>
+#include <QFileInfo>
 
 #ifdef YOUTUBE_SUPPORT
 #include "retrieveyoutubeurl.h"
@@ -104,14 +105,16 @@ void PrefNetwork::retranslateStrings() {
 	int quality_item = ytdl_quality_combo->currentIndex();
 	ytdl_quality_combo->clear();
 
+	#define YTQ(QUALITY) "bestvideo[height<=?" QUALITY "]+bestaudio/best[height<=?" QUALITY "]"
+	//#define YTQ(QUALITY) "[height<=?" QUALITY "]"
 	ytdl_quality_combo->addItem(tr("Best video and audio"), "");
 	ytdl_quality_combo->addItem(tr("Best"), "best");
-	ytdl_quality_combo->addItem("1080p", "[height <=? 1080]");
-	ytdl_quality_combo->addItem("720p", "[height <=? 720]");
-	ytdl_quality_combo->addItem("480p", "[height <=? 480]");
-	ytdl_quality_combo->addItem("360p", "[height <=? 360]");
-	ytdl_quality_combo->addItem("240p", "[height <=? 240]");
-	ytdl_quality_combo->addItem("144p", "[height <=? 144]");
+	ytdl_quality_combo->addItem("1080p", YTQ("1080"));
+	ytdl_quality_combo->addItem("720p", YTQ("720"));
+	ytdl_quality_combo->addItem("480p", YTQ("480"));
+	ytdl_quality_combo->addItem("360p", YTQ("360"));
+	ytdl_quality_combo->addItem("240p", YTQ("240"));
+	ytdl_quality_combo->addItem("144p", YTQ("144"));
 	ytdl_quality_combo->addItem(tr("Worst"), "worst");
 
 	ytdl_quality_combo->setCurrentIndex(quality_item);
@@ -133,7 +136,11 @@ void PrefNetwork::setData(Preferences * pref) {
 #ifdef YOUTUBE_SUPPORT
 	setYTResolution( pref->yt_resolution );
 	yt_dash_check->setChecked( pref->yt_use_dash );
+	yt_use_60fps_check->setChecked( pref->yt_use_60fps );
+	yt_av1_check->setChecked( pref->yt_use_av1 );
 	yt_user_agent_edit->setText( pref->yt_user_agent );
+
+	setYtdlBin( pref->yt_ytdl_bin );
 #endif
 
 #ifdef MPV_SUPPORT
@@ -170,7 +177,12 @@ void PrefNetwork::getData(Preferences * pref) {
 #ifdef YOUTUBE_SUPPORT
 	pref->yt_resolution = YTResolution();
 	pref->yt_use_dash = yt_dash_check->isChecked();
+	pref->yt_use_60fps = yt_use_60fps_check->isChecked();
+	pref->yt_use_av1 = yt_av1_check->isChecked();
 	pref->yt_user_agent = yt_user_agent_edit->text();
+
+	pref->yt_ytdl_bin = ytdlBin();
+	RetrieveYoutubeUrl::setYtdlBin( pref->yt_ytdl_bin );
 #endif
 
 #ifdef MPV_SUPPORT
@@ -212,6 +224,39 @@ int PrefNetwork::YTResolution() {
 	int index = yt_resolution_combo->currentIndex();
 	return yt_resolution_combo->itemData(index).toInt();
 }
+
+void PrefNetwork::setYtdlBin(const QString & path) {
+	ytdl_bin_combo->clear();
+	ytdl_bin_combo->addItem("youtube-dl", "youtube-dl");
+	ytdl_bin_combo->addItem(tr("yt-dlp (based on youtube-dl with improvements)"), "yt-dlp");
+
+	QString ytdl_bin = path;
+	if (ytdl_bin.isEmpty()) ytdl_bin = YTDL_DEFAULT_BIN;
+	QString basename = QFileInfo(ytdl_bin).baseName();
+
+	int selected = 0;
+	if (basename == "youtube-dl") {
+		selected = 0;
+		ytdl_bin_combo->setItemData(0, path);
+	}
+	else
+	if (basename == "yt-dlp") {
+		selected = 1;
+		ytdl_bin_combo->setItemData(1, path);
+	}
+	else {
+		selected = 2;
+		ytdl_bin_combo->addItem(tr("Other") + " (" + basename + ")", path);
+	}
+
+	ytdl_bin_combo->setCurrentIndex(selected);
+}
+
+QString PrefNetwork::ytdlBin() {
+	QString ytdl_bin = ytdl_bin_combo->itemData(ytdl_bin_combo->currentIndex()).toString();
+	if (ytdl_bin == YTDL_DEFAULT_BIN) ytdl_bin = ""; // Default
+	return ytdl_bin;
+}
 #endif
 
 void PrefNetwork::setStreamingType(int type) {
@@ -241,6 +286,7 @@ QString PrefNetwork::YTDLQuality() {
 void PrefNetwork::streaming_type_combo_changed(int i) {
 	//qDebug() << "PrefNetwork::streaming_type_combo_changed:" << i;
 	youtube_box->setEnabled(i == Preferences::StreamingYT || i == Preferences::StreamingAuto);
+	youtube_app_box->setEnabled(i != Preferences::NoStreaming);
 
 #ifdef MPV_SUPPORT
 	ytdl_quality_frame->setEnabled(i == Preferences::StreamingAuto || i == Preferences::StreamingYTDL);
@@ -313,9 +359,13 @@ void PrefNetwork::createHelp() {
 	setWhatsThis(yt_resolution_combo, tr("Playback quality"),
 		tr("Select the preferred quality for YouTube videos.") );
 
-
+#ifdef YOUTUBE_SUPPORT
 	setWhatsThis(yt_dash_check, tr("Use adaptive streams"),
 		tr("This option enables adaptive streams which can provide videos up to 4K.") );
+
+	setWhatsThis(yt_use_60fps_check, tr("Use 60 fps if available"),
+		tr("This option enables streams at 60 frames per second if available.") );
+#endif
 
 #ifdef USE_YT_USER_AGENT
 	setWhatsThis(yt_user_agent_edit, tr("User agent"),

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -118,7 +118,7 @@ void Preferences::reset() {
 
 	remember_media_settings = true;
 	remember_time_pos = true;
-	remember_stream_settings = true;
+	remember_stream_settings = false;
 
 #if SIMPLE_TRACK_SELECTION
 	alang = "";
@@ -139,18 +139,16 @@ void Preferences::reset() {
 	add_blackborders_on_fullscreen = false;
 #endif
 
-#ifdef Q_OS_WIN
-	#ifdef SCREENSAVER_OFF
-	turn_screensaver_off = false;
-	#endif
-	#ifdef AVOID_SCREENSAVER
-	avoid_screensaver = true;
-	#endif
-#else
+#ifdef SCREENSAVER_OFF
 	disable_screensaver = true;
 #endif
+#if defined(Q_OS_WIN) && defined(AVOID_SCREENSAVER)
+	avoid_screensaver = true;
+#endif
 
-#ifndef Q_OS_WIN
+#ifdef OS_UNIX_NOT_MAC
+	wayland_workarounds = true;
+
 	vdpau.ffh264vdpau = true;
 	vdpau.ffmpeg12vdpau = true;
 	vdpau.ffwmv3vdpau = true;
@@ -380,7 +378,11 @@ void Preferences::reset() {
 	time_to_kill_mplayer = 5000;
 
 #ifdef MPRIS2
+	#ifdef Q_OS_LINUX
 	use_mpris2 = true;
+	#else
+	use_mpris2 = false;
+	#endif
 #endif
 
 #ifdef MPV_SUPPORT
@@ -395,6 +397,8 @@ void Preferences::reset() {
 #endif
 
 	use_native_open_dialog = true;
+
+	disable_player_config = true;
 
 
     /* *********
@@ -457,7 +461,7 @@ void Preferences::reset() {
 #if SEEKBAR_RESOLUTION
 	relative_seeking = false;
 #endif
-	precise_seeking = true;
+	precise_seeking = false;
 
 	reset_stop = false;
 	delay_left_click = false;
@@ -543,11 +547,12 @@ void Preferences::reset() {
 #endif
 #ifdef YOUTUBE_SUPPORT
 	yt_resolution = RetrieveYoutubeUrl::R720p;
-	yt_user_agent = "Mozilla/5.0 (X11; Linux x86_64; rv:5.0.1) Gecko/20100101 Firefox/5.0.1";
-	//yt_user_agent = "";
-	yt_use_https_main = false;
-	yt_use_https_vi = false;
+	yt_user_agent = "";
+	yt_ytdl_bin = "";
+	yt_override_format = "";
 	yt_use_dash = true;
+	yt_use_60fps = true;
+	yt_use_av1 = false;
 #endif
 
 	// Proxy
@@ -611,7 +616,7 @@ void Preferences::reset() {
 	mplayer_user_supplied_version = -1;
 #ifdef MPLAYER2_SUPPORT
 	mplayer_is_mplayer2 = false;
-	mplayer2_detected_version = QString::null;
+	mplayer2_detected_version = QString();
 #endif
 
 
@@ -718,18 +723,16 @@ void Preferences::save() {
 	set->setValue("add_blackborders_on_fullscreen", add_blackborders_on_fullscreen);
 #endif
 
-#ifdef Q_OS_WIN
-	#ifdef SCREENSAVER_OFF
-	set->setValue("turn_screensaver_off", turn_screensaver_off);
-	#endif
-	#ifdef AVOID_SCREENSAVER
-	set->setValue("avoid_screensaver", avoid_screensaver);
-	#endif
-#else
+#ifdef SCREENSAVER_OFF
 	set->setValue("disable_screensaver", disable_screensaver);
 #endif
+#if defined(Q_OS_WIN) && defined(AVOID_SCREENSAVER)
+	set->setValue("avoid_screensaver", avoid_screensaver);
+#endif
 
-#ifndef Q_OS_WIN
+#ifdef OS_UNIX_NOT_MAC
+	set->setValue("wayland_workarounds", wayland_workarounds);
+
 	set->setValue("vdpau_ffh264vdpau", vdpau.ffh264vdpau);
 	set->setValue("vdpau_ffmpeg12vdpau", vdpau.ffmpeg12vdpau);
 	set->setValue("vdpau_ffwmv3vdpau", vdpau.ffwmv3vdpau);
@@ -963,6 +966,8 @@ void Preferences::save() {
 
 	set->setValue("use_native_open_dialog", use_native_open_dialog);
 
+	set->setValue("disable_player_config", disable_player_config);
+
 	set->endGroup(); // advanced
 
 
@@ -1096,10 +1101,12 @@ void Preferences::save() {
 	#ifdef YOUTUBE_SUPPORT
 	set->beginGroup("streaming/youtube");
 	set->setValue("resolution", yt_resolution);
-	set->setValue("yt_user_agent", yt_user_agent);
-	set->setValue("yt_use_https_main", yt_use_https_main);
-	set->setValue("yt_use_https_vi", yt_use_https_vi);
+	set->setValue("preferred_user_agent", yt_user_agent);
+	set->setValue("ytdl_bin", yt_ytdl_bin);
+	set->setValue("override_format", yt_override_format);
 	set->setValue("use_dash", yt_use_dash);
+	set->setValue("use_60fps", yt_use_60fps);
+	set->setValue("use_av1", yt_use_av1);
 	set->endGroup();
 	#endif
 	set->endGroup(); // streaming
@@ -1311,18 +1318,16 @@ void Preferences::load() {
 	add_blackborders_on_fullscreen = set->value("add_blackborders_on_fullscreen", add_blackborders_on_fullscreen).toBool();
 #endif
 
-#ifdef Q_OS_WIN
-	#ifdef SCREENSAVER_OFF
-	turn_screensaver_off = set->value("turn_screensaver_off", turn_screensaver_off).toBool();
-	#endif
-	#ifdef AVOID_SCREENSAVER
-	avoid_screensaver = set->value("avoid_screensaver", avoid_screensaver).toBool();
-	#endif
-#else
+#ifdef SCREENSAVER_OFF
 	disable_screensaver = set->value("disable_screensaver", disable_screensaver).toBool();
 #endif
+#if defined(Q_OS_WIN) && defined(AVOID_SCREENSAVER)
+	avoid_screensaver = set->value("avoid_screensaver", avoid_screensaver).toBool();
+#endif
 
-#ifndef Q_OS_WIN
+#ifdef OS_UNIX_NOT_MAC
+	wayland_workarounds = set->value("wayland_workarounds", wayland_workarounds).toBool();
+
 	vdpau.ffh264vdpau = set->value("vdpau_ffh264vdpau", vdpau.ffh264vdpau).toBool();
 	vdpau.ffmpeg12vdpau = set->value("vdpau_ffmpeg12vdpau", vdpau.ffmpeg12vdpau).toBool();
 	vdpau.ffwmv3vdpau = set->value("vdpau_ffwmv3vdpau", vdpau.ffwmv3vdpau).toBool();
@@ -1560,6 +1565,8 @@ void Preferences::load() {
 
 	use_native_open_dialog = set->value("use_native_open_dialog", use_native_open_dialog).toBool();
 
+	disable_player_config = set->value("disable_player_config", disable_player_config).toBool();
+
 	set->endGroup(); // advanced
 
 
@@ -1696,11 +1703,14 @@ void Preferences::load() {
 	#ifdef YOUTUBE_SUPPORT
 	set->beginGroup("streaming/youtube");
 	yt_resolution = set->value("resolution", yt_resolution).toInt();
-	yt_user_agent = set->value("yt_user_agent", yt_user_agent).toString();
-	yt_use_https_main = set->value("yt_use_https_main", yt_use_https_main).toBool();
-	yt_use_https_vi = set->value("yt_use_https_vi", yt_use_https_vi).toBool();
+	yt_user_agent = set->value("preferred_user_agent", yt_user_agent).toString();
+	yt_ytdl_bin = set->value("ytdl_bin", yt_ytdl_bin).toString();
+	yt_override_format = set->value("override_format", yt_override_format).toString();
 	yt_use_dash = set->value("use_dash", yt_use_dash).toBool();
+	yt_use_60fps = set->value("use_60fps", yt_use_60fps).toBool();
+	yt_use_av1 = set->value("use_av1", yt_use_av1).toBool();
 	set->endGroup();
+	RetrieveYoutubeUrl::setYtdlBin(yt_ytdl_bin);
 	#endif
 	set->endGroup(); // streaming
 
@@ -1930,20 +1940,25 @@ void Preferences::load() {
 		}
 	}
 	#endif
-	#ifdef Q_OS_LINUX
+	#ifdef OS_UNIX_NOT_MAC
 	if (!QFile::exists(mplayer_bin)) {
-		QString app_path = Helper::findExecutable(mplayer_bin);
+		/*
+		QString player = "mpv";
+		if (mplayer_bin.contains("mplayer")) player = "mplayer";
+		*/
+		QString player = QFileInfo(mplayer_bin).fileName();
+		QString app_path = Helper::findExecutable(player);
 		//qDebug("Preferences::load: app_path: %s", app_path.toUtf8().constData());
 		if (!app_path.isEmpty()) {
 			mplayer_bin = app_path;
 		} else {
 			// Executable not found, try to find an alternative
-			if (mplayer_bin.startsWith("mplayer")) {
+			if (mplayer_bin.contains("mplayer")) {
 				app_path = Helper::findExecutable("mpv");
 				if (!app_path.isEmpty()) mplayer_bin = app_path;
 			}
 			else
-			if (mplayer_bin.startsWith("mpv")) {
+			if (mplayer_bin.contains("mpv")) {
 				app_path = Helper::findExecutable("mplayer");
 				if (!app_path.isEmpty()) mplayer_bin = app_path;
 			}

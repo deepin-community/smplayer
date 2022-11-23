@@ -1,5 +1,5 @@
     SMPlayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@
     that you install them too.
 
     Visit the web for updates:
-    http://smplayer.sourceforge.net
     http://www.smplayer.info
 
     Support forum:
@@ -45,6 +44,10 @@
      * libmaia by Sebastian Wiedenroth
        url: https://github.com/wiedi/libmaia
        license: Simplified BSD License (see src/findsubtitles/maia/LICENSE)
+
+     * qt-json
+       url: https://github.com/qt-json/qt-json
+       license: GPL 3 (see src/youtube/qt-json/LICENSE)
 
     Some icons were taken from:
 

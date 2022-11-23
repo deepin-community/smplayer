@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,13 +20,17 @@
 #include "smplayer.h"
 
 #include <QDir>
+#ifdef USE_GL_WINDOW
+#include <QSurfaceFormat>
+#endif
 
 #ifdef HDPI_SUPPORT
 #include "paths.h"
 #include "hdpisupport.h"
 
-#if defined(PORTABLE_APP) && defined(Q_OS_WIN)
-QString windowsApplicationPath() {
+#ifdef PORTABLE_APP
+#ifdef Q_OS_WIN
+QString applicationPath() {
 	wchar_t my_path[_MAX_PATH+1];
 	GetModuleFileName(NULL, my_path,_MAX_PATH);
 	QString app_path = QString::fromWCharArray(my_path);
@@ -34,14 +38,21 @@ QString windowsApplicationPath() {
 	QFileInfo fi(app_path);
 	return fi.absolutePath();
 }
+#else
+QString applicationPath() {
+	QString exe_file = QFile::symLinkTarget(QString("/proc/%1/exe").arg(QCoreApplication::applicationPid()));
+	return QFileInfo(exe_file).absolutePath();
+}
 #endif
+#endif // PORTABLE_APP
 
 QString hdpiConfig() {
-	#ifdef PORTABLE_APP
-	return windowsApplicationPath();
-	#else
+#ifdef PORTABLE_APP
+	// We can't use QCoreApplication::applicationDirPath() here
+	return applicationPath();
+#else
 	return Paths::configPath();
-	#endif
+#endif // PORTABLE_APP
 }
 #endif // HDPI_SUPPORT
 
@@ -56,6 +67,15 @@ int main( int argc, char ** argv )
 #endif
 
 	MyApplication a( "smplayer", argc, argv );
+
+#ifdef USE_GL_WINDOW
+	QSurfaceFormat fmt;
+	fmt.setVersion( 3, 2 );
+	fmt.setProfile( QSurfaceFormat::CoreProfile );
+	//fmt.setRenderableType(QSurfaceFormat::OpenGLES);
+	QSurfaceFormat::setDefaultFormat(fmt);
+#endif
+
 	/*
 	if (a.isRunning()) { 
 		qDebug("Another instance is running. Exiting.");
@@ -73,6 +93,7 @@ int main( int argc, char ** argv )
 #if QT_VERSION >= 0x040400
 	// Enable icons in menus
 	QCoreApplication::setAttribute(Qt::AA_DontShowIconsInMenus, false);
+	//QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
 #endif
 
 	// Sets the config path

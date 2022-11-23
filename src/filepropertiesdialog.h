@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ class FilePropertiesDialog : public QDialog, public Ui::FilePropertiesDialog
 	Q_OBJECT
 
 public:
-    FilePropertiesDialog( QWidget* parent = 0, Qt::WindowFlags f = 0 );
+    FilePropertiesDialog( QWidget* parent = 0, Qt::WindowFlags f = QFlag(0) );
     ~FilePropertiesDialog();
 
 	void setMediaData(MediaData md, Tracks videos, Tracks audios, SubTracks subs);

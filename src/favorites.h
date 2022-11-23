@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ class Favorite
 {
 public:
 	Favorite() { is_subentry = false; }
-	Favorite(QString name, QString file, QString icon = QString::null, bool subentry = false) 
+	Favorite(QString name, QString file, QString icon = QString(), bool subentry = false) 
 	{ 
 		_name = name; _file = file; _icon = icon; is_subentry = subentry;
 	};

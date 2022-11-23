@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <QPoint>
 
 class QWidget;
+class QScreen;
 
 class DesktopInfo
 {
@@ -35,6 +36,11 @@ public:
 	static bool isInsideScreen(QWidget *w);
 
 	static QPoint topLeftPrimaryScreen();
+
+protected:
+#if QT_VERSION >= 0x050000
+	static QScreen * find_screen(QWidget *w);
+#endif
 };
 
 #endif

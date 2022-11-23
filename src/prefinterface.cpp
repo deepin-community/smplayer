@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -84,7 +84,7 @@ PrefInterface::PrefInterface(QWidget * parent, Qt::WindowFlags f)
 	}
 
 	// Global
-	icon_dir = Paths::themesPath();
+	icon_dir.setPath(Paths::themesPath());
 	qDebug() << "PrefInterface::PrefInterface: icon_dir:" << icon_dir.absolutePath();
 	iconsets = icon_dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 	for (int n=0; n < iconsets.count(); n++) {

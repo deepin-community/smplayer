@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ class QSettings;
 #ifdef DOWNLOAD_SUBS
 class FileDownloader;
 class QBuffer;
-class QuaZip;
 #endif
 
 class FindSubtitlesWindow : public QWidget, public Ui::FindSubtitlesWindow
@@ -44,7 +43,7 @@ class FindSubtitlesWindow : public QWidget, public Ui::FindSubtitlesWindow
 	Q_OBJECT
 
 public:
-	FindSubtitlesWindow( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	FindSubtitlesWindow( QWidget * parent = 0, Qt::WindowFlags f = QFlag(0) );
 	~FindSubtitlesWindow();
 
 	QString language();
@@ -58,6 +57,7 @@ public:
 public slots:
 	void setMovie(QString filename);
 	void setLanguage(const QString & lang);
+	void searchTitle();
 	void refresh();
 	void download();
 	void copyLink();
@@ -105,17 +105,14 @@ protected:
 	void saveSettings();
 	void loadSettings();
 
+	void updateSearchTitleWidget();
+
 #ifdef DOWNLOAD_SUBS
 signals:
 	void subtitleDownloaded(const QString & filename);
 
 protected:
-	#ifdef USE_QUAZIP
-	bool uncompressZip(const QString & filename, const QString & output_path, const QString & preferred_output_name);
-	bool extractFile(QuaZip & zip, const QString & filename, const QString & output_name);
-	#else
 	QByteArray gUncompress(const QByteArray &data);
-	#endif
 
 protected slots:
 	void fixSubtitles(const QString & filename);

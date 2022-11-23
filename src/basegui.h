@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -62,6 +62,10 @@ class FindSubtitlesWindow;
 class VideoPreview;
 #endif
 
+#ifdef USE_SMTUBE_LIB
+class BrowserWindow;
+#endif
+
 class MyAction;
 class MyActionGroup;
 class PreferencesDialog;
@@ -82,7 +86,7 @@ class BaseGui : public QMainWindow
 	Q_OBJECT
 
 public:
-	BaseGui( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+	BaseGui( QWidget* parent = 0, Qt::WindowFlags flags = QFlag(0) );
 	~BaseGui();
 
 	/* Return true if the window shouldn't show on startup */
@@ -144,6 +148,7 @@ public slots:
 	virtual void loadAudioFile(); // Load external audio file
 
 	void setInitialSubtitle(const QString & subtitle_file);
+	void setInitialSecond(int second);
 
 #ifdef FIND_SUBTITLES
 	virtual void showFindSubtitlesDialog();
@@ -229,6 +234,8 @@ protected slots:
 	virtual void setDefaultValuesFromVideoEqualizer();
 	virtual void changeVideoEqualizerBySoftware(bool b);
 
+	virtual void setSpeed();
+
 	virtual void newMediaLoaded();
 	virtual void updateMediaInfo();
 
@@ -250,10 +257,13 @@ protected slots:
 #endif
 
 #ifdef YOUTUBE_SUPPORT
-	void YTNoSslSupport();
-	void YTNoSignature(const QString &);
-	#ifdef YT_USE_YTSIG
-	void YTUpdateScript();
+	#ifdef YT_CODEDOWNLOADER
+	void YTUpdate();
+	void YTFailedToStart();
+	void YTUrlNotFound();
+	#ifdef Q_OS_WIN
+	void YTDLLNotFound();
+	#endif
 	#endif
 #endif
 	void gotForbidden();
@@ -485,6 +495,7 @@ protected:
 	MyAction * incSpeed4Act;
 	MyAction * decSpeed1Act;
 	MyAction * incSpeed1Act;
+	QList<MyAction*> speed_acts;
 
 	// Menu Video
 	MyAction * fullscreenAct;
@@ -573,7 +584,7 @@ protected:
 	MyAction * showFAQAct;
 	MyAction * showCLOptionsAct; // Command line options
 	MyAction * showCheckUpdatesAct;
-#if defined(YOUTUBE_SUPPORT) && defined(YT_USE_YTSIG)
+#ifdef YT_CODEDOWNLOADER
 	MyAction * updateYTAct;
 #endif
 	MyAction * showConfigAct;
@@ -616,8 +627,11 @@ protected:
 	MyAction * incSaturationAct;
 	MyAction * decGammaAct;
 	MyAction * incGammaAct;
+	MyAction * prevVideoAct;
 	MyAction * nextVideoAct;
+	MyAction * prevAudioAct;
 	MyAction * nextAudioAct;
+	MyAction * prevSubtitleAct;
 	MyAction * nextSubtitleAct;
 	MyAction * nextChapterAct;
 	MyAction * prevChapterAct;
@@ -708,6 +722,7 @@ protected:
 	MyAction * rotateClockwiseAct;
 	MyAction * rotateCounterclockwiseAct;
 	MyAction * rotateCounterclockwiseFlipAct;
+	MyAction * rotate180Act;
 
 	// Menu StayOnTop
 	MyActionGroup * onTopActionGroup;
@@ -899,6 +914,10 @@ protected:
 #ifdef MG_DELAYED_SEEK
 	QTimer * delayed_seek_timer;
 	int delayed_seek_value;
+#endif
+
+#ifdef USE_SMTUBE_LIB
+	BrowserWindow * browser_window;
 #endif
 
 private:

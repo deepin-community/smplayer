@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ class PrefPlaylist : public PrefWidget, public Ui::PrefPlaylist
 	Q_OBJECT
 
 public:
-	PrefPlaylist( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	PrefPlaylist( QWidget * parent = 0, Qt::WindowFlags f = QFlag(0) );
 	~PrefPlaylist();
 
 	virtual QString sectionName();
@@ -73,6 +73,9 @@ public:
 	void allowDeleteFromDisk(bool b);
 	bool isDeleteFromDiskAllowed();
 #endif
+
+	void setChangeName(bool b);
+	bool changeName();
 
 	bool dockableChanged() { return dockable_changed; };
 

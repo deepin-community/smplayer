@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,12 +33,14 @@
 #define MPLAYER_MPV_SELECTION
 #endif
 
+//#define AUDIO_DEVICES_SELECTION
+
 class PrefGeneral : public PrefWidget, public Ui::PrefGeneral
 {
 	Q_OBJECT
 
 public:
-	PrefGeneral( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	PrefGeneral( QWidget * parent = 0, Qt::WindowFlags f = QFlag(0) );
 	~PrefGeneral();
 
 	// Return the name of the section
@@ -197,7 +199,7 @@ protected slots:
 	void vo_combo_changed(int);
 	void ao_combo_changed(int);
 
-#ifndef Q_OS_WIN
+#ifdef OS_UNIX_NOT_MAC
 	void on_vdpau_button_clicked();
 #endif
 
@@ -207,19 +209,24 @@ protected:
 
 	InfoList vo_list;
 	InfoList ao_list;
-	
-#if USE_DSOUND_DEVICES
-	DeviceList dsound_devices;
-#endif
 
-#if USE_ALSA_DEVICES
+#ifdef AUDIO_DEVICES_SELECTION
+	#if USE_DSOUND_DEVICES
+	DeviceList dsound_devices;
+	#endif
+
+	#if USE_ALSA_DEVICES
 	DeviceList alsa_devices;
-#endif
-#if USE_MPV_ALSA_DEVICES
+	#endif
+	#if USE_MPV_ALSA_DEVICES
 	DeviceList mpv_alsa_devices;
-#endif
-#if USE_PULSEAUDIO_DEVICES
+	#endif
+	#if USE_PULSEAUDIO_DEVICES || USE_MPV_PULSE_DEVICES
 	DeviceList pa_devices;
+	#endif
+	#if USE_MPV_COREAUDIO_DEVICES
+	DeviceList coreaudio_devices;
+	#endif
 #endif
 #if USE_XV_ADAPTORS
 	DeviceList xv_adaptors;
@@ -228,7 +235,7 @@ protected:
 private:
 	bool filesettings_method_changed;
 
-#ifndef Q_OS_WIN
+#ifdef OS_UNIX_NOT_MAC
 	struct Preferences::VDPAU_settings vdpau;
 #endif
 

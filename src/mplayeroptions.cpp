@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,8 +31,11 @@ void MplayerProcess::setMedia(const QString & media, bool is_playlist) {
 	arg << media;
 }
 
-void MplayerProcess::setFixedOptions() {
+void MplayerProcess::setPredefinedOptions() {
 	arg << "-noquiet" << "-slave" << "-identify";
+}
+
+void MplayerProcess::disableConfig() {
 }
 
 void MplayerProcess::disableInput() {
@@ -56,19 +59,44 @@ void MplayerProcess::enableScreenshots(const QString & dir, const QString & /* t
 	QString f = "screenshot";
 	if (!dir.isEmpty()) {
 		QString d = QDir::toNativeSeparators(dir);
-		if (MplayerVersion::isMplayerAtLeast(36848)) {
-			f += "="+ d + "/shot";
-		} else {
-			// Keep compatibility with older versions
-			qDebug() << "MplayerProcess::enableScreenshots: this version of mplayer is very old";
-			qDebug() << "MplayerProcess::enableScreenshots: changing working directory to" << d;
-			setWorkingDirectory(d);
-		}
+		f += "="+ d + "/shot";
+		arg << "-vf-add" << f;
 	}
-	arg << "-vf-add" << f;
 }
 
 void MplayerProcess::setOption(const QString & option_name, const QVariant & value) {
+#if defined(USE_COREVIDEO_BUFFER) || defined(USE_SHM)
+	if (option_name == "vo") {
+		QString buffer_name = QString("/smplayer-%1").arg(QCoreApplication::applicationPid());
+		QString vo = value.toString();
+		qDebug() << "MplayerProcess::setOption: vo:" << vo;
+		#ifdef USE_COREVIDEO_BUFFER
+		if (vo.startsWith("corevideo")) {
+			vo = QString("corevideo:buffer_name=%1").arg(buffer_name);
+			arg << "-vo" << vo + ",";
+			arg << "-vf-add" << "format=UYVY";
+			return;
+		}
+		#endif
+		#ifdef USE_SHM
+		if (vo.startsWith("shm")) {
+			vo = QString("shm:buffer_name=%1").arg(buffer_name);
+			arg << "-vo" << vo + ",";
+			return;
+		}
+		#endif
+	}
+	else
+	if (option_name == "wid") {
+		foreach(QString s, arg) {
+			if (s.contains("corevideo") || s.contains("shm")) {
+				qDebug("MplayerProcess::setOption: wid ignored");
+				return;
+			}
+		}
+	}
+#endif
+
 	if (option_name == "ao") {
 		QString ao = value.toString();
 		if (ao.contains(":")) {
@@ -152,6 +180,10 @@ void MplayerProcess::setOption(const QString & option_name, const QVariant & val
 		// Not supported
 	}
 	else
+	if (option_name == "ytdl_path") {
+		// Not supported
+	}
+	else
 	if (option_name == "hwdec") {
 		// Not supported
 	}
@@ -171,6 +203,17 @@ void MplayerProcess::setOption(const QString & option_name, const QVariant & val
 			if (v < 100) v = 100;
 			arg << "-softvol" << "-softvol-max" << QString::number(v);
 		}
+	}
+	else
+	if (option_name == "channels") {
+		QString v;
+		switch (value.toInt()) {
+			case 2:
+			case 4:
+			case 6:
+			case 8: v = QString::number(value.toInt());
+		}
+		if (!v.isEmpty()) arg << "-channels" << v;
 	}
 	else
 	if (option_name == "keepaspect" ||
@@ -246,6 +289,14 @@ void MplayerProcess::addVF(const QString & filter_name, const QVariant & value) 
 		arg << "-vf-add" << "harddup,flip";
 	}
 	else
+	if (filter_name == "rotate") {
+		if (option == "4") {
+			arg << "-vf-add" << "mirror,flip";
+		} else {
+			arg << "-vf-add" << "rotate=" + option;
+		}
+	}
+	else
 	if (filter_name == "letterbox") {
 		QSize desktop_size = value.toSize();
 		double aspect = (double) desktop_size.width() / desktop_size.height();
@@ -316,35 +367,35 @@ void MplayerProcess::addAF(const QString & filter_name, const QVariant & value) 
 }
 
 void MplayerProcess::quit() {
-	writeToStdin("quit");
+	sendCommand("quit");
 }
 
 void MplayerProcess::setVolume(int v) {
-	writeToStdin("volume " + QString::number(v) + " 1");
+	sendCommand("volume " + QString::number(v) + " 1");
 }
 
 void MplayerProcess::setOSD(int o) {
-	writeToStdin(pausing_prefix + " osd " + QString::number(o));
+	sendCommand(pausing_prefix + " osd " + QString::number(o));
 }
 
 void MplayerProcess::setAudio(int ID) {
-	writeToStdin("switch_audio " + QString::number(ID));
+	sendCommand("switch_audio " + QString::number(ID));
 }
 
 void MplayerProcess::setVideo(int ID) {
-	writeToStdin("set_property switch_video " + QString::number(ID));
+	sendCommand("set_property switch_video " + QString::number(ID));
 }
 
 void MplayerProcess::setSubtitle(int type, int ID) {
 	switch (type) {
 		case SubData::Vob:
-			writeToStdin( "sub_vob " + QString::number(ID) );
+			sendCommand( "sub_vob " + QString::number(ID) );
 			break;
 		case SubData::Sub:
-			writeToStdin( "sub_demux " + QString::number(ID) );
+			sendCommand( "sub_demux " + QString::number(ID) );
 			break;
 		case SubData::File:
-			writeToStdin( "sub_file " + QString::number(ID) );
+			sendCommand( "sub_file " + QString::number(ID) );
 			break;
 		default: {
 			qWarning("MplayerProcess::setSubtitle: unknown type!");
@@ -353,29 +404,29 @@ void MplayerProcess::setSubtitle(int type, int ID) {
 }
 
 void MplayerProcess::disableSubtitles() {
-	writeToStdin("sub_source -1");
+	sendCommand("sub_source -1");
 }
 
 void MplayerProcess::setSubtitlesVisibility(bool b) {
-	writeToStdin(QString("sub_visibility %1").arg(b ? 1 : 0));
+	sendCommand(QString("sub_visibility %1").arg(b ? 1 : 0));
 }
 
 void MplayerProcess::seek(double secs, int mode, bool precise) {
 	QString s = QString("seek %1 %2").arg(secs).arg(mode);
 	if (precise) s += " 1"; else s += " -1";
-	writeToStdin(s);
+	sendCommand(s);
 }
 
 void MplayerProcess::mute(bool b) {
-	writeToStdin(pausing_prefix + " mute " + QString::number(b ? 1 : 0));
+	sendCommand(pausing_prefix + " mute " + QString::number(b ? 1 : 0));
 }
 
 void MplayerProcess::setPause(bool /*b*/) {
-	writeToStdin("pause"); // pauses / unpauses
+	sendCommand("pause"); // pauses / unpauses
 }
 
 void MplayerProcess::frameStep() {
-	writeToStdin("frame_step");
+	sendCommand("frame_step");
 }
 
 void MplayerProcess::frameBackStep() {
@@ -387,7 +438,7 @@ void MplayerProcess::frameBackStep() {
 void MplayerProcess::showOSDText(const QString & text, int duration, int level) {
 	QString str = QString("osd_show_text \"%1\" %2 %3").arg(text).arg(duration).arg(level);
 	if (!pausing_prefix.isEmpty()) str = pausing_prefix + " " + str;
-	writeToStdin(str);
+	sendCommand(str);
 }
 
 void MplayerProcess::showFilenameOnOSD(int duration) {
@@ -395,7 +446,7 @@ void MplayerProcess::showFilenameOnOSD(int duration) {
 
 	if (!osd_media_info.isEmpty()) s = osd_media_info;
 
-	writeToStdin(QString("osd_show_property_text \"%1\" %2 0").arg(s).arg(duration));
+	sendCommand(QString("osd_show_property_text \"%1\" %2 0").arg(s).arg(duration));
 }
 
 void MplayerProcess::showMediaInfoOnOSD() {
@@ -403,55 +454,55 @@ void MplayerProcess::showMediaInfoOnOSD() {
 }
 
 void MplayerProcess::showTimeOnOSD() {
-	writeToStdin("osd_show_property_text \"${time_pos} / ${length} (${percent_pos}%)\" 2000 0");
+	sendCommand("osd_show_property_text \"${time_pos} / ${length} (${percent_pos}%)\" 2000 0");
 }
 
 void MplayerProcess::setContrast(int value) {
-	writeToStdin(pausing_prefix + " contrast " + QString::number(value) + " 1");
+	sendCommand(pausing_prefix + " contrast " + QString::number(value) + " 1");
 }
 
 void MplayerProcess::setBrightness(int value) {
-	writeToStdin(pausing_prefix + " brightness " + QString::number(value) + " 1");
+	sendCommand(pausing_prefix + " brightness " + QString::number(value) + " 1");
 }
 
 void MplayerProcess::setHue(int value) {
-	writeToStdin(pausing_prefix + " hue " + QString::number(value) + " 1");
+	sendCommand(pausing_prefix + " hue " + QString::number(value) + " 1");
 }
 
 void MplayerProcess::setSaturation(int value) {
-	writeToStdin(pausing_prefix + " saturation " + QString::number(value) + " 1");
+	sendCommand(pausing_prefix + " saturation " + QString::number(value) + " 1");
 }
 
 void MplayerProcess::setGamma(int value) {
-	writeToStdin(pausing_prefix + " gamma " + QString::number(value) + " 1");
+	sendCommand(pausing_prefix + " gamma " + QString::number(value) + " 1");
 }
 
 void MplayerProcess::setChapter(int ID) {
-	writeToStdin("seek_chapter " + QString::number(ID) +" 1");
+	sendCommand("seek_chapter " + QString::number(ID) +" 1");
 }
 
 void MplayerProcess::nextChapter() {
-	writeToStdin("seek_chapter 1 0");
+	sendCommand("seek_chapter 1 0");
 }
 
 void MplayerProcess::previousChapter() {
-	writeToStdin("seek_chapter -1 0");
+	sendCommand("seek_chapter -1 0");
 }
 
 void MplayerProcess::setExternalSubtitleFile(const QString & filename) {
-	writeToStdin("sub_load \""+ filename +"\"");
+	sendCommand("sub_load \""+ filename +"\"");
 }
 
 void MplayerProcess::setSubPos(int pos) {
-	writeToStdin("sub_pos " + QString::number(pos) + " 1");
+	sendCommand("sub_pos " + QString::number(pos) + " 1");
 }
 
 void MplayerProcess::setSubScale(double value) {
-	writeToStdin("sub_scale " + QString::number(value) + " 1");
+	sendCommand("sub_scale " + QString::number(value) + " 1");
 }
 
 void MplayerProcess::setSubStep(int value) {
-	writeToStdin("sub_step " + QString::number(value));
+	sendCommand("sub_step " + QString::number(value));
 }
 
 #ifdef MPV_SUPPORT
@@ -462,40 +513,40 @@ void MplayerProcess::seekSub(int /*value*/) {
 #endif
 
 void MplayerProcess::setSubForcedOnly(bool b) {
-	writeToStdin(QString("forced_subs_only %1").arg(b ? 1 : 0));
+	sendCommand(QString("forced_subs_only %1").arg(b ? 1 : 0));
 }
 
 void MplayerProcess::setSpeed(double value) {
-	writeToStdin("speed_set " + QString::number(value));
+	sendCommand("speed_set " + QString::number(value));
 }
 
 void MplayerProcess::enableKaraoke(bool b) {
-	if (b) writeToStdin("af_add karaoke"); else writeToStdin("af_del karaoke");
+	if (b) sendCommand("af_add karaoke"); else sendCommand("af_del karaoke");
 }
 
 void MplayerProcess::enableExtrastereo(bool b) {
-	if (b) writeToStdin("af_add extrastereo"); else writeToStdin("af_del extrastereo");
+	if (b) sendCommand("af_add extrastereo"); else sendCommand("af_del extrastereo");
 }
 
 void MplayerProcess::enableVolnorm(bool b, const QString & option) {
-	if (b) writeToStdin("af_add volnorm=" + option); else writeToStdin("af_del volnorm");
+	if (b) sendCommand("af_add volnorm=" + option); else sendCommand("af_del volnorm");
 }
 
 void MplayerProcess::setAudioEqualizer(AudioEqualizerList l) {
 	QString values = AudioEqualizerHelper::equalizerListToString(l);
-	writeToStdin("af_cmdline equalizer " + values);
+	sendCommand("af_cmdline equalizer " + values);
 }
 
 void MplayerProcess::setAudioDelay(double delay) {
-	writeToStdin(pausing_prefix + " audio_delay " + QString::number(delay) +" 1");
+	sendCommand(pausing_prefix + " audio_delay " + QString::number(delay) +" 1");
 }
 
 void MplayerProcess::setSubDelay(double delay) {
-	writeToStdin(pausing_prefix + " sub_delay " + QString::number(delay) +" 1");
+	sendCommand(pausing_prefix + " sub_delay " + QString::number(delay) +" 1");
 }
 
 void MplayerProcess::setLoop(int v) {
-	writeToStdin(QString("loop %1 1").arg(v));
+	sendCommand(QString("loop %1 1").arg(v));
 }
 
 void MplayerProcess::setAMarker(int /*sec*/) {
@@ -512,59 +563,59 @@ void MplayerProcess::clearABMarkers() {
 
 void MplayerProcess::takeScreenshot(ScreenshotType t, bool /*include_subtitles*/) {
 	if (t == Single) {
-		writeToStdin(pausing_prefix + " screenshot 0");
+		sendCommand(pausing_prefix + " screenshot 0");
 	} else {
-		writeToStdin("screenshot 1");
+		sendCommand("screenshot 1");
 	}
 }
 
 #ifdef CAPTURE_STREAM
 void MplayerProcess::switchCapturing() {
-	writeToStdin("capturing");
+	sendCommand("capturing");
 }
 #endif
 
 void MplayerProcess::setTitle(int ID) {
-	writeToStdin("switch_title " + QString::number(ID));
+	sendCommand("switch_title " + QString::number(ID));
 }
 
 #if DVDNAV_SUPPORT
 void MplayerProcess::discSetMousePos(int x, int y) {
-	writeToStdin(QString("set_mouse_pos %1 %2").arg(x).arg(y));
+	sendCommand(QString("set_mouse_pos %1 %2").arg(x).arg(y));
 }
 
 void MplayerProcess::discButtonPressed(const QString & button_name) {
-	writeToStdin("dvdnav " + button_name);
+	sendCommand("dvdnav " + button_name);
 }
 #endif
 
 void MplayerProcess::setAspect(double aspect) {
-	writeToStdin("switch_ratio " + QString::number(aspect));
+	sendCommand("switch_ratio " + QString::number(aspect));
 }
 
 void MplayerProcess::setFullscreen(bool b) {
-	writeToStdin(QString("vo_fullscreen %1").arg(b ? "1" : "0"));
+	sendCommand(QString("vo_fullscreen %1").arg(b ? "1" : "0"));
 }
 
 #if PROGRAM_SWITCH
 void MplayerProcess::setTSProgram(int ID) {
-	writeToStdin("set_property switch_program " + QString::number(ID) );
-	writeToStdin("get_property switch_audio");
-	writeToStdin("get_property switch_video");
+	sendCommand("set_property switch_program " + QString::number(ID) );
+	sendCommand("get_property switch_audio");
+	sendCommand("get_property switch_video");
 }
 #endif
 
 void MplayerProcess::toggleDeinterlace() {
-	writeToStdin("step_property deinterlace");
+	sendCommand("step_property deinterlace");
 }
 
 void MplayerProcess::askForLength() {
-	writeToStdin(pausing_prefix + " get_property length");
+	sendCommand(pausing_prefix + " get_property length");
 }
 
 void MplayerProcess::setOSDScale(double /*value*/) {
 	// not available
-	/* writeToStdin("set_property subfont-osd-scale " + QString::number(value)); */
+	/* sendCommand("set_property subfont-osd-scale " + QString::number(value)); */
 }
 
 void MplayerProcess::changeVF(const QString & filter, bool enable, const QVariant & option) {

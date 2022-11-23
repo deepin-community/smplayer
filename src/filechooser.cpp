@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ QString FileChooser::last_dir;
 FileChooser::FileChooser(QWidget * parent) : LineEditWithIcon(parent) 
 {
 	setDialogType(GetFileName);
-	setOptions(0);
+	setOptions(QFlag(0));
 
 	setupButton();
 	button->setCursor( Qt::PointingHandCursor );

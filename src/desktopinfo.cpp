@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2018 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,32 +21,54 @@
 #include <QDesktopWidget>
 #include <QDebug>
 
+#if QT_VERSION >= 0x050000
+#include <QScreen>
+#include <QWindow>
+
+QScreen * DesktopInfo::find_screen(QWidget *w) {
+	QScreen * screen = 0;
+
+	while (w) {
+		QWindow * window = w->windowHandle();
+		if (window) {
+			screen = window->screen();
+			break;
+		}
+		w = w->parentWidget();
+	}
+
+	if (screen == 0) screen = QApplication::primaryScreen();
+	return screen;
+}
+#endif
+
 QSize DesktopInfo::desktop_size(QWidget *w) {
+#if QT_VERSION >= 0x050000
+	QScreen * screen = find_screen(w);
+	qDebug() << "DesktopInfo::desktop_size: size of screen:" << screen->size();
+	return screen->size();
+#else
 	QDesktopWidget * dw = QApplication::desktop();
-	qDebug("DesktopInfo::desktop_size: primary screen: %d", dw->primaryScreen());
+	qDebug() << "DesktopInfo::desktop_size: primary screen:" << dw->primaryScreen();
 
 	QSize s = dw->screen( dw->primaryScreen() )->size();
 
-	qDebug("DesktopInfo::desktop_size: size of primary screen: %d x %d", s.width(), s.height() );
+	qDebug() << "DesktopInfo::desktop_size: size of primary screen:" <<  s;
 	//return dw->screen( dw->primaryScreen() )->size();
 
 	QRect r = dw->screenGeometry(w);
-	qDebug("DesktopInfo::desktop_size: size of screen: %d x %d", r.width(), r.height() );
+	qDebug() << "DesktopInfo::desktop_size: size of screen:" << r;
 
 	return QSize(r.width(), r.height() );
+#endif
 }
 
 double DesktopInfo::desktop_aspectRatio(QWidget *w) {
-    QSize s = DesktopInfo::desktop_size(w);
-    return  (double) s.width() / s.height() ;
+	QSize s = DesktopInfo::desktop_size(w);
+	return  (double) s.width() / s.height() ;
 }
 
 bool DesktopInfo::isInsideScreen(QWidget *w) {
-	QDesktopWidget * dw = QApplication::desktop();
-	QRect r = dw->screenGeometry(w);
-
-	qDebug() << "DesktopInfo::isInsideScreen: geometry of screen:" << r;
-
 	QPoint p = w->pos();
 
 	p.setX(p.x() + w->size().width() / 2);
@@ -54,12 +76,23 @@ bool DesktopInfo::isInsideScreen(QWidget *w) {
 
 	qDebug() << "DesktopInfo::isInsideScreen: center point of window:" << p;
 
+#if QT_VERSION >= 0x050000
+	QRect r = QApplication::primaryScreen()->availableVirtualGeometry();
+#else
+	QRect r = QApplication::desktop()->geometry();
+#endif
+
+	qDebug() << "DesktopInfo::isInsideScreen: virtual geometry:" << r;
 	return r.contains(p);
 }
 
 QPoint DesktopInfo::topLeftPrimaryScreen() {
+#if QT_VERSION >= 0x050000
+	QRect r = QApplication::primaryScreen()->geometry();
+#else
 	int screen = QApplication::desktop()->primaryScreen();
 	QRect r = QApplication::desktop()->screenGeometry(screen);
+#endif
 	return r.topLeft();
 }
 

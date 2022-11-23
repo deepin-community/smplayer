@@ -1,24 +1,30 @@
 Source: smplayer
 Section: video
 Priority: optional
-Maintainer: Deepin Developer <deepin-dev@deepin.org>
-Uploaders: Deepin Packages Builder <packages@deepin.org>
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Uploaders:
+ Reinhard Tartler <siretart@tauware.de>,
+ Mateusz Łukasik <mati75@linuxmint.pl>,
+ Alf Gaida <agaida@siduction.org>
 Build-Depends:
- debhelper (>= 11),
- qtbase5-dev (>= 5.1),
+ debhelper-compat (= 13),
+ qtbase5-dev,
  qtbase5-private-dev,
  qt5-qmake,
  qt5-qmake:native,
  qtscript5-dev,
  qttools5-dev-tools,
  zlib1g-dev
-Standards-Version: 4.2.1
+Standards-Version: 4.6.1
 Homepage: http://smplayer.sourceforge.net/
+Vcs-Git: https://salsa.debian.org/multimedia-team/smplayer.git
+Vcs-Browser: https://salsa.debian.org/multimedia-team/smplayer
+Rules-Requires-Root: no
 
 Package: smplayer
 Architecture: any
 Depends:
- mpv (>= 0.6.2) | mplayer,
+ mpv | mplayer,
  ${misc:Depends},
  ${shlibs:Depends}
 Recommends:
@@ -41,7 +47,7 @@ Depends:
  smplayer (>= ${source:Version}),
  ${misc:Depends}
 Replaces:
- smplayer (<< 0.5.62), smplayer-translations (<< 14.3.0)
+ smplayer-translations (<< 14.3.0)
 Breaks:
  smplayer-translations (<< 14.3.0)
 Description: Complete front-end for MPlayer and mpv - translation files

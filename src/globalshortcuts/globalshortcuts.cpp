@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2017 Ricardo Villalba <rvm@users.sourceforge.net>
+    Copyright (C) 2006-2017 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -79,10 +79,6 @@ void GlobalShortcuts::unregisterAll() {
 }
 
 void GlobalShortcuts::activateShortcut(Qt::Key key) {
-#ifdef Q_OS_LINUX
-	//if (QApplication::activeWindow()) return;
-#endif
-
 	QKeySequence ks(key);
 
 	qDebug() << "GlobalShortcuts::activateShortcut:" << key << "shortcut:" << ks;
