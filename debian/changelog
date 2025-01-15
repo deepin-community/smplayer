@@ -1,3 +1,43 @@
+smplayer (24.5.0+ds-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update standards version to 4.7.0, no changes needed.
+  * Update debian/copyright.
+  * Drop debian-orig from original sources.
+  * Remove Alf Gaida from Uploaders.
+  * Bump d/watch to version 4.
+  * Add Forwarded: not-needed to Debian patches.
+  * Cherry pick from upstream for Adapt MPV's renaming
+    --sub-forced-only to --sub-forced-events-only.
+  * d/rules: Remove override_dh_missing.
+  * Update d/upstream/metadata.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Fri, 20 Sep 2024 21:12:34 +0200
+
+smplayer (23.12.0+ds0-1) unstable; urgency=medium
+
+  * New upstream release. (Closes: #1062700)
+  * Add qtdeclarative5-dev to the dependencies.
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Fri, 16 Feb 2024 20:44:40 +0100
+
+smplayer (23.6.0+ds0-1) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Use secure URI in Homepage field.
+  * Update standards version to 4.6.2, no changes needed.
+
+  [ Mateusz Łukasik ]
+  * New upstream release.
+  * Set version to +ds for repack to drop upstream docs included gpl
+    multilingual licence in html.
+  * Add patch for drop hardcodes use of Google DNS resolver. (Closes: #1023546)
+  * Add patch for remove hardcodes use of Google DNS resolver from chromecast
+    feature. (Closes: #1023547)
+  * Add version to clean file. (Closes: #1048090)
+
+ -- Mateusz Łukasik <mati75@linuxmint.pl>  Sun, 01 Oct 2023 14:42:30 +0200
+
 smplayer (22.7.0~ds0-1) unstable; urgency=medium
 
   * New upstream release.

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
+    Copyright (C) 2006-2024 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -324,7 +324,15 @@ bool VideoPreview::runPlayer(double seek, double aspect_ratio) {
 		args << "--frames=" + QString::number(N_OUTPUT_FRAMES);
 		args << "--framedrop=no" << "--start=" + QString::number(seek);
 		if (aspect_ratio != 0) {
-			args << "--video-aspect=" + QString::number(aspect_ratio);
+			#if defined(Q_OS_UNIX) && !defined(NO_SMPLAYER_SUPPORT)
+			if (isOptionAvailableinMPV("--video-aspect-override")) {
+				args << "--video-aspect-override=" + QString::number(aspect_ratio);
+			} else {
+				args << "--video-aspect=" + QString::number(aspect_ratio);
+			}
+			#else
+			args << "--video-aspect-override=" + QString::number(aspect_ratio);
+			#endif
 		}
 		if (!prop.dvd_device.isEmpty()) args << "--dvd-device=" + prop.dvd_device;
 		if (!use_new_options) {

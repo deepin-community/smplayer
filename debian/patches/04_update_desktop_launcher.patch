@@ -1,6 +1,7 @@
 Description: Add Unity Launcher Quicklist and keywords to desktop file
 Author: Mateusz Łukasik <mati75@linuxmint.pl>
 Bug-Ubuntu: https://bugs.launchpad.net/bugs/938015
+Forwarded: not-needed
 
 --- b/smplayer.desktop
 +++ b/smplayer.desktop

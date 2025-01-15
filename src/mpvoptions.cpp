@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
+    Copyright (C) 2006-2024 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -73,13 +73,15 @@ void MPVProcess::setMedia(const QString & media, bool is_playlist) {
 			"INFO_VIDEO_FPS=${=container-fps:${=fps}}\n"
 //			"INFO_VIDEO_BITRATE=${=video-bitrate}\n"
 			"INFO_VIDEO_FORMAT=${=video-format}\n"
-			"INFO_VIDEO_CODEC=${=video-codec}\n"
+//			"INFO_VIDEO_CODEC=${=video-codec}\n"
+			"INFO_VIDEO_CODEC=${=video-format}\n"
 			"INFO_DEMUX_ROTATION=${=track-list/0/demux-rotation}\n"
 
 //			"INFO_AUDIO_BITRATE=${=audio-bitrate}\n"
 //			"INFO_AUDIO_FORMAT=${=audio-format}\n" // old
 			"INFO_AUDIO_FORMAT=${=audio-codec-name}\n"
-			"INFO_AUDIO_CODEC=${=audio-codec}\n"
+//			"INFO_AUDIO_CODEC=${=audio-codec}\n"
+			"INFO_AUDIO_CODEC=${=audio-codec-name}\n"
 //			"INFO_AUDIO_RATE=${=audio-samplerate}\n" // old
 			"INFO_AUDIO_RATE=${=audio-params/samplerate}\n"
 //			"INFO_AUDIO_NCH=${=audio-channels}\n" // old
@@ -595,9 +597,15 @@ void MPVProcess::setOption(const QString & option_name, const QVariant & value) 
 		if (!value.isNull()) arg << "--af-add=" + value.toString();
 	}
 	else
-	if (option_name == "aid" || option_name == "sid" || option_name == "secondary-sid" || option_name == "vid") {
+	if (option_name == "aid" || option_name == "vid") {
 		int v = value.toInt();
 		arg << QString("--%1=%2").arg(option_name).arg(v > -1 ? value.toString() : "no");
+	}
+	else
+	if (option_name == "sid" || option_name == "secondary-sid") {
+		QString s = value.toString();
+		if (s == "-1") s = "no";
+		arg << QString("--%1=%2").arg(option_name).arg(s);
 	}
 	else
 	if (option_name == "alang" || option_name == "slang" ||
@@ -848,6 +856,12 @@ void MPVProcess::mute(bool b) {
 
 void MPVProcess::setPause(bool b) {
 	sendCommand(QString("set pause %1").arg(b ? "yes" : "no"));
+
+	// Workaround for mpv 0.37, playback not resuming after pause
+	// It seems mpv reports the pause state in the status line with some delay
+	#if 1
+		for (int n=0; n < 50; n++) sendCommand("print_text IGNORE_THIS");
+	#endif
 }
 
 void MPVProcess::frameStep() {
@@ -890,8 +904,10 @@ void MPVProcess::showTimeOnOSD() {
 #ifdef OSD_WITH_TIMER
 void MPVProcess::toggleInfoOnOSD() {
 	#ifdef USE_MPV_STATS
-	stats_page++;
-	if (stats_page > 3) stats_page = 0;
+	if (stats_page == 0 || osd_timer->isActive()) {
+		stats_page++;
+		if (stats_page > 3) stats_page = 0;
+	}
 
 	if (stats_page > 0) {
 		if (!osd_timer->isActive()) osd_timer->start();

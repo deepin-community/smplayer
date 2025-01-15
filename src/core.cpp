@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
+    Copyright (C) 2006-2024 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1841,8 +1841,8 @@ void Core::startMplayer( QString file, double seek ) {
 	proc->setOption("dr", pref->use_direct_rendering);
 	proc->setOption("double", pref->use_double_buffer);
 
-#if defined(Q_WS_X11) && defined(SCREENSAVER_OFF)
-	proc->setOption("stop-xscreensaver", pref->disable_screensaver);
+#if defined(Q_OS_LINUX) && defined(SCREENSAVER_OFF)
+	proc->setOption("stop-xscreensaver", false /*pref->disable_screensaver*/);
 #endif
 
 	if (display_screen != 0) {
@@ -2004,6 +2004,9 @@ void Core::startMplayer( QString file, double seek ) {
 		if (mset.current_subtitle_track != MediaSettings::NoneSelected) {
 			int real_id = mset.subs.IDAt(mset.current_subtitle_track);
 			proc->setOption("sid", QString::number(real_id));
+		}
+		else {
+			proc->setOption("sid", "auto");
 		}
 
 		if (mset.current_secondary_subtitle_track != MediaSettings::NoneSelected) {
@@ -2190,8 +2193,9 @@ void Core::startMplayer( QString file, double seek ) {
 		proc->setOption("cache", QString::number(cache));
 	}
 
-	if (mset.speed != 1.0) {
-		proc->setOption("speed", QString::number(mset.speed));
+	double speed = pref->global_speed ? pref->speed : mset.speed;
+	if (speed != 1.0) {
+		proc->setOption("speed", QString::number(speed));
 	}
 
 	if (mdat.type != TYPE_TV) {
@@ -2510,8 +2514,10 @@ void Core::startMplayer( QString file, double seek ) {
 
 #ifdef MPV_SUPPORT
 	if (mdat.type == TYPE_STREAM) {
+		#ifdef YOUTUBE_SUPPORT
 		QString ytdl_bin = pref->yt_ytdl_bin;
 		if (ytdl_bin.isEmpty()) ytdl_bin = YTDL_DEFAULT_BIN;
+		#endif
 		if (pref->streaming_type == Preferences::StreamingAuto) {
 			bool is_youtube = false;
 			#ifdef YOUTUBE_SUPPORT
@@ -2534,10 +2540,12 @@ void Core::startMplayer( QString file, double seek ) {
 			proc->setOption("enable_streaming_sites_support", enable_sites);
 			if (enable_sites) {
 				proc->setOption("ytdl_quality", pref->ytdl_quality);
+				#ifdef YOUTUBE_SUPPORT
 				#ifdef YT_BIN_ON_CONFIG_DIR
 				proc->setOption("ytdl_path", RetrieveYoutubeUrl::ytdlBin());
 				#else
 				proc->setOption("ytdl_path", ytdl_bin);
+				#endif
 				#endif
 			}
 		} else {
@@ -2545,10 +2553,12 @@ void Core::startMplayer( QString file, double seek ) {
 			proc->setOption("enable_streaming_sites_support", enable_sites);
 			if (enable_sites) {
 				proc->setOption("ytdl_quality", pref->ytdl_quality);
+				#ifdef YOUTUBE_SUPPORT
 				#ifdef YT_BIN_ON_CONFIG_DIR
 				proc->setOption("ytdl_path", RetrieveYoutubeUrl::ytdlBin());
 				#else
 				proc->setOption("ytdl_path", ytdl_bin);
+				#endif
 				#endif
 			}
 		}
@@ -3358,7 +3368,11 @@ void Core::setSpeed( double value ) {
 	if (value < 0.10) value = 0.10;
 	if (value > 100) value = 100;
 
-	mset.speed = value;
+	if (pref->global_speed) {
+		pref->speed = value;
+	} else{
+		mset.speed = value;
+	}
 	proc->setSpeed(value);
 
 	displayMessage( tr("Speed: %1").arg(value) );
@@ -3366,42 +3380,50 @@ void Core::setSpeed( double value ) {
 
 void Core::incSpeed10() {
 	qDebug("Core::incSpeed10");
-	setSpeed( (double) mset.speed + 0.1 );
+	double speed = pref->global_speed ? pref->speed : mset.speed;
+	setSpeed( (double) speed + 0.1 );
 }
 
 void Core::decSpeed10() {
 	qDebug("Core::decSpeed10");
-	setSpeed( (double) mset.speed - 0.1 );
+	double speed = pref->global_speed ? pref->speed : mset.speed;
+	setSpeed( (double) speed - 0.1 );
 }
 
 void Core::incSpeed4() {
 	qDebug("Core::incSpeed4");
-	setSpeed( (double) mset.speed + 0.04 );
+	double speed = pref->global_speed ? pref->speed : mset.speed;
+	setSpeed( (double) speed + 0.04 );
 }
 
 void Core::decSpeed4() {
 	qDebug("Core::decSpeed4");
-	setSpeed( (double) mset.speed - 0.04 );
+	double speed = pref->global_speed ? pref->speed : mset.speed;
+	setSpeed( (double) speed - 0.04 );
 }
 
 void Core::incSpeed1() {
 	qDebug("Core::incSpeed1");
-	setSpeed( (double) mset.speed + 0.01 );
+	double speed = pref->global_speed ? pref->speed : mset.speed;
+	setSpeed( (double) speed + 0.01 );
 }
 
 void Core::decSpeed1() {
 	qDebug("Core::decSpeed1");
-	setSpeed( (double) mset.speed - 0.01 );
+	double speed = pref->global_speed ? pref->speed : mset.speed;
+	setSpeed( (double) speed - 0.01 );
 }
 
 void Core::doubleSpeed() {
 	qDebug("Core::doubleSpeed");
-	setSpeed( (double) mset.speed * 2 );
+	double speed = pref->global_speed ? pref->speed : mset.speed;
+	setSpeed( (double) speed * 2 );
 }
 
 void Core::halveSpeed() {
 	qDebug("Core::halveSpeed");
-	setSpeed( (double) mset.speed / 2 );
+	double speed = pref->global_speed ? pref->speed : mset.speed;
+	setSpeed( (double) speed / 2 );
 }
 
 void Core::normalSpeed() {
@@ -3933,7 +3955,9 @@ void Core::prevSubtitle() {
 	qDebug("Core::prevSubtitle");
 
 	if (mset.subs.numItems() > 0) {
-		if (mset.current_subtitle_track == MediaSettings::SubNone) {
+		if (mset.current_subtitle_track == MediaSettings::SubNone ||
+            mset.current_subtitle_track == MediaSettings::NoneSelected)
+		{
 			changeSubtitle(mset.subs.numItems() - 1);
 		} else {
 			int item = mset.current_subtitle_track - 1;
@@ -3947,7 +3971,9 @@ void Core::nextSubtitle() {
 	qDebug("Core::nextSubtitle");
 
 	if (mset.subs.numItems() > 0) {
-		if (mset.current_subtitle_track == MediaSettings::SubNone) {
+		if (mset.current_subtitle_track == MediaSettings::SubNone ||
+            mset.current_subtitle_track == MediaSettings::NoneSelected)
+		{
 			changeSubtitle(0);
 		} else {
 			int item = mset.current_subtitle_track + 1;

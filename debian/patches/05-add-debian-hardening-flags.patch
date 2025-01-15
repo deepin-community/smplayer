@@ -1,6 +1,6 @@
 Description: Add Debian hardening flags to qmake.
 Author: Mateusz Łukasik <mati75@linuxmint.pl>
-
+Forwarded: not-needed
  
 --- a/src/smplayer.pro
 +++ b/src/smplayer.pro

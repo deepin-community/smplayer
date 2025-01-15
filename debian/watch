@@ -1,3 +1,3 @@
-version=3
-opts=dversionmangle=s/\~ds0//,compression=xz,repack,repacksuffix=~ds0 \
+version=4
+opts=dversionmangle=s/\+ds//,compression=xz,repack,repacksuffix=+ds \
 https://sf.net/smplayer/smplayer-([0-9][^r]*)\.tar\.bz2
