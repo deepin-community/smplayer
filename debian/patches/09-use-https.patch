@@ -7,7 +7,7 @@ Description: use https at some points
 Author: Alf Gaida <agaida@siduction.org>
 
 Last-Update: 2018-11-10
-
+Forwarded: not-needed
 --- a/src/links.h
 +++ b/src/links.h
 @@ -19,8 +19,8 @@

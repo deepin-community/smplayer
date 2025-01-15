@@ -1,0 +1,28 @@
+Description: After removing the html documents containing the multilingual gpl license, they cannot be installed
+Author: Mateusz Łukasik <mati75@linuxmint.pl>
+Origin: other
+Last-Update: 2023-07-20
+Forwarded: not-needed
+
+--- smplayer-23.6.0+ds0.orig/Makefile
++++ smplayer-23.6.0+ds0/Makefile
+@@ -50,7 +50,7 @@ install: all
+ 	install -m 755 webserver/simple_web_server $(DESTDIR)$(PREFIX)/bin/
+ 
+ 	-install -d $(DESTDIR)$(DOC_PATH)
+-	tar -C docs/ --exclude=.svn -c -f - . | tar -C $(DESTDIR)$(DOC_PATH) -x -f -
++#	tar -C docs/ --exclude=.svn -c -f - . | tar -C $(DESTDIR)$(DOC_PATH) -x -f -
+ 
+ 	-install -d $(DESTDIR)$(SHORTCUTS_PATH)
+ 	cp src/shortcuts/* $(DESTDIR)$(SHORTCUTS_PATH)
+@@ -109,8 +109,8 @@ uninstall:
+ #	-for file in docs/*; do \
+ #	    rmdir $(DOC_PATH)/$${file/docs/}; \
+ #	done;
+-	-(cd docs && find -iname '*.html') | (cd $(DESTDIR)$(DOC_PATH) && xargs rm)
+-	-(cd docs && find -type d -name '??') | (cd $(DESTDIR)$(DOC_PATH) && xargs rmdir)
++#	-(cd docs && find -iname '*.html') | (cd $(DESTDIR)$(DOC_PATH) && xargs rm)
++#	-(cd docs && find -type d -name '??') | (cd $(DESTDIR)$(DOC_PATH) && xargs rmdir)
+ 	-rmdir $(DOC_PATH)/
+ 	-rmdir $(DATA_PATH)/
+ 

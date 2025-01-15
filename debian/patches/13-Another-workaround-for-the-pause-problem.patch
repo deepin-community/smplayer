@@ -1,0 +1,28 @@
+From 74690b30a816aa4644be4f83ffca096441713645 Mon Sep 17 00:00:00 2001
+From: Ricardo <10128951+smplayer-dev@users.noreply.github.com>
+Date: Sat, 2 Dec 2023 11:11:08 +0100
+Subject: [PATCH] Another workaround for the pause problem
+Forwarded: not-needed
+---
+ src/mpvoptions.cpp | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/src/mpvoptions.cpp b/src/mpvoptions.cpp
+index 49d8f08b6..816bc0b57 100644
+--- a/src/mpvoptions.cpp
++++ b/src/mpvoptions.cpp
+@@ -850,12 +850,8 @@ void MPVProcess::setPause(bool b) {
+ 	sendCommand(QString("set pause %1").arg(b ? "yes" : "no"));
+ 
+ 	// Workaround for mpv 0.37, playback not resuming after pause
+-	// It seems mpv takes a while to report the pause state in the status line
+-	if (b) {
+-		for (int n = 0; n < 10; n++) {
+-			sendCommand("print_text PAUSE=${=pause}");
+-		}
+-	}
++	// It seems mpv reports the pause state in the status line with some delay
++	if (b) sendCommand("no-osd seek 0 relative exact");
+ }
+ 
+ void MPVProcess::frameStep() {

@@ -1,4 +1,4 @@
-Bug-Database: https://sourceforge.net/p/smplayer/bugs/
-Changelog: https://app.assembla.com/spaces/smplayer/subversion/commits/list
-Repository: https://subversion.assembla.com/svn/smplayer/
-Repository-Browse: https://app.assembla.com/spaces/smplayer/subversion/source
+Bug-Database: https://github.com/smplayer-dev/smplayer/issues
+Changelog: https://github.com/smplayer-dev/smplayer/commits/master/
+Repository: https://github.com/smplayer-dev/smplayer.git
+Repository-Browse: https://github.com/smplayer-dev/smplayer/commits/master/

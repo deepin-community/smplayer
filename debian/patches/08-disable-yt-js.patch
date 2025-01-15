@@ -2,6 +2,7 @@ Description: Disable fetching potentially insecure javascript from youtube.com
 Author: Reinhard Tartler <siretart@debian.org>
 Bug-Debian: http://bugs.debian.org/870233
 Last-update: 2018-06-19
+Forwarded: not-needed
 
 --- a/src/smplayer.pro
 +++ b/src/smplayer.pro

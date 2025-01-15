@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="bg">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="bg">
 <context>
     <name>About</name>
     <message>
@@ -145,81 +143,81 @@
 <context>
     <name>ActionsEditor</name>
     <message>
-        <location filename="../actionseditor.cpp" line="240"/>
+        <location filename="../actionseditor.cpp" line="244"/>
         <source>Name</source>
         <translation>Име</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="240"/>
+        <location filename="../actionseditor.cpp" line="244"/>
         <source>Description</source>
         <translation>Описание</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="240"/>
+        <location filename="../actionseditor.cpp" line="244"/>
         <source>Shortcut</source>
         <translation>Пряк път</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="242"/>
+        <location filename="../actionseditor.cpp" line="246"/>
         <source>&amp;Save</source>
         <translation>&amp;Запаметяване</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="245"/>
+        <location filename="../actionseditor.cpp" line="249"/>
         <source>&amp;Load</source>
         <translation>&amp;Зареждане</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="503"/>
-        <location filename="../actionseditor.cpp" line="553"/>
+        <location filename="../actionseditor.cpp" line="507"/>
+        <location filename="../actionseditor.cpp" line="557"/>
         <source>Key files</source>
         <translation>Ключови файлове</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="501"/>
+        <location filename="../actionseditor.cpp" line="505"/>
         <source>Choose a filename</source>
         <translation>Избор на име на файла</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="213"/>
+        <location filename="../actionseditor.cpp" line="217"/>
         <source>Type to search</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="512"/>
+        <location filename="../actionseditor.cpp" line="516"/>
         <source>Confirm overwrite?</source>
         <translation>Потвърждавате ли презаписване?</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="513"/>
+        <location filename="../actionseditor.cpp" line="517"/>
         <source>The file %1 already exists.
 Do you want to overwrite?</source>
         <translation>Файлът %1 вече съществува.
 Искате ли да бъде презаписан?</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="552"/>
+        <location filename="../actionseditor.cpp" line="556"/>
         <source>Choose a file</source>
         <translation>Избор на файл</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="525"/>
-        <location filename="../actionseditor.cpp" line="559"/>
+        <location filename="../actionseditor.cpp" line="529"/>
+        <location filename="../actionseditor.cpp" line="563"/>
         <source>Error</source>
         <translation>Грешка</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="526"/>
+        <location filename="../actionseditor.cpp" line="530"/>
         <source>The file couldn&apos;t be saved</source>
         <translation>Файлът не може да бъде запаметен</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="560"/>
+        <location filename="../actionseditor.cpp" line="564"/>
         <source>The file couldn&apos;t be loaded</source>
         <translation>Файлът не може да бъде зареден</translation>
     </message>
     <message>
-        <location filename="../actionseditor.cpp" line="249"/>
+        <location filename="../actionseditor.cpp" line="253"/>
         <source>&amp;Change shortcut...</source>
         <translation>&amp;Промяна на пряк път...</translation>
     </message>
@@ -803,6 +801,11 @@ Do you want to overwrite?</source>
         <translation>Избор на файл</translation>
     </message>
     <message>
+        <location filename="../basegui.cpp" line="1869"/>
+        <source>D&amp;ownload subtitles from %1...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../basegui.cpp" line="1892"/>
         <source>&amp;YouTube%1 browser</source>
         <translation>&amp;YouTube%1 браузър</translation>
@@ -842,17 +845,17 @@ The configuration dialog will be shown now, so you can do it.</source>
     <message>
         <location filename="../basegui.cpp" line="4633"/>
         <source>&amp;Donate with PayPal</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../basegui.cpp" line="4634"/>
         <source>&amp;Not now</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../basegui.cpp" line="4637"/>
         <source>&amp;No</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../basegui.cpp" line="5165"/>
@@ -1048,9 +1051,9 @@ The configuration dialog will be shown now, so you can do it.</source>
         <translation>Използвай пот&amp;ребителски стил</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="1869"/>
-        <source>Find subtitles at &amp;OpenSubtitles.org...</source>
-        <translation>Намери субтитри в &amp;OpenSubtitles.org...</translation>
+        <location filename="../basegui.cpp" line="1870"/>
+        <source>Upload su&amp;btitles to %1...</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../basegui.cpp" line="1879"/>
@@ -1076,12 +1079,12 @@ The configuration dialog will be shown now, so you can do it.</source>
     <message>
         <location filename="../basegui.cpp" line="1912"/>
         <source>Update &amp;YouTube support</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../basegui.cpp" line="1914"/>
         <source>Install / Update &amp;YouTube support</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../basegui.cpp" line="1918"/>
@@ -1268,7 +1271,7 @@ The configuration dialog will be shown now, so you can do it.</source>
     <message>
         <location filename="../basegui.cpp" line="2122"/>
         <source>Rotate by 1&amp;80 degrees</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../basegui.cpp" line="2136"/>
@@ -1366,10 +1369,6 @@ The configuration dialog will be shown now, so you can do it.</source>
         <translation>SMPlayer поддръжка</translation>
     </message>
     <message>
-        <source>No</source>
-        <translation type="obsolete">Не</translation>
-    </message>
-    <message>
         <location filename="../basegui.cpp" line="4641"/>
         <source>SMPlayer needs you</source>
         <translation>SMPlayer се нуждае от Вас</translation>
@@ -1397,105 +1396,105 @@ The configuration dialog will be shown now, so you can do it.</source>
     <message>
         <location filename="../basegui.cpp" line="5166"/>
         <source>The youtube-dl process failed because of missing libraries.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../basegui.cpp" line="5167"/>
         <source>You&apos;ll probably need to install %1.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../basegui.cpp" line="5169"/>
         <source>the Microsoft Visual C++ 2010 Redistributable Package</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6159"/>
-        <location filename="../basegui.cpp" line="6212"/>
+        <location filename="../basegui.cpp" line="6160"/>
+        <location filename="../basegui.cpp" line="6214"/>
         <source>More info in the log.</source>
         <translation>Повече информация в лога.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6165"/>
-        <location filename="../basegui.cpp" line="6218"/>
+        <location filename="../basegui.cpp" line="6166"/>
+        <location filename="../basegui.cpp" line="6220"/>
         <source>%1 Error</source>
         <translation>%1 Грешка</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6159"/>
-        <location filename="../basegui.cpp" line="6166"/>
+        <location filename="../basegui.cpp" line="6160"/>
+        <location filename="../basegui.cpp" line="6167"/>
         <source>%1 has finished unexpectedly.</source>
         <translation>%1 приключи неочаквано.</translation>
     </message>
     <message>
         <location filename="../basegui.cpp" line="4649"/>
         <source>It&apos;s also possible to donate with cryptocurrencies.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6191"/>
+        <location filename="../basegui.cpp" line="6192"/>
         <source>The component youtube-dl failed to run.</source>
         <translation>Неуспешно изпълнение на youtube-dl.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6192"/>
+        <location filename="../basegui.cpp" line="6193"/>
         <source>Installing the Microsoft Visual C++ 2010 Redistributable Package (x86) may fix the problem.</source>
         <translation>Инсталирането на Microsoft Visual C++ 2010 Redistributable Package (x86) е възможно да поправи проблема.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6194"/>
+        <location filename="../basegui.cpp" line="6195"/>
         <source>Click here to get it</source>
         <translation>Кликнете тук, за да го получите</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6212"/>
-        <location filename="../basegui.cpp" line="6220"/>
+        <location filename="../basegui.cpp" line="6214"/>
+        <location filename="../basegui.cpp" line="6222"/>
         <source>%1 failed to start.</source>
         <translation>%1 е неуспешно стартиран.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6221"/>
+        <location filename="../basegui.cpp" line="6223"/>
         <source>Please check the %1 path in preferences.</source>
         <translation>Моля, проверете пътя %1 в предпочитанията.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6223"/>
+        <location filename="../basegui.cpp" line="6225"/>
         <source>%1 has crashed.</source>
         <translation>%1 се срина.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6318"/>
+        <location filename="../basegui.cpp" line="6320"/>
         <source>The YouTube Browser is not installed.</source>
         <translation>Браузърът на YouTube не е инсталиран.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6319"/>
-        <location filename="../basegui.cpp" line="6331"/>
+        <location filename="../basegui.cpp" line="6321"/>
+        <location filename="../basegui.cpp" line="6333"/>
         <source>Visit %1 to get it.</source>
         <translation>Посетете %1, за да го вземете.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6329"/>
+        <location filename="../basegui.cpp" line="6331"/>
         <source>The YouTube Browser failed to run.</source>
         <translation>Неуспешно изпълнение на YouTube браузъра.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6330"/>
+        <location filename="../basegui.cpp" line="6332"/>
         <source>Be sure it&apos;s installed correctly.</source>
         <translation>Уверете се, че е инсталиран правилно.</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6497"/>
+        <location filename="../basegui.cpp" line="6499"/>
         <source>The system has switched to tablet mode. Should SMPlayer change to tablet mode as well?</source>
         <translation>Системата превключи в таблетен режим. Да премине ли и SMPlayer в този режим?</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6499"/>
+        <location filename="../basegui.cpp" line="6501"/>
         <source>The system has exited tablet mode. Should SMPlayer turn off the tablet mode as well?</source>
         <translation>Системата излезе от таблетен режим. Да излезе ли и SMPlayer от този режим?</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6503"/>
+        <location filename="../basegui.cpp" line="6505"/>
         <source>Remember my decision and don&apos;t ask again</source>
         <translation>Запомни решението ми и не ме питай отново</translation>
     </message>
@@ -1631,12 +1630,12 @@ The configuration dialog will be shown now, so you can do it.</source>
         <translation>Сървърът отговори „%1“</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6167"/>
+        <location filename="../basegui.cpp" line="6168"/>
         <source>Exit code: %1</source>
         <translation>Изходен код: %1</translation>
     </message>
     <message>
-        <location filename="../basegui.cpp" line="6224"/>
+        <location filename="../basegui.cpp" line="6226"/>
         <source>See the log for more info.</source>
         <translation>Прегледайте отчетите за повече информация.</translation>
     </message>
@@ -1694,11 +1693,6 @@ The configuration dialog will be shown now, so you can do it.</source>
         <location filename="../basegui.cpp" line="1980"/>
         <source>Reset audio equalizer</source>
         <translation>Възстановяване на тонкоректор</translation>
-    </message>
-    <message>
-        <location filename="../basegui.cpp" line="1870"/>
-        <source>Upload su&amp;btitles to OpenSubtitles.org...</source>
-        <translation>Качи су&amp;бтитри в OpenSubtitles.org...</translation>
     </message>
     <message>
         <location filename="../basegui.cpp" line="2089"/>
@@ -2025,17 +2019,17 @@ The configuration dialog will be shown now, so you can do it.</source>
     <message>
         <location filename="../baseguiplus.cpp" line="386"/>
         <source>&amp;Cast to</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../baseguiplus.cpp" line="389"/>
         <source>&amp;Chromecast</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../baseguiplus.cpp" line="391"/>
         <source>&amp;Smartphone/tablet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../baseguiplus.cpp" line="396"/>
@@ -2216,12 +2210,12 @@ The configuration dialog will be shown now, so you can do it.</source>
     <message>
         <location filename="../chromecast.cpp" line="91"/>
         <source>The SMPlayer web server is running</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../chromecast.cpp" line="93"/>
         <source>&amp;Stop the SMPlayer web server</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -2229,171 +2223,171 @@ The configuration dialog will be shown now, so you can do it.</source>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="50"/>
         <source>Downloading...</source>
-        <translation type="unfinished">Изтегляне...</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="77"/>
         <source>Connecting to %1</source>
-        <translation type="unfinished">Свързване към %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="146"/>
         <source>The YouTube code has been installed successfully.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="147"/>
         <source>Installed version: %1</source>
-        <translation type="unfinished">Инсталана е версия: %1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="148"/>
         <source>Success</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="153"/>
         <location filename="../youtube/codedownloader.cpp" line="158"/>
         <source>Error</source>
-        <translation type="unfinished">Грешка</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="153"/>
         <source>It&apos;s not possible to save %1.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="158"/>
         <source>An error happened while downloading the file:&lt;br&gt;%1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="170"/>
         <source>It wasn&apos;t possible to find the URL for this video.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="166"/>
         <source>%1 failed to communicate with the external YouTube application. Either it&apos;s not installed or it doesn&apos;t work correctly.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="171"/>
         <source>Maybe you need to update the YouTube code.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="176"/>
         <source>In order to play YouTube videos, %1 needs an external application called youtube-dl.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="177"/>
         <source>This component needs to be updated frequently.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="178"/>
         <source>You can update it just by reinstalling SMPlayer. The installer will download and install the very latest version.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="180"/>
         <source>Install / Update YouTube support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../youtube/codedownloader.cpp" line="240"/>
-        <source>In order to play YouTube videos, %1 needs the help of an external application.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../youtube/codedownloader.cpp" line="241"/>
-        <source>%1 can download and install this application for you.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="242"/>
-        <source>It will be downloaded from the official website and installed as %1.</source>
-        <translation type="unfinished"></translation>
+        <source>In order to play YouTube videos, %1 needs the help of an external application.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../youtube/codedownloader.cpp" line="243"/>
-        <source>Would you like to proceed?</source>
-        <translation type="unfinished"></translation>
+        <source>%1 can download and install this application for you.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../youtube/codedownloader.cpp" line="247"/>
-        <location filename="../youtube/codedownloader.cpp" line="250"/>
+        <location filename="../youtube/codedownloader.cpp" line="244"/>
+        <source>It will be downloaded from the official website and installed as %1.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../youtube/codedownloader.cpp" line="245"/>
+        <source>Would you like to proceed?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../youtube/codedownloader.cpp" line="249"/>
+        <location filename="../youtube/codedownloader.cpp" line="252"/>
         <source>Install YouTube support?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>Core</name>
     <message>
-        <location filename="../core.cpp" line="3249"/>
+        <location filename="../core.cpp" line="3250"/>
         <source>Brightness: %1</source>
         <translation>Яркост: %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3265"/>
+        <location filename="../core.cpp" line="3266"/>
         <source>Contrast: %1</source>
         <translation>Контраст: %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3280"/>
+        <location filename="../core.cpp" line="3281"/>
         <source>Gamma: %1</source>
         <translation>Гама: %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3295"/>
+        <location filename="../core.cpp" line="3296"/>
         <source>Hue: %1</source>
         <translation>Нюанс: %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3310"/>
+        <location filename="../core.cpp" line="3311"/>
         <source>Saturation: %1</source>
         <translation>Наситеност: %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3453"/>
+        <location filename="../core.cpp" line="3466"/>
         <source>Volume: %1</source>
         <translation>Сила на звука: %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="4432"/>
+        <location filename="../core.cpp" line="4449"/>
         <source>Zoom: %1</source>
         <translation>Увеличение: %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3585"/>
-        <location filename="../core.cpp" line="3596"/>
+        <location filename="../core.cpp" line="3598"/>
+        <location filename="../core.cpp" line="3609"/>
         <source>Font scale: %1</source>
         <translation>Размер на шрифта: %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="4261"/>
+        <location filename="../core.cpp" line="4278"/>
         <source>Aspect ratio: %1</source>
         <translation>Съотношение: %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="4670"/>
+        <location filename="../core.cpp" line="4687"/>
         <source>Updating the font cache. This may take some seconds...</source>
         <translation>Обновяване на складираните шрифтове. Това може да отнеме няколко секунди...</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3510"/>
+        <location filename="../core.cpp" line="3523"/>
         <source>Subtitle delay: %1 ms</source>
         <translation>Забавяне на субтитрите: %1 мс</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3528"/>
+        <location filename="../core.cpp" line="3541"/>
         <source>Audio delay: %1 ms</source>
         <translation>Забавяне на звука: %1 мс</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3364"/>
+        <location filename="../core.cpp" line="3369"/>
         <source>Speed: %1</source>
         <translation>Скорост: %1</translation>
     </message>
@@ -2403,42 +2397,42 @@ The configuration dialog will be shown now, so you can do it.</source>
         <translation>Неуспех в засичането на Интернет адреса на видеото</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3684"/>
+        <location filename="../core.cpp" line="3697"/>
         <source>Subtitles on</source>
         <translation>Включени субтитри</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="3686"/>
+        <location filename="../core.cpp" line="3699"/>
         <source>Subtitles off</source>
         <translation>Изключени субтитри</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="4309"/>
+        <location filename="../core.cpp" line="4326"/>
         <source>Mouse wheel seeks now</source>
         <translation>Превъртане с колелото на мишката</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="4312"/>
+        <location filename="../core.cpp" line="4329"/>
         <source>Mouse wheel changes volume now</source>
         <translation>Променя се силата на звука с колелото на мишката</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="4315"/>
+        <location filename="../core.cpp" line="4332"/>
         <source>Mouse wheel changes zoom level now</source>
         <translation>Промяна на увеличението с колелото на мишката</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="4318"/>
+        <location filename="../core.cpp" line="4335"/>
         <source>Mouse wheel changes speed now</source>
         <translation>Промяна на скоростта с колелото на мишката</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="4646"/>
+        <location filename="../core.cpp" line="4663"/>
         <source>Screenshot saved as %1</source>
         <translation>Екранната снимка е запазена като %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="4681"/>
+        <location filename="../core.cpp" line="4698"/>
         <source>Starting...</source>
         <translation>Начало...</translation>
     </message>
@@ -2453,17 +2447,17 @@ The configuration dialog will be shown now, so you can do it.</source>
         <translation>Снимките НЕ са направени, няма избрана папка</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="2851"/>
+        <location filename="../core.cpp" line="2852"/>
         <source>&quot;A&quot; marker set to %1</source>
         <translation>Зададена позиция „А“ на %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="2876"/>
+        <location filename="../core.cpp" line="2877"/>
         <source>&quot;B&quot; marker set to %1</source>
         <translation>Зададена позиция „А“ на %1</translation>
     </message>
     <message>
-        <location filename="../core.cpp" line="2899"/>
+        <location filename="../core.cpp" line="2900"/>
         <source>A-B markers cleared</source>
         <translation>Позициите А и Б са изчистени</translation>
     </message>
@@ -2528,7 +2522,7 @@ The configuration dialog will be shown now, so you can do it.</source>
     <message>
         <location filename="../defaultgui.cpp" line="264"/>
         <source>Time format</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../defaultgui.cpp" line="715"/>
@@ -2553,12 +2547,12 @@ The configuration dialog will be shown now, so you can do it.</source>
     <message>
         <location filename="../defaultgui.cpp" line="721"/>
         <source>Display &amp;total time</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../defaultgui.cpp" line="722"/>
         <source>Display &amp;remaining time</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../defaultgui.cpp" line="725"/>
@@ -2992,7 +2986,7 @@ Example: extrastereo,karaoke</source>
     <message>
         <location filename="../findsubtitles/findsubtitlesconfigdialog.ui" line="66"/>
         <source>Opensubtitles Credentials</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../findsubtitles/findsubtitlesconfigdialog.ui" line="119"/>
@@ -3040,139 +3034,119 @@ Example: extrastereo,karaoke</source>
 <context>
     <name>FindSubtitlesWindow</name>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="232"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="229"/>
         <source>Language</source>
         <translation>Език</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="232"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="229"/>
         <source>Name</source>
         <translation>Име</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="232"/>
-        <source>Format</source>
-        <translation>Формат</translation>
-    </message>
-    <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="233"/>
-        <source>Files</source>
-        <translation>Файлове</translation>
-    </message>
-    <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="233"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="229"/>
         <source>Date</source>
         <translation>Дата</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="233"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="229"/>
         <source>Uploaded by</source>
         <translation>Качено от</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="274"/>
-        <source>Portuguese - Brasil</source>
-        <translation>Португалски - бразилски</translation>
-    </message>
-    <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="269"/>
-        <source>Spanish - Spain</source>
-        <translation type="unfinished"></translation>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="243"/>
+        <source>Spanish</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../findsubtitles/findsubtitleswindow.cpp" line="247"/>
-        <source>Spanish</source>
-        <translation type="unfinished">Испански</translation>
-    </message>
-    <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="251"/>
         <source>Portuguese</source>
-        <translation type="unfinished">Португалски</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="270"/>
-        <source>Spanish - Latin America</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="282"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="266"/>
         <source>All</source>
         <translation>Всички</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="291"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="275"/>
         <source>Close</source>
         <translation>Затваряне</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="314"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="298"/>
         <source>Subtitles service powered by %1</source>
         <translation>Услуга за субтитри, поддържана от %1</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="405"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="393"/>
         <source>Connecting...</source>
         <translation>Свързване...</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="415"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="403"/>
         <source>Login to opensubtitles.org has failed</source>
         <translation>Вписването в opensubtitles.org е неуспешно</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="419"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="407"/>
         <source>Search has failed</source>
         <translation>Търсенето е неуспешно</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="584"/>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="586"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="411"/>
+        <source>File URL not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="593"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="595"/>
         <source>Save File</source>
         <translation>Запазване на файл</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="667"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="680"/>
         <source>Error fixing the subtitle lines</source>
         <translation>Грешка при поправка на ред в субтитрите</translation>
     </message>
     <message>
         <location filename="../findsubtitles/findsubtitleswindow.ui" line="136"/>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="295"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="279"/>
         <source>&amp;Download</source>
         <translation>&amp;Изтегляне</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="296"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="280"/>
         <source>&amp;Copy link to clipboard</source>
         <translation>&amp;Копирай в системния буфер</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="399"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="387"/>
         <source>Error</source>
         <translation>Грешка</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="400"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="388"/>
         <source>Download failed: %1.</source>
         <translation>Неуспешно изтегляне на: %1.</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="429"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="421"/>
         <source>Downloading...</source>
         <translation>Изтегляне...</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="437"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="429"/>
         <source>Done.</source>
         <translation>Готово.</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="483"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="475"/>
         <source>%1 files available</source>
         <translation>%1 файла са достъпни</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="492"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="484"/>
         <source>Failed to parse the received data.</source>
         <translation>Грешка при анализ на получените данни.</translation>
     </message>
@@ -3189,17 +3163,17 @@ Example: extrastereo,karaoke</source>
     <message>
         <location filename="../findsubtitles/findsubtitleswindow.ui" line="49"/>
         <source>Search for &amp;title:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../findsubtitles/findsubtitleswindow.ui" line="59"/>
         <source>Type here a movie or TV show title</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../findsubtitles/findsubtitleswindow.ui" line="66"/>
         <source>&amp;Search</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../findsubtitles/findsubtitleswindow.ui" line="86"/>
@@ -3212,18 +3186,18 @@ Example: extrastereo,karaoke</source>
         <translation>&amp;Обнови</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="603"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="616"/>
         <source>Subtitle saved as %1</source>
         <translation>Субтитрите са запазени като %1</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="598"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="611"/>
         <source>Error saving file</source>
         <translation>Грешка при запис на файла</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="599"/>
-        <source>It wasn&apos;t possible to save the downloaded
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="612"/>
+        <source>It wasn't possible to save the downloaded
 file in folder %1
 Please check the permissions of that folder.</source>
         <translation>Немовъзможно е запазването на сваления
@@ -3231,8 +3205,8 @@ Please check the permissions of that folder.</source>
 Моля, проверете правата за тази папка.</translation>
     </message>
     <message>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="397"/>
-        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="554"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="385"/>
+        <location filename="../findsubtitles/findsubtitleswindow.cpp" line="562"/>
         <source>Download failed</source>
         <translation>Изтеглянето е неуспешно</translation>
     </message>
@@ -3260,57 +3234,57 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="23"/>
         <source>Select the multimedia keys that SMPlayer will capture.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="35"/>
         <source>Media &amp;Play</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="42"/>
         <source>Media &amp;Stop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="49"/>
         <source>Media Pre&amp;vious</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="56"/>
         <source>Media &amp;Next</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="63"/>
         <source>Media P&amp;ause</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="97"/>
         <source>Media &amp;Record</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="104"/>
         <source>Volume &amp;Mute</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="111"/>
         <source>Volume &amp;Down</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.ui" line="118"/>
         <source>Volume &amp;Up</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../globalshortcuts/globalshortcutsdialog.cpp" line="26"/>
         <source>Global Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -3445,7 +3419,7 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../infofile.cpp" line="140"/>
         <source>Video Streams</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../infofile.cpp" line="159"/>
@@ -3516,7 +3490,7 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../infofile.cpp" line="128"/>
         <source>Initial Video Stream</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../infofile.cpp" line="190"/>
@@ -3648,11 +3622,13 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="25"/>
+        <location filename="../languages.cpp" line="358"/>
         <source>Abkhazian</source>
         <translation>Абхазки</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="27"/>
+        <location filename="../languages.cpp" line="355"/>
         <source>Afrikaans</source>
         <translation>Африкански</translation>
     </message>
@@ -3664,11 +3640,13 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="31"/>
         <location filename="../languages.cpp" line="310"/>
+        <location filename="../languages.cpp" line="359"/>
         <source>Arabic</source>
         <translation>Арабски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="32"/>
+        <location filename="../languages.cpp" line="361"/>
         <source>Assamese</source>
         <translation>Асамски</translation>
     </message>
@@ -3679,6 +3657,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="35"/>
+        <location filename="../languages.cpp" line="427"/>
         <source>Azerbaijani</source>
         <translation>Азербайджански</translation>
     </message>
@@ -3690,6 +3669,7 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="38"/>
         <location filename="../languages.cpp" line="336"/>
+        <location filename="../languages.cpp" line="366"/>
         <source>Bulgarian</source>
         <translation>Български</translation>
     </message>
@@ -3705,6 +3685,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="42"/>
+        <location filename="../languages.cpp" line="364"/>
         <source>Bengali</source>
         <translation>Бенгалски</translation>
     </message>
@@ -3715,11 +3696,13 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="44"/>
+        <location filename="../languages.cpp" line="365"/>
         <source>Breton</source>
         <translation>Бретонски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="46"/>
+        <location filename="../languages.cpp" line="367"/>
         <source>Catalan</source>
         <translation>Каталонски</translation>
     </message>
@@ -3731,66 +3714,78 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="50"/>
         <location filename="../languages.cpp" line="337"/>
+        <location filename="../languages.cpp" line="429"/>
         <source>Czech</source>
         <translation>Чешки</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="53"/>
+        <location filename="../languages.cpp" line="421"/>
         <source>Welsh</source>
         <translation>Уелски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="54"/>
+        <location filename="../languages.cpp" line="430"/>
         <source>Danish</source>
         <translation>Датски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="55"/>
         <location filename="../languages.cpp" line="224"/>
+        <location filename="../languages.cpp" line="371"/>
         <source>German</source>
         <translation>Немски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="59"/>
+        <location filename="../languages.cpp" line="375"/>
         <source>Greek</source>
         <translation>Гръцки</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="60"/>
         <location filename="../languages.cpp" line="225"/>
+        <location filename="../languages.cpp" line="432"/>
         <source>English</source>
         <translation>Английски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="61"/>
+        <location filename="../languages.cpp" line="433"/>
         <source>Esperanto</source>
         <translation>Есперанто</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="62"/>
         <location filename="../languages.cpp" line="226"/>
+        <location filename="../languages.cpp" line="410"/>
         <source>Spanish</source>
         <translation>Испански</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="63"/>
         <location filename="../languages.cpp" line="338"/>
+        <location filename="../languages.cpp" line="434"/>
         <source>Estonian</source>
         <translation>Естонски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="64"/>
+        <location filename="../languages.cpp" line="363"/>
         <source>Basque</source>
         <translation>Баска</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="65"/>
+        <location filename="../languages.cpp" line="397"/>
         <source>Persian</source>
         <translation>Персийски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="67"/>
         <location filename="../languages.cpp" line="227"/>
+        <location filename="../languages.cpp" line="435"/>
         <source>Finnish</source>
         <translation>Фински</translation>
     </message>
@@ -3802,6 +3797,7 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="70"/>
         <location filename="../languages.cpp" line="228"/>
+        <location filename="../languages.cpp" line="369"/>
         <source>French</source>
         <translation>Френски</translation>
     </message>
@@ -3812,11 +3808,13 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="72"/>
+        <location filename="../languages.cpp" line="373"/>
         <source>Irish</source>
         <translation>Ирландски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="74"/>
+        <location filename="../languages.cpp" line="374"/>
         <source>Galician</source>
         <translation>Галисийски</translation>
     </message>
@@ -3837,38 +3835,45 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="79"/>
+        <location filename="../languages.cpp" line="376"/>
         <source>Hebrew</source>
         <translation>Ивритски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="80"/>
+        <location filename="../languages.cpp" line="377"/>
         <source>Hindi</source>
         <translation>Хиндийски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="82"/>
         <location filename="../languages.cpp" line="339"/>
+        <location filename="../languages.cpp" line="378"/>
         <source>Croatian</source>
         <translation>Хърватски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="84"/>
         <location filename="../languages.cpp" line="340"/>
+        <location filename="../languages.cpp" line="379"/>
         <source>Hungarian</source>
         <translation>Унгарски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="85"/>
+        <location filename="../languages.cpp" line="360"/>
         <source>Armenian</source>
         <translation>Арменски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="88"/>
+        <location filename="../languages.cpp" line="382"/>
         <source>Interlingua</source>
         <translation>Интерлингва</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="89"/>
+        <location filename="../languages.cpp" line="436"/>
         <source>Indonesian</source>
         <translation>Индонезийски</translation>
     </message>
@@ -3879,12 +3884,14 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="95"/>
+        <location filename="../languages.cpp" line="381"/>
         <source>Icelandic</source>
         <translation>Исландски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="96"/>
         <location filename="../languages.cpp" line="229"/>
+        <location filename="../languages.cpp" line="387"/>
         <source>Italian</source>
         <translation>Италиански</translation>
     </message>
@@ -3896,6 +3903,7 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="98"/>
         <location filename="../languages.cpp" line="230"/>
+        <location filename="../languages.cpp" line="388"/>
         <source>Japanese</source>
         <translation>Японски</translation>
     </message>
@@ -3906,11 +3914,13 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="100"/>
+        <location filename="../languages.cpp" line="370"/>
         <source>Georgian</source>
         <translation>Грузински</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="104"/>
+        <location filename="../languages.cpp" line="383"/>
         <source>Kazakh</source>
         <translation>Казахстански</translation>
     </message>
@@ -3921,11 +3931,13 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="107"/>
+        <location filename="../languages.cpp" line="437"/>
         <source>Kannada</source>
         <translation>Канадски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="108"/>
+        <location filename="../languages.cpp" line="390"/>
         <source>Korean</source>
         <translation>Корейски</translation>
     </message>
@@ -3936,6 +3948,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="111"/>
+        <location filename="../languages.cpp" line="391"/>
         <source>Kurdish</source>
         <translation>Кюрдски</translation>
     </message>
@@ -3957,12 +3970,14 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="121"/>
         <location filename="../languages.cpp" line="341"/>
+        <location filename="../languages.cpp" line="385"/>
         <source>Lithuanian</source>
         <translation>Литовски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="123"/>
         <location filename="../languages.cpp" line="342"/>
+        <location filename="../languages.cpp" line="384"/>
         <source>Latvian</source>
         <translation>Латвийски</translation>
     </message>
@@ -3978,16 +3993,19 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="127"/>
+        <location filename="../languages.cpp" line="392"/>
         <source>Macedonian</source>
         <translation>Македонски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="128"/>
+        <location filename="../languages.cpp" line="386"/>
         <source>Malayalam</source>
         <translation>Малаяламски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="129"/>
+        <location filename="../languages.cpp" line="441"/>
         <source>Mongolian</source>
         <translation>Монголски</translation>
     </message>
@@ -3998,11 +4016,13 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="131"/>
+        <location filename="../languages.cpp" line="393"/>
         <source>Marathi</source>
         <translation>Маратхийски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="132"/>
+        <location filename="../languages.cpp" line="439"/>
         <source>Malay</source>
         <translation>Малайски</translation>
     </message>
@@ -4013,6 +4033,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="134"/>
+        <location filename="../languages.cpp" line="357"/>
         <source>Burmese</source>
         <translation>Бирмански</translation>
     </message>
@@ -4022,18 +4043,15 @@ Please check the permissions of that folder.</source>
         <translation>Наурийски</translation>
     </message>
     <message>
-        <location filename="../languages.cpp" line="137"/>
-        <source>BokmÃ¥l</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../languages.cpp" line="142"/>
+        <location filename="../languages.cpp" line="442"/>
         <source>Nepali</source>
         <translation>Непалски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="144"/>
         <location filename="../languages.cpp" line="231"/>
+        <location filename="../languages.cpp" line="431"/>
         <source>Dutch</source>
         <translation>Немски</translation>
     </message>
@@ -4045,11 +4063,13 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="146"/>
         <location filename="../languages.cpp" line="232"/>
+        <location filename="../languages.cpp" line="395"/>
         <source>Norwegian</source>
         <translation>Норвежки</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="150"/>
+        <location filename="../languages.cpp" line="396"/>
         <source>Occitan</source>
         <translation>Окситански</translation>
     </message>
@@ -4061,12 +4081,14 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="157"/>
         <location filename="../languages.cpp" line="343"/>
+        <location filename="../languages.cpp" line="398"/>
         <source>Polish</source>
         <translation>Полски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="159"/>
         <location filename="../languages.cpp" line="233"/>
+        <location filename="../languages.cpp" line="399"/>
         <source>Portuguese</source>
         <translation>Португалски</translation>
     </message>
@@ -4077,6 +4099,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="163"/>
+        <location filename="../languages.cpp" line="422"/>
         <source>Romanian</source>
         <translation>Румънски</translation>
     </message>
@@ -4085,6 +4108,7 @@ Please check the permissions of that folder.</source>
         <location filename="../languages.cpp" line="234"/>
         <location filename="../languages.cpp" line="317"/>
         <location filename="../languages.cpp" line="344"/>
+        <location filename="../languages.cpp" line="401"/>
         <source>Russian</source>
         <translation>Руски</translation>
     </message>
@@ -4100,12 +4124,14 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="168"/>
+        <location filename="../languages.cpp" line="409"/>
         <source>Sindhi</source>
         <translation>Синдхи</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="172"/>
         <location filename="../languages.cpp" line="345"/>
+        <location filename="../languages.cpp" line="403"/>
         <source>Slovak</source>
         <translation>Словашки</translation>
     </message>
@@ -4121,16 +4147,19 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="176"/>
+        <location filename="../languages.cpp" line="446"/>
         <source>Somali</source>
         <translation>Сомалийски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="177"/>
+        <location filename="../languages.cpp" line="425"/>
         <source>Albanian</source>
         <translation>Албански</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="178"/>
+        <location filename="../languages.cpp" line="402"/>
         <source>Serbian</source>
         <translation>Сръбски</translation>
     </message>
@@ -4142,21 +4171,25 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="182"/>
         <location filename="../languages.cpp" line="235"/>
+        <location filename="../languages.cpp" line="412"/>
         <source>Swedish</source>
         <translation>Шведски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="183"/>
+        <location filename="../languages.cpp" line="411"/>
         <source>Swahili</source>
         <translation>Суахили</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="184"/>
+        <location filename="../languages.cpp" line="406"/>
         <source>Tamil</source>
         <translation>Тамилски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="185"/>
+        <location filename="../languages.cpp" line="414"/>
         <source>Telugu</source>
         <translation>Телугу</translation>
     </message>
@@ -4167,6 +4200,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="187"/>
+        <location filename="../languages.cpp" line="415"/>
         <source>Thai</source>
         <translation>Тайландски</translation>
     </message>
@@ -4177,11 +4211,13 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="189"/>
+        <location filename="../languages.cpp" line="416"/>
         <source>Turkmen</source>
         <translation>Туркменски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="190"/>
+        <location filename="../languages.cpp" line="447"/>
         <source>Tagalog</source>
         <translation>Тагалогски</translation>
     </message>
@@ -4193,6 +4229,7 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="193"/>
         <location filename="../languages.cpp" line="312"/>
+        <location filename="../languages.cpp" line="417"/>
         <source>Turkish</source>
         <translation>Турски</translation>
     </message>
@@ -4203,6 +4240,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="195"/>
+        <location filename="../languages.cpp" line="413"/>
         <source>Tatar</source>
         <translation>Татарски</translation>
     </message>
@@ -4219,28 +4257,27 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="199"/>
         <location filename="../languages.cpp" line="347"/>
+        <location filename="../languages.cpp" line="418"/>
         <source>Ukrainian</source>
         <translation>Украински</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="200"/>
+        <location filename="../languages.cpp" line="448"/>
         <source>Urdu</source>
         <translation>Урдуйски</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="201"/>
+        <location filename="../languages.cpp" line="419"/>
         <source>Uzbek</source>
         <translation>Узбекистански</translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="203"/>
+        <location filename="../languages.cpp" line="420"/>
         <source>Vietnamese</source>
         <translation>Виетнамски</translation>
-    </message>
-    <message>
-        <location filename="../languages.cpp" line="205"/>
-        <source>VolapÃ¼k</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../languages.cpp" line="210"/>
@@ -4395,6 +4432,101 @@ Please check the permissions of that folder.</source>
         <translation>Арабски на Windows</translation>
     </message>
     <message>
+        <location filename="../languages.cpp" line="362"/>
+        <source>Asturian</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="368"/>
+        <source>Chinese (simplified)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="404"/>
+        <source>Slovenian</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="405"/>
+        <source>Syriac</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="407"/>
+        <source>Montenegrin</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="408"/>
+        <source>Chinese bilingual</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="423"/>
+        <source>Portuguese (BR)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="424"/>
+        <source>Chinese (traditional)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="440"/>
+        <source>Manipuri</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="443"/>
+        <source>Odia</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="444"/>
+        <source>Sinhalese</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="445"/>
+        <source>Northern Sami</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="449"/>
+        <source>Portuguese (MZ)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="450"/>
+        <source>Spanish (LA)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="451"/>
+        <source>Extremaduran</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="452"/>
+        <source>Dari</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="453"/>
+        <source>Spanish (EU)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="454"/>
+        <source>Santali</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../languages.cpp" line="455"/>
+        <source>Toki Pona</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../languages.cpp" line="26"/>
         <source>Avestan</source>
         <translation>Авестански</translation>
@@ -4406,6 +4538,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="30"/>
+        <location filename="../languages.cpp" line="426"/>
         <source>Aragonese</source>
         <translation>Арагонезийски</translation>
     </message>
@@ -4417,6 +4550,7 @@ Please check the permissions of that folder.</source>
     <message>
         <location filename="../languages.cpp" line="37"/>
         <location filename="../languages.cpp" line="335"/>
+        <location filename="../languages.cpp" line="356"/>
         <source>Belarusian</source>
         <translation>Беларуски</translation>
     </message>
@@ -4427,6 +4561,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="45"/>
+        <location filename="../languages.cpp" line="428"/>
         <source>Bosnian</source>
         <translation>Босненски</translation>
     </message>
@@ -4477,6 +4612,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="73"/>
+        <location filename="../languages.cpp" line="372"/>
         <source>Gaelic</source>
         <translation>Галски</translation>
     </message>
@@ -4507,6 +4643,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="91"/>
+        <location filename="../languages.cpp" line="380"/>
         <source>Igbo</source>
         <translation>Игбойски</translation>
     </message>
@@ -4542,6 +4679,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="106"/>
+        <location filename="../languages.cpp" line="389"/>
         <source>Khmer</source>
         <translation>Кхмерски</translation>
     </message>
@@ -4562,6 +4700,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="116"/>
+        <location filename="../languages.cpp" line="438"/>
         <source>Luxembourgish</source>
         <translation>Люксембургски</translation>
     </message>
@@ -4590,7 +4729,8 @@ Please check the permissions of that folder.</source>
         <source>Marshallese</source>
         <translation>Маршалски</translation>
     </message>
-    <message utf8="true">
+    <message>
+        <location filename="../languages.cpp" line="137"/>
         <location filename="../languages.cpp" line="139"/>
         <source>Bokmål</source>
         <translation>Бокмалски</translation>
@@ -4608,6 +4748,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="148"/>
+        <location filename="../languages.cpp" line="394"/>
         <source>Navajo</source>
         <translation>Навайойски</translation>
     </message>
@@ -4643,6 +4784,7 @@ Please check the permissions of that folder.</source>
     </message>
     <message>
         <location filename="../languages.cpp" line="158"/>
+        <location filename="../languages.cpp" line="400"/>
         <source>Pushto</source>
         <translation>Пущунски</translation>
     </message>
@@ -4707,7 +4849,8 @@ Please check the permissions of that folder.</source>
         <source>Venda</source>
         <translation>Венда</translation>
     </message>
-    <message utf8="true">
+    <message>
+        <location filename="../languages.cpp" line="205"/>
         <location filename="../languages.cpp" line="207"/>
         <source>Volapük</source>
         <translation>Волапюк</translation>
@@ -4783,102 +4926,102 @@ Do you want to overwrite?</source>
 <context>
     <name>MPVProcess</name>
     <message>
-        <location filename="../mpvoptions.cpp" line="203"/>
-        <location filename="../mpvprocess.h" line="208"/>
+        <location filename="../mpvoptions.cpp" line="205"/>
+        <location filename="../mpvprocess.h" line="211"/>
         <source>the &apos;%1&apos; filter is not supported by mpv</source>
         <translation>филтърът &apos;%1&apos; не се поддържа от mpv</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="929"/>
-        <location filename="../mpvprocess.h" line="209"/>
+        <location filename="../mpvoptions.cpp" line="937"/>
+        <location filename="../mpvprocess.h" line="212"/>
         <source>File:</source>
         <translation>Файл:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="932"/>
-        <location filename="../mpvprocess.h" line="210"/>
+        <location filename="../mpvoptions.cpp" line="940"/>
+        <location filename="../mpvprocess.h" line="213"/>
         <source>Video:</source>
         <translation>Видео:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="933"/>
-        <location filename="../mpvprocess.h" line="211"/>
+        <location filename="../mpvoptions.cpp" line="941"/>
+        <location filename="../mpvprocess.h" line="214"/>
         <source>Resolution:</source>
         <translation>Резолюция:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="934"/>
-        <location filename="../mpvprocess.h" line="212"/>
+        <location filename="../mpvoptions.cpp" line="942"/>
+        <location filename="../mpvprocess.h" line="215"/>
         <source>Frames per second:</source>
         <translation>Рамки в секунда:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="934"/>
-        <location filename="../mpvprocess.h" line="213"/>
+        <location filename="../mpvoptions.cpp" line="942"/>
+        <location filename="../mpvprocess.h" line="216"/>
         <source>Estimated:</source>
         <translation>Изминало:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="936"/>
-        <location filename="../mpvprocess.h" line="214"/>
+        <location filename="../mpvoptions.cpp" line="944"/>
+        <location filename="../mpvprocess.h" line="217"/>
         <source>Aspect Ratio:</source>
         <translation>Отношение на страните:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="937"/>
-        <location filename="../mpvoptions.cpp" line="942"/>
-        <location filename="../mpvprocess.h" line="215"/>
+        <location filename="../mpvoptions.cpp" line="945"/>
+        <location filename="../mpvoptions.cpp" line="950"/>
         <location filename="../mpvprocess.h" line="218"/>
+        <location filename="../mpvprocess.h" line="221"/>
         <source>Bitrate:</source>
         <translation>Побитова честота:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="938"/>
-        <location filename="../mpvprocess.h" line="216"/>
+        <location filename="../mpvoptions.cpp" line="946"/>
+        <location filename="../mpvprocess.h" line="219"/>
         <source>Dropped frames:</source>
         <translation>Пропуснати рамки:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="941"/>
-        <location filename="../mpvprocess.h" line="217"/>
+        <location filename="../mpvoptions.cpp" line="949"/>
+        <location filename="../mpvprocess.h" line="220"/>
         <source>Audio:</source>
         <translation>Звук:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="943"/>
-        <location filename="../mpvprocess.h" line="219"/>
+        <location filename="../mpvoptions.cpp" line="951"/>
+        <location filename="../mpvprocess.h" line="222"/>
         <source>Sample Rate:</source>
         <translation>Честота на дискретизация:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="944"/>
-        <location filename="../mpvprocess.h" line="220"/>
+        <location filename="../mpvoptions.cpp" line="952"/>
+        <location filename="../mpvprocess.h" line="223"/>
         <source>Channels:</source>
         <translation>Канали:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="947"/>
-        <location filename="../mpvprocess.h" line="221"/>
+        <location filename="../mpvoptions.cpp" line="955"/>
+        <location filename="../mpvprocess.h" line="224"/>
         <source>Audio/video synchronization:</source>
         <translation>Синхронизация на звук/видео:</translation>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="950"/>
+        <location filename="../mpvoptions.cpp" line="958"/>
         <source>Cache (in seconds):</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../mpvoptions.cpp" line="951"/>
+        <location filename="../mpvoptions.cpp" line="959"/>
         <source>Cache speed:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../mpvprocess.h" line="222"/>
+        <location filename="../mpvprocess.h" line="225"/>
         <source>Cache fill:</source>
         <translation>Складирано:</translation>
     </message>
     <message>
-        <location filename="../mpvprocess.h" line="223"/>
+        <location filename="../mpvprocess.h" line="226"/>
         <source>Used cache:</source>
         <translation>Използвано складирано:</translation>
     </message>
@@ -4947,7 +5090,7 @@ Do you want to overwrite?</source>
         <location filename="../mplayeroptions.cpp" line="434"/>
         <location filename="../mplayeroptions.cpp" line="511"/>
         <source>This option is not supported by MPlayer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4968,17 +5111,17 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../qrcode/openwithdevicedialog.ui" line="14"/>
         <source>Play on device</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../qrcode/openwithdevicedialog.ui" line="20"/>
         <source>To play this video in a smartphone or tablet, scan the following QR code with your device:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../qrcode/openwithdevicedialog.ui" line="46"/>
         <source>Or open this URL in your device&apos;s media player:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -5022,57 +5165,57 @@ Do you want to overwrite?</source>
 <context>
     <name>Playlist</name>
     <message>
-        <location filename="../playlist.cpp" line="720"/>
+        <location filename="../playlist.cpp" line="732"/>
         <source>Name</source>
         <translation>Име</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="720"/>
+        <location filename="../playlist.cpp" line="732"/>
         <source>Length</source>
         <translation>Времетраене</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="730"/>
+        <location filename="../playlist.cpp" line="742"/>
         <source>&amp;Play</source>
         <translation>&amp;Възпроизвеждане</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="777"/>
+        <location filename="../playlist.cpp" line="789"/>
         <source>&amp;Edit</source>
         <translation>&amp;Редактиране</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1389"/>
-        <location filename="../playlist.cpp" line="1425"/>
+        <location filename="../playlist.cpp" line="1401"/>
+        <location filename="../playlist.cpp" line="1447"/>
         <source>Playlists</source>
         <translation>Списъци</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1387"/>
+        <location filename="../playlist.cpp" line="1399"/>
         <source>Choose a file</source>
         <translation>Избор на файл</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1423"/>
+        <location filename="../playlist.cpp" line="1445"/>
         <source>Choose a filename</source>
         <translation>Избор на име на файла</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1435"/>
+        <location filename="../playlist.cpp" line="1457"/>
         <source>Confirm overwrite?</source>
         <translation>Потвърждавате ли презаписване?</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1436"/>
+        <location filename="../playlist.cpp" line="1458"/>
         <source>The file %1 already exists.
 Do you want to overwrite?</source>
         <translation>Файлът %1 вече съществува.
 Искате ли да бъде презаписан?</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1389"/>
-        <location filename="../playlist.cpp" line="1425"/>
-        <location filename="../playlist.cpp" line="1738"/>
+        <location filename="../playlist.cpp" line="1401"/>
+        <location filename="../playlist.cpp" line="1447"/>
+        <location filename="../playlist.cpp" line="1760"/>
         <source>All files</source>
         <translation>Всички файлове</translation>
     </message>
@@ -5082,254 +5225,265 @@ Do you want to overwrite?</source>
         <translation>Неименуван списък</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="722"/>
+        <location filename="../playlist.cpp" line="734"/>
         <source>&amp;Load...</source>
         <translation>&amp;Зареждане...</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="724"/>
+        <location filename="../playlist.cpp" line="736"/>
         <source>Load playlist from &amp;URL...</source>
         <translation>Зареждане на списък от &amp;Интернет адрес...</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="763"/>
+        <location filename="../playlist.cpp" line="775"/>
         <source>Play on Chromec&amp;ast</source>
         <translation>Възпроизведи в Chrom&amp;ecast</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="765"/>
+        <location filename="../playlist.cpp" line="777"/>
         <source>Open stream in &amp;a web browser</source>
         <translation>Отваряне на потока в &amp;уеб браузър</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="781"/>
+        <location filename="../playlist.cpp" line="793"/>
         <source>Load/Save</source>
         <translation>Зареждане/Запазване</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1735"/>
+        <location filename="../playlist.cpp" line="1757"/>
         <source>Select one or more files to open</source>
         <translation>Изберете един или повече файлове за отваряне</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1804"/>
+        <location filename="../playlist.cpp" line="1826"/>
         <source>Choose a directory</source>
         <translation>Избор на директория</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2001"/>
+        <location filename="../playlist.cpp" line="2023"/>
         <source>Edit name</source>
         <translation>Редактиране на име</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2002"/>
+        <location filename="../playlist.cpp" line="2024"/>
         <source>Type the name that will be displayed in the playlist for this file:</source>
         <translation>Напишете име, което ще бъде показано в списъка за изпълнение:</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="720"/>
+        <location filename="../playlist.cpp" line="732"/>
         <source>Filename / URL</source>
         <translation>Име на файл/Интернет адрес</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="720"/>
+        <location filename="../playlist.cpp" line="732"/>
         <source>Shuffle order</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="725"/>
+        <location filename="../playlist.cpp" line="737"/>
         <source>Download playlist from URL</source>
         <translation>Изтегляне на списък от Интернет адрес</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="727"/>
+        <location filename="../playlist.cpp" line="739"/>
         <source>&amp;Save</source>
         <translation>З&amp;апис</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="728"/>
+        <location filename="../playlist.cpp" line="740"/>
         <source>Save &amp;as...</source>
         <translation>Запази &amp;като....</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="732"/>
+        <location filename="../playlist.cpp" line="744"/>
         <source>&amp;Next</source>
         <translation>&amp;Следващ</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="733"/>
+        <location filename="../playlist.cpp" line="745"/>
         <source>Pre&amp;vious</source>
         <translation>&amp;Предишен</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="739"/>
+        <location filename="../playlist.cpp" line="751"/>
         <source>Move &amp;up</source>
         <translation>Премести &amp;нагоре</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="740"/>
+        <location filename="../playlist.cpp" line="752"/>
         <source>Move &amp;down</source>
         <translation>Премести н&amp;адолу</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="742"/>
+        <location filename="../playlist.cpp" line="754"/>
         <source>&amp;Repeat</source>
         <translation>&amp;Повторение</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="743"/>
+        <location filename="../playlist.cpp" line="755"/>
         <source>S&amp;huffle</source>
         <translation>&amp;Разбъркване</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="746"/>
+        <location filename="../playlist.cpp" line="758"/>
         <source>Add &amp;current file</source>
         <translation>Добавяне на &amp;текущия файл</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="747"/>
+        <location filename="../playlist.cpp" line="759"/>
         <source>Add &amp;file(s)</source>
         <translation>Добавяне на &amp;файл(ове)</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="748"/>
+        <location filename="../playlist.cpp" line="760"/>
         <source>Add &amp;directory</source>
         <translation>Добавяне на &amp;директория</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="749"/>
+        <location filename="../playlist.cpp" line="761"/>
         <source>Add &amp;URL(s)</source>
         <translation>Добави &amp;Интенет адрес(и)</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="752"/>
+        <location filename="../playlist.cpp" line="764"/>
         <source>Remove &amp;selected</source>
         <translation>&amp;Премахване на избраните</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="753"/>
+        <location filename="../playlist.cpp" line="765"/>
         <source>Remove &amp;all</source>
         <translation>Премахване на &amp;всички</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="756"/>
+        <location filename="../playlist.cpp" line="768"/>
         <source>&amp;Delete file from disk</source>
         <translation>&amp;Изтрий файла от диска</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="759"/>
-        <location filename="../playlist.cpp" line="1533"/>
+        <location filename="../playlist.cpp" line="771"/>
+        <location filename="../playlist.cpp" line="1555"/>
         <source>&amp;Copy file path to clipboard</source>
         <translation>&amp;Копиране на пътя до файла в буфера за обмен</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="760"/>
+        <location filename="../playlist.cpp" line="772"/>
         <source>&amp;Open source folder</source>
         <translation>&amp;Отвори папката-източник</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="768"/>
-        <location filename="../playlist.cpp" line="789"/>
+        <location filename="../playlist.cpp" line="780"/>
+        <location filename="../playlist.cpp" line="801"/>
         <source>Search</source>
         <translation>Търсене</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="770"/>
+        <location filename="../playlist.cpp" line="782"/>
         <source>Show position column</source>
         <translation>Показвай колона с позиции</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="771"/>
+        <location filename="../playlist.cpp" line="783"/>
         <source>Show name column</source>
         <translation>Показвай колона с имена</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="772"/>
+        <location filename="../playlist.cpp" line="784"/>
         <source>Show length column</source>
         <translation>Показвай колона с времетраене</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="773"/>
+        <location filename="../playlist.cpp" line="785"/>
         <source>Show filename column</source>
         <translation>Показвай колона с име на файла</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="774"/>
+        <location filename="../playlist.cpp" line="786"/>
         <source>Show shuffle column</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1538"/>
+        <location filename="../playlist.cpp" line="1419"/>
+        <source>Wrong playlist</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../playlist.cpp" line="1420"/>
+        <source>It wasn't possible to load '%1'.
+Playlist file name must end with a specific suffix which is pls, xspf or m3u. &apos;%2&apos; is not supported. Please, choose once again!</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../playlist.cpp" line="1560"/>
         <source>&amp;Copy URL to clipboard</source>
         <translation>&amp;Копирай интернет адреса в буфера за обмен</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2039"/>
+        <location filename="../playlist.cpp" line="2061"/>
         <source>Confirm deletion</source>
         <translation>Потвърдете изтриване</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2040"/>
+        <location filename="../playlist.cpp" line="2062"/>
         <source>You&apos;re about to DELETE the file &apos;%1&apos; from your drive.</source>
         <translation>На път сте да изтриете файлът &apos;%1&apos; от Вашият диск.</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2041"/>
+        <location filename="../playlist.cpp" line="2063"/>
         <source>This action cannot be undone. Are you sure you want to proceed?</source>
         <translation>Това действие не може да бъде върнато. Сигурни ли сте, че искате до продължите?</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2059"/>
+        <location filename="../playlist.cpp" line="2081"/>
         <source>Deletion failed</source>
         <translation>Изтриването се провали</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2060"/>
+        <location filename="../playlist.cpp" line="2082"/>
         <source>It wasn&apos;t possible to delete &apos;%1&apos;</source>
         <translation>Не бе възможно изтриването на &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2065"/>
+        <location filename="../playlist.cpp" line="2087"/>
         <source>Error deleting the file</source>
         <translation>Грешка при изтриването на файла</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2066"/>
+        <location filename="../playlist.cpp" line="2088"/>
         <source>It&apos;s not possible to delete &apos;%1&apos; from the filesystem.</source>
         <translation>Не е възможно изтриването на &apos;%1&apos; от файловата система.</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2553"/>
+        <location filename="../playlist.cpp" line="2575"/>
         <source>It&apos;s not possible to load this playlist</source>
         <translation>Не е възможно зареждането на този списък</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="2553"/>
+        <location filename="../playlist.cpp" line="2575"/>
         <source>Unrecognized format.</source>
         <translation>Неразпознат формат.</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="783"/>
+        <location filename="../playlist.cpp" line="795"/>
         <source>Add...</source>
         <translation>Добавяне...</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="785"/>
+        <location filename="../playlist.cpp" line="797"/>
         <source>Remove...</source>
         <translation>Премахване...</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1468"/>
+        <location filename="../playlist.cpp" line="1490"/>
         <source>Playlist modified</source>
         <translation>Списъкът за изпълнение е променен</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1469"/>
+        <location filename="../playlist.cpp" line="1491"/>
         <source>There are unsaved changes, do you want to save the playlist?</source>
         <translation>Има незапазени промени, искате ли да запазите списъка?</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="1737"/>
+        <location filename="../playlist.cpp" line="1759"/>
         <source>Multimedia</source>
         <translation>Мултимедия</translation>
     </message>
@@ -5380,12 +5534,12 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefadvanced.ui" line="200"/>
         <source>O&amp;SD bar position:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefadvanced.ui" line="238"/>
         <source>Display the name o&amp;f the media in the window title</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefadvanced.ui" line="253"/>
@@ -5610,7 +5764,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefadvanced.cpp" line="96"/>
         <source>Notify %1 crash&amp;es</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefadvanced.cpp" line="99"/>
@@ -5635,22 +5789,22 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefadvanced.cpp" line="500"/>
         <source>OSD bar position</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefadvanced.cpp" line="501"/>
         <source>Set the position of the screen where the OSD bar is displayed. 0 is top, 100 bottom.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefadvanced.cpp" line="503"/>
         <source>Display the name of the media in the window title</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefadvanced.cpp" line="504"/>
         <source>If this option is enabled the media title from information tags will be displayed in the window title instead of the filename.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefadvanced.cpp" line="529"/>
@@ -5665,12 +5819,12 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefadvanced.cpp" line="538"/>
         <source>Notify %1 crashes</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefadvanced.cpp" line="539"/>
         <source>If this option is checked, a popup window will be displayed to inform about %1 crashes. Otherwise those failures will be silently ignored.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefadvanced.cpp" line="552"/>
@@ -5963,7 +6117,7 @@ Do you want to overwrite?</source>
     <name>PrefGeneral</name>
     <message>
         <location filename="../prefgeneral.cpp" line="153"/>
-        <location filename="../prefgeneral.cpp" line="1077"/>
+        <location filename="../prefgeneral.cpp" line="1081"/>
         <source>General</source>
         <translation>Общи</translation>
     </message>
@@ -5978,12 +6132,12 @@ Do you want to overwrite?</source>
         <translation>Настройки на медия</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1220"/>
+        <location filename="../prefgeneral.cpp" line="1228"/>
         <source>Start videos in fullscreen</source>
         <translation>Започване на видеоклипове на цял екран</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1251"/>
+        <location filename="../prefgeneral.cpp" line="1259"/>
         <source>Disable screensaver</source>
         <translation>Деактивиране предпазител на екрана</translation>
     </message>
@@ -6024,148 +6178,163 @@ Do you want to overwrite?</source>
     </message>
     <message>
         <location filename="../prefgeneral.cpp" line="172"/>
-        <location filename="../prefgeneral.cpp" line="483"/>
-        <location filename="../prefgeneral.cpp" line="484"/>
+        <location filename="../prefgeneral.cpp" line="487"/>
+        <location filename="../prefgeneral.cpp" line="488"/>
         <source>Default</source>
         <translation>Стандартно</translation>
     </message>
     <message>
         <location filename="../prefgeneral.cpp" line="214"/>
         <source>Here you can type your preferred language for the audio and subtitle streams. When a media with multiple audio or subtitle streams is found, SMPlayer will try to use your preferred language. This only will work with media that offer info about the language of audio and subtitle streams, like DVDs or mkv files.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="491"/>
+        <location filename="../prefgeneral.cpp" line="495"/>
         <source>hardware</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="492"/>
+        <location filename="../prefgeneral.cpp" line="496"/>
         <source>software</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1080"/>
+        <location filename="../prefgeneral.cpp" line="1084"/>
         <source>Multimedia engine</source>
         <translation>Мултимедиен двигател</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1081"/>
+        <location filename="../prefgeneral.cpp" line="1085"/>
         <source>Select which multimedia engine you want to use, either MPlayer or mpv.</source>
         <translation>Изберете кой мултимедиен двигател искате да използвате, дали ще е MPlayer или mpv.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1082"/>
+        <location filename="../prefgeneral.cpp" line="1086"/>
         <source>The option &apos;other&apos; allows you to manually select the path of the executable.</source>
         <translation>Опцията „друго“ Ви позволява ръчно да зададете пътя до изпълнимият файл.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1085"/>
+        <location filename="../prefgeneral.cpp" line="1089"/>
         <source>%1 executable</source>
         <translation>%1 изпълним файл</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1086"/>
+        <location filename="../prefgeneral.cpp" line="1090"/>
         <source>Here you must specify the %1 executable that SMPlayer will use.</source>
         <translation>Тук трябва да определите изпълнимият файл на %1, който SMPlayer ще използва.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1101"/>
+        <location filename="../prefgeneral.cpp" line="1105"/>
         <source>Remember settings for streams</source>
         <translation>Запомни настройките и потоците</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1102"/>
+        <location filename="../prefgeneral.cpp" line="1106"/>
         <source>When this option is enabled the settings for online streams will be remembered as well.</source>
         <translation>Когато тази опция е активирана, настройките за онлайн потоците ще бъдат запазени.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1117"/>
+        <location filename="../prefgeneral.cpp" line="1121"/>
         <source>Screenshots folder</source>
         <translation>Папка за снимки на екрана</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1123"/>
+        <location filename="../prefgeneral.cpp" line="1127"/>
         <source>Template for screenshots</source>
         <translation>Шаблон за снимките на екрана</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1125"/>
+        <location filename="../prefgeneral.cpp" line="1129"/>
         <source>For example %1 would save the screenshot as &apos;moviename_0001.png&apos;.</source>
         <translation>Например %1 би запаметил снимката на екрана като &apos;именафилма_0001.png&apos;.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1126"/>
+        <location filename="../prefgeneral.cpp" line="1130"/>
         <source>%1 specifies the filename of the video without the extension, %2 adds a 4 digit number padded with zeros.</source>
         <translation>%1 извлича името на видео файла без разширението, %2 добавя 4-цифрен номер с допълващи нули.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1136"/>
+        <location filename="../prefgeneral.cpp" line="1140"/>
         <source>Format for screenshots</source>
         <translation>Формат за екранните снимки</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1137"/>
+        <location filename="../prefgeneral.cpp" line="1141"/>
         <source>This option allows to choose the image file type used for saving screenshots.</source>
         <translation>Тази опция позволява избирането на вида файл, използват за запазването на екранните снимки.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1155"/>
+        <location filename="../prefgeneral.cpp" line="1148"/>
+        <source>Keep selected speed across files</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../prefgeneral.cpp" line="1149"/>
+        <source>If this option is enabled, the speed selected in the Play menu will be applied for all files.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../prefgeneral.cpp" line="1150"/>
+        <source>Otherwise each file will use its own speed setting.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../prefgeneral.cpp" line="1163"/>
         <source>If this option is enabled, the computer will shut down just after SMPlayer is closed.</source>
         <translation>Ако тази възможност е активирана, компютърът ще се изключва след затваряне на SMPlayer.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1161"/>
+        <location filename="../prefgeneral.cpp" line="1169"/>
         <source>Video output driver</source>
         <translation>Драйвър за изходящо видео</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1162"/>
+        <location filename="../prefgeneral.cpp" line="1170"/>
         <source>Select the video output driver.</source>
         <translation>Изберете драйвър за изходящо видео.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1171"/>
+        <location filename="../prefgeneral.cpp" line="1179"/>
         <source>Wayland support</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1172"/>
+        <location filename="../prefgeneral.cpp" line="1180"/>
         <source>This activates some options to prevent the video being displayed outside the main window.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1190"/>
+        <location filename="../prefgeneral.cpp" line="1198"/>
         <source>If this option is enabled, black borders will be added to the image by default on new opened files.</source>
         <translation>Ако тази възможност е активирана, черните ивици ще бъдат добавени стандартно в новоотворените файлове.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1260"/>
+        <location filename="../prefgeneral.cpp" line="1268"/>
         <source>Audio output driver</source>
         <translation>Драйвър за изходящ звук</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1261"/>
+        <location filename="../prefgeneral.cpp" line="1269"/>
         <source>Select the audio output driver.</source>
         <translation>Избор на драйвър за изходящ звук.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1091"/>
+        <location filename="../prefgeneral.cpp" line="1095"/>
         <source>Remember settings</source>
         <translation>Запомняне на настройки</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1319"/>
+        <location filename="../prefgeneral.cpp" line="1327"/>
         <source>Preferred audio language</source>
         <translation>Предпочитан език за дублаж</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1331"/>
+        <location filename="../prefgeneral.cpp" line="1339"/>
         <source>Preferred subtitle language</source>
         <translation>Предпочитан език за субтитри</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1198"/>
+        <location filename="../prefgeneral.cpp" line="1206"/>
         <source>Software video equalizer</source>
         <translation>Програмен видео изравнител</translation>
     </message>
@@ -6175,93 +6344,93 @@ Do you want to overwrite?</source>
         <translation>Друго...</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1124"/>
+        <location filename="../prefgeneral.cpp" line="1128"/>
         <source>This option specifies the filename template used to save screenshots.</source>
         <translation>Тук имате възможност да определите шаблон за име на файла, под който ще се запазват снимките на екрана.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1128"/>
+        <location filename="../prefgeneral.cpp" line="1132"/>
         <source>For a full list of the template specifiers visit this link:</source>
         <translation>За пълния списък на шаблоните посетете този линк:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1132"/>
-        <location filename="../prefgeneral.cpp" line="1139"/>
+        <location filename="../prefgeneral.cpp" line="1136"/>
+        <location filename="../prefgeneral.cpp" line="1143"/>
         <source>This option only works with mpv.</source>
         <translation>Тази опция работи само с mpv.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1154"/>
+        <location filename="../prefgeneral.cpp" line="1162"/>
         <source>Shut down computer</source>
         <translation>Изключване на компютъра</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1189"/>
+        <location filename="../prefgeneral.cpp" line="1197"/>
         <source>Add black borders for subtitles by default</source>
         <translation>По подразбиране да се добавят черни ивици за субтитрите</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1199"/>
+        <location filename="../prefgeneral.cpp" line="1207"/>
         <source>You can check this option if video equalizer is not supported by your graphic card or the selected video output driver.&lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; this option can be incompatible with some video output drivers.</source>
         <translation>Можете да отметнете тази опция, ако видео изравняването не се поддържа от вашата видеокарта или избрания видео драйвър.&lt;br&gt;&lt;b&gt;Забележка:&lt;/b&gt; тази опция може да не е съвместима с някои видео драйвъри.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1221"/>
+        <location filename="../prefgeneral.cpp" line="1229"/>
         <source>If this option is checked, all videos will start to play in fullscreen mode.</source>
         <translation>Ако тази опция е избрана, всички видеоклипове започват на цял екран.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1266"/>
+        <location filename="../prefgeneral.cpp" line="1274"/>
         <source>Global audio equalizer</source>
         <translation>Глобален тонкоректор</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1267"/>
+        <location filename="../prefgeneral.cpp" line="1275"/>
         <source>If this option is checked, all media files share the audio equalizer.</source>
         <translation>Ако тази опция е избрана, всички медийни файлове ще използват един и същи тонкоректор.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1268"/>
+        <location filename="../prefgeneral.cpp" line="1276"/>
         <source>If it&apos;s not checked, the audio equalizer values are saved along each file and loaded back when the file is played later.</source>
         <translation>Ако не е избрана, тонкоректорните стойности се запаметяват за всеки отделен файл и се зареждат отново, когато файлът бъде възпроизведен отново.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1271"/>
+        <location filename="../prefgeneral.cpp" line="1279"/>
         <source>AC3/DTS passthrough over S/PDIF and HDMI</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1277"/>
+        <location filename="../prefgeneral.cpp" line="1285"/>
         <source>Requests the number of playback channels. %1 asks the decoder to decode the audio into as many channels as specified. Then it is up to the decoder to fulfill the requirement. This is usually only important when playing videos with AC3 audio (like DVDs). In that case liba52 does the decoding by default and correctly downmixes the audio into the requested number of channels. &lt;b&gt;Note&lt;/b&gt;: This option is honored by codecs (AC3 only), filters (surround) and audio output drivers (OSS at least).</source>
         <translation>Запитва за броя на каналите за възпроизвеждане. %1 изисква от разкодера да разкодира звука на броя на указаните канали. Покриването на изискването зависи от самият разкодер. Това е важно само при възпроизвеждане на видеа с AC3 звук (като DVD-та). В този случай liba52 стандартно извършва разкодирането и смесването на звука към поискания брой канали. &lt;b&gt;Бележка:&lt;/b&gt; Тази опция се дължи на кодеците (единствено AC3), филтрите (квадрофония) и изходните звукови драйвери (поне OSS).</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1288"/>
+        <location filename="../prefgeneral.cpp" line="1296"/>
         <source>Allows to change the playback speed without altering pitch.</source>
         <translation>Позволява смяна на скоростта на възпроизвеждане без изкривяване.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1296"/>
+        <location filename="../prefgeneral.cpp" line="1304"/>
         <source>Software volume control</source>
         <translation>Програмно управление на звука</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1297"/>
+        <location filename="../prefgeneral.cpp" line="1305"/>
         <source>Check this option to use the software mixer, instead of using the sound card mixer.</source>
         <translation>Отметнете тази опция, за да използвате програмния миксер, вместо на звуковата карта.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1178"/>
+        <location filename="../prefgeneral.cpp" line="1186"/>
         <source>Postprocessing quality</source>
         <translation>Качество на дообработка</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1179"/>
+        <location filename="../prefgeneral.cpp" line="1187"/>
         <source>Dynamically changes the level of postprocessing depending on the available spare CPU time. The number you specify will be the maximum level used. Usually you can use some big number.</source>
         <translation>Динамична промяна на нивото на дообработка в зависимост от резервираното време на ЦПУ. Номерът, който изберете, ще бъде максимална граница. Обикновено можете да използвате голям номер.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="1172"/>
+        <location filename="../prefgeneral.ui" line="1179"/>
         <source>&amp;Audio:</source>
         <translation>&amp;Звук:</translation>
     </message>
@@ -6271,12 +6440,12 @@ Do you want to overwrite?</source>
         <translation>&amp;Запомняне на настройките за всички файлове (звукова пътечка, субтитри...)</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="1191"/>
+        <location filename="../prefgeneral.ui" line="1198"/>
         <source>Su&amp;btitles:</source>
         <translation>Су&amp;бтитри:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="455"/>
+        <location filename="../prefgeneral.ui" line="462"/>
         <source>&amp;Quality:</source>
         <translation>&amp;Качество:</translation>
     </message>
@@ -6301,87 +6470,92 @@ Do you want to overwrite?</source>
         <translation>&amp;Формат:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="308"/>
+        <location filename="../prefgeneral.ui" line="269"/>
+        <source>&amp;Keep selected speed across files</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../prefgeneral.ui" line="315"/>
         <source>S&amp;hut down computer</source>
         <translation>Из&amp;ключване на компютъра</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="407"/>
+        <location filename="../prefgeneral.ui" line="414"/>
         <source>Wa&amp;yland support</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="627"/>
+        <location filename="../prefgeneral.ui" line="634"/>
         <source>Start videos in &amp;fullscreen</source>
         <translation>Започване на видеоклиповете на &amp;цял екран</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="641"/>
+        <location filename="../prefgeneral.ui" line="648"/>
         <source>Disable &amp;screensaver</source>
         <translation>Деактивиране &amp;предпазител на екрана</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="775"/>
+        <location filename="../prefgeneral.ui" line="782"/>
         <source>Global audio e&amp;qualizer</source>
         <translation>Глобален тон&amp;коректор</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="784"/>
+        <location filename="../prefgeneral.ui" line="791"/>
         <source>&amp;AC3/DTS passthrough over S/PDIF and HDMI</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="894"/>
+        <location filename="../prefgeneral.ui" line="901"/>
         <source>Use s&amp;oftware volume control</source>
         <translation>Използвай прог&amp;рамно управление на звука</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="917"/>
+        <location filename="../prefgeneral.ui" line="924"/>
         <source>Ma&amp;x. Amplification:</source>
         <translation>Ма&amp;кс. увеличаване:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1204"/>
+        <location filename="../prefgeneral.cpp" line="1212"/>
         <source>Direct rendering</source>
         <translation>Директно предаване</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1209"/>
+        <location filename="../prefgeneral.cpp" line="1217"/>
         <source>Double buffering</source>
         <translation>Двойно задържане</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="593"/>
+        <location filename="../prefgeneral.ui" line="600"/>
         <source>D&amp;irect rendering</source>
         <translation>Ди&amp;ректно предаване</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="600"/>
+        <location filename="../prefgeneral.ui" line="607"/>
         <source>Dou&amp;ble buffering</source>
         <translation>Дво&amp;йно задържане</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1210"/>
+        <location filename="../prefgeneral.cpp" line="1218"/>
         <source>Double buffering fixes flicker by storing two frames in memory, and displaying one while decoding another. If disabled it can affect OSD negatively, but often removes OSD flickering.</source>
         <translation>Двойното задържане решава треперенето като задържа две рамки в паметта, и показва едната, докато се декодира другата. Ако е деактивирано може да се отрази неблагоприятно на Екранното известие, но често дори премахва трептенето му.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="435"/>
+        <location filename="../prefgeneral.ui" line="442"/>
         <source>&amp;Enable postprocessing by default</source>
         <translation>&amp;Активиране на дообработката по подразбиране</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="945"/>
+        <location filename="../prefgeneral.ui" line="952"/>
         <source>Volume &amp;normalization by default</source>
         <translation>Стандартна &amp;нормализация на звука</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1149"/>
+        <location filename="../prefgeneral.cpp" line="1157"/>
         <source>Close when finished</source>
         <translation>Затвори след приключване</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1150"/>
+        <location filename="../prefgeneral.cpp" line="1158"/>
         <source>If this option is checked, the main window will be automatically closed when the current file/playlist finishes.</source>
         <translation>Ако тази опция е отметната, основният прозорец ще бъде затворен автоматично, когато приключи настоящият файл или списък.</translation>
     </message>
@@ -6401,167 +6575,167 @@ Do you want to overwrite?</source>
         <translation>6 (5.1 Обграждащ звук)</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="799"/>
+        <location filename="../prefgeneral.ui" line="806"/>
         <source>C&amp;hannels by default:</source>
         <translation>Стандартни ка&amp;нали:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="269"/>
+        <location filename="../prefgeneral.ui" line="276"/>
         <source>&amp;Pause when minimized</source>
         <translation>&amp;Пауза при минимизиране</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1144"/>
+        <location filename="../prefgeneral.cpp" line="1152"/>
         <source>Pause when minimized</source>
         <translation>Пауза при минимизиране</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1175"/>
+        <location filename="../prefgeneral.cpp" line="1183"/>
         <source>Enable postprocessing by default</source>
         <translation>Активиране на дообработката по подрабиране</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1300"/>
+        <location filename="../prefgeneral.cpp" line="1308"/>
         <source>Max. Amplification</source>
         <translation>Макс. увеличаване</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1307"/>
+        <location filename="../prefgeneral.cpp" line="1315"/>
         <source>Volume normalization by default</source>
         <translation>Стандартно нормализиране на звука</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1308"/>
+        <location filename="../prefgeneral.cpp" line="1316"/>
         <source>Maximizes the volume without distorting the sound.</source>
         <translation>Увеличава звука без изкривяване.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1276"/>
+        <location filename="../prefgeneral.cpp" line="1284"/>
         <source>Channels by default</source>
         <translation>Стандартни канали</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1301"/>
+        <location filename="../prefgeneral.cpp" line="1309"/>
         <source>Sets the maximum amplification level in percent (default: 110). A value of 200 will allow you to adjust the volume up to a maximum of double the current level. With values below 100 the initial volume (which is 100%) will be above the maximum, which e.g. the OSD cannot display correctly.</source>
         <translation>Задава максималното ниво на увеличаване (стандартно: 110). Стойност 200 ще Ви позволи да увеличите звука до два пъти повече. Със стойности под 100 първаначалното усилване (което е 100%) ще бъде над максимума, което екранното известие не може да покаже правилно.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1176"/>
+        <location filename="../prefgeneral.cpp" line="1184"/>
         <source>Postprocessing will be used by default on new opened files.</source>
         <translation>Дообработката ще бъде използвана по подразбиране за новоотворени файлове.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1321"/>
+        <location filename="../prefgeneral.cpp" line="1329"/>
         <source>You can specify here a priority list of audio language codes, separated by commas. For example: spa,eng,jpn</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../prefgeneral.cpp" line="1325"/>
-        <source>This field accepts regular expressions. Example: &lt;b&gt;es|esp|spa&lt;/b&gt; will select the audio track if it matches with &lt;i&gt;es&lt;/i&gt;, &lt;i&gt;esp&lt;/i&gt; or &lt;i&gt;spa&lt;/i&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefgeneral.cpp" line="1333"/>
+        <source>This field accepts regular expressions. Example: &lt;b&gt;es|esp|spa&lt;/b&gt; will select the audio track if it matches with &lt;i&gt;es&lt;/i&gt;, &lt;i&gt;esp&lt;/i&gt; or &lt;i&gt;spa&lt;/i&gt;.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../prefgeneral.cpp" line="1341"/>
         <source>You can specify here a priority list of subtitle language codes, separated by commas. For example: spa,eng,jpn</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1336"/>
+        <location filename="../prefgeneral.cpp" line="1344"/>
         <source>This field accepts regular expressions. Example: &lt;b&gt;es|esp|spa&lt;/b&gt; will select the subtitle stream if it matches with &lt;i&gt;es&lt;/i&gt;, &lt;i&gt;esp&lt;/i&gt; or &lt;i&gt;spa&lt;/i&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1343"/>
+        <location filename="../prefgeneral.cpp" line="1351"/>
         <source>Audio track</source>
         <translation>Звукова пътечка</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1344"/>
+        <location filename="../prefgeneral.cpp" line="1352"/>
         <source>Specifies the default audio track which will be used when playing new files. If the track doesn&apos;t exist, the first one will be used. &lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; the &lt;i&gt;&quot;preferred audio language&quot;&lt;/i&gt; has preference over this option.</source>
         <translation>Представлява звуковата пътечка, която ще се използва при възпроизвеждане на нови файлове. Ако пътечката не съществува, ще се използва първата налична. &lt;br&gt;&lt;b&gt;Бележка:&lt;/b&gt; &lt;i&gt;„предпочитан език за дублаж“&lt;/i&gt; е с превес.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1349"/>
+        <location filename="../prefgeneral.cpp" line="1357"/>
         <source>Subtitle track</source>
         <translation>Пътечка със субтитри</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1350"/>
+        <location filename="../prefgeneral.cpp" line="1358"/>
         <source>Specifies the default subtitle track which will be used when playing new files. If the track doesn&apos;t exist, the first one will be used. &lt;br&gt;&lt;b&gt;Note:&lt;/b&gt; the &lt;i&gt;&quot;preferred subtitle language&quot;&lt;/i&gt; has preference over this option.</source>
         <translation>Представлява пътечката със субтитри, която ще се използва при възпроизвеждане на нови файове. Ако пътечката не съществува, ще се използва първата налична. &lt;br&gt;&lt;b&gt;Бележка:&lt;/b&gt; &lt;i&gt;„предпочитан език за субтитри“&lt;/i&gt; е с превес.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="1312"/>
+        <location filename="../prefgeneral.ui" line="1319"/>
         <source>Or choose a track number:</source>
         <translation>Или изберете номер на пътечка:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="1253"/>
+        <location filename="../prefgeneral.ui" line="1260"/>
         <source>Audi&amp;o:</source>
         <translation>Зв&amp;ук:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="1207"/>
+        <location filename="../prefgeneral.ui" line="1214"/>
         <source>Preferred language:</source>
         <translation>Предпочитан език:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="1096"/>
+        <location filename="../prefgeneral.ui" line="1103"/>
         <source>Preferre&amp;d audio and subtitles</source>
         <translation>Пре&amp;дпочитан език за звук и субтитри</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="1266"/>
+        <location filename="../prefgeneral.ui" line="1273"/>
         <source>&amp;Subtitle:</source>
         <translation>&amp;Субтитри:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="835"/>
+        <location filename="../prefgeneral.ui" line="842"/>
         <source>High speed &amp;playback without altering pitch</source>
         <translation>&amp;Възпроизвеждане на висока скорост без изкривяване</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1287"/>
+        <location filename="../prefgeneral.cpp" line="1295"/>
         <source>High speed playback without altering pitch</source>
         <translation>Възпроизвеждане на висока скорост без изкривяване</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="348"/>
+        <location filename="../prefgeneral.ui" line="355"/>
         <source>&amp;Video</source>
         <translation>&amp;Видео</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="523"/>
+        <location filename="../prefgeneral.ui" line="530"/>
         <source>Add blac&amp;k borders for subtitles by default</source>
         <translation>По подразбиране да се &amp;добавят черни ивици за субтитрите</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="586"/>
+        <location filename="../prefgeneral.ui" line="593"/>
         <source>Use s&amp;oftware video equalizer</source>
         <translation>Използвай с&amp;офтуерен видео изравнител</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="685"/>
+        <location filename="../prefgeneral.ui" line="692"/>
         <source>A&amp;udio</source>
         <translation>&amp;Звук</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="870"/>
+        <location filename="../prefgeneral.ui" line="877"/>
         <source>Volume</source>
         <translation>Сила на звука</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1159"/>
+        <location filename="../prefgeneral.cpp" line="1167"/>
         <source>Video</source>
         <translation>Видео</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1258"/>
+        <location filename="../prefgeneral.cpp" line="1266"/>
         <source>Audio</source>
         <translation>Звук</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1317"/>
+        <location filename="../prefgeneral.cpp" line="1325"/>
         <source>Preferred audio and subtitles</source>
         <translation>Предпочитан звук и субтитри</translation>
     </message>
@@ -6596,17 +6770,17 @@ Do you want to overwrite?</source>
         <translation>Kerndeint</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1183"/>
+        <location filename="../prefgeneral.cpp" line="1191"/>
         <source>Deinterlace by default</source>
         <translation>Компенсиране по подразбиране</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1184"/>
+        <location filename="../prefgeneral.cpp" line="1192"/>
         <source>Select the deinterlace filter that you want to be used for new videos opened.</source>
         <translation>Изберете компенсиращ филтър, който искате да бъде използван за новоотворените видеа.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1096"/>
+        <location filename="../prefgeneral.cpp" line="1100"/>
         <source>Remember time position</source>
         <translation>Запомни времева позиция</translation>
     </message>
@@ -6616,104 +6790,104 @@ Do you want to overwrite?</source>
         <translation>Запомни &amp;времева позиция</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1263"/>
+        <location filename="../prefgeneral.cpp" line="1271"/>
         <source>Enable the audio equalizer</source>
         <translation>Активирай тонкоректор</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1264"/>
+        <location filename="../prefgeneral.cpp" line="1272"/>
         <source>Check this option if you want to use the audio equalizer.</source>
         <translation>Отметнете тази опция, ако желаете да използвате тонкоректора.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="752"/>
+        <location filename="../prefgeneral.ui" line="759"/>
         <source>&amp;Enable the audio equalizer</source>
         <translation>&amp;Активирай тонкоректора</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1214"/>
+        <location filename="../prefgeneral.cpp" line="1222"/>
         <source>Draw video using slices</source>
         <translation>Чертаене на видео чрез отрези</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1215"/>
+        <location filename="../prefgeneral.cpp" line="1223"/>
         <source>Enable/disable drawing video by 16-pixel height slices/bands. If disabled, the whole frame is drawn in a single run. May be faster or slower, depending on video card and available cache. It has effect only with libmpeg2 and libavcodec codecs.</source>
         <translation>Активиране/деактивиране на чертаене на видео чрез отрези/ленти високи 16 точки. Ако е деактивирано, рамката се чертае наведнъж. Може да бъде по-бързо или по-бавно, в зависимост от видео картата и наличната складирана памет. Въздейства единствено на кодеците libmpeg2 и libavcodec.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="607"/>
+        <location filename="../prefgeneral.ui" line="614"/>
         <source>Dra&amp;w video using slices</source>
         <translation>Черт&amp;аене на видео чрез отрези</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="276"/>
+        <location filename="../prefgeneral.ui" line="283"/>
         <source>&amp;Close when finished playback</source>
         <translation>&amp;Затваряне след приключване на възпроизвеждането</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="498"/>
+        <location filename="../prefgeneral.cpp" line="502"/>
         <source>fast</source>
         <translation>бързо</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="534"/>
-        <location filename="../prefgeneral.cpp" line="586"/>
+        <location filename="../prefgeneral.cpp" line="538"/>
+        <location filename="../prefgeneral.cpp" line="590"/>
         <source>User defined...</source>
         <translation>Потребителско...</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1194"/>
+        <location filename="../prefgeneral.cpp" line="1202"/>
         <source>Default zoom</source>
         <translation>Стандартно увеличение</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1195"/>
+        <location filename="../prefgeneral.cpp" line="1203"/>
         <source>This option sets the default zoom which will be used for new videos.</source>
         <translation>Тази опция задава стандартно увеличение, което ще се използва за нови видеоклипове.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="532"/>
+        <location filename="../prefgeneral.ui" line="539"/>
         <source>Default &amp;zoom:</source>
         <translation>Стандартно &amp;увеличение:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1088"/>
+        <location filename="../prefgeneral.cpp" line="1092"/>
         <source>If this setting is wrong, SMPlayer won&apos;t be able to play anything!</source>
         <translation>Ако тези настройки за грешни, SMPlayer няма да работи!</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1092"/>
+        <location filename="../prefgeneral.cpp" line="1096"/>
         <source>Usually SMPlayer will remember the settings for each file you play (audio track selected, volume, filters...). Disable this option if you don&apos;t like this feature.</source>
         <translation>Обикновено SMPlayer ще запомни настройките за всеки файл, който възпроизвеждате (избрана звукова пътечка, сила на звука, филтри...). Изключете тази опция, ако не желаете запомняне.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1145"/>
+        <location filename="../prefgeneral.cpp" line="1153"/>
         <source>If this option is enabled, the file will be paused when the main window is hidden. When the window is restored, playback will be resumed.</source>
         <translation>Ако тази опция е включена, файлът ще спре да се изпълнява, когато основният прозорец е скрит. Когато бъде възстановен, възпроизвеждането ще продължи.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1252"/>
+        <location filename="../prefgeneral.cpp" line="1260"/>
         <source>Check this option to disable the screensaver while playing.&lt;br&gt;The screensaver will enabled again when play finishes.</source>
         <translation>Отметнете тази опция, изключвайки предпазителя на екрана при възпроизвеждане. &lt;br&gt;Предпазителя ще бъде включен отново, когато възпроизвеждането приключи.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="356"/>
-        <location filename="../prefgeneral.ui" line="693"/>
+        <location filename="../prefgeneral.ui" line="363"/>
+        <location filename="../prefgeneral.ui" line="700"/>
         <source>Ou&amp;tput driver:</source>
         <translation>Изхо&amp;ден драйвър:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1225"/>
+        <location filename="../prefgeneral.cpp" line="1233"/>
         <source>Add black borders on fullscreen</source>
         <translation>Добави черни ивици на цял екран</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1226"/>
+        <location filename="../prefgeneral.cpp" line="1234"/>
         <source>If this option is enabled, black borders will be added to the image in fullscreen mode. This allows subtitles to be displayed on the black borders.</source>
         <translation>Ако тази опция е активна, ще бъдат добавени черни ивици към изображението в режим на цял екран. Това позволява субтитрите да се показват върху черната ивица.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="634"/>
+        <location filename="../prefgeneral.ui" line="641"/>
         <source>&amp;Add black borders on fullscreen</source>
         <translation>&amp;Добави черни ивици на цял екран</translation>
     </message>
@@ -6728,22 +6902,22 @@ Do you want to overwrite?</source>
         <translation>няколко ini файла</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1104"/>
+        <location filename="../prefgeneral.cpp" line="1108"/>
         <source>Method to store the file settings</source>
         <translation>Начин за съхранение настройките на файла</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1105"/>
+        <location filename="../prefgeneral.cpp" line="1109"/>
         <source>This option allows to change the way the file settings would be stored. The following options are available:</source>
         <translation>Тази опция позволява промяна на начина за съхранение настройките на файла. Налични са следните опции:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1107"/>
+        <location filename="../prefgeneral.cpp" line="1111"/>
         <source>&lt;b&gt;one ini file&lt;/b&gt;: the settings for all played files will be saved in a single ini file (%1)</source>
         <translation>&lt;b&gt;един ini файл&lt;/b&gt;: настройките за всички изпълнявани файлове, ще се съхраняват в един ini файл (%1)</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1111"/>
+        <location filename="../prefgeneral.cpp" line="1115"/>
         <source>The latter method could be faster if there is info for a lot of files.</source>
         <translation>Последният метод може да бъде по-бърз, ако има информация за много файлове.</translation>
     </message>
@@ -6753,32 +6927,32 @@ Do you want to overwrite?</source>
         <translation>&amp;Съхрани настройки в</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1109"/>
+        <location filename="../prefgeneral.cpp" line="1113"/>
         <source>&lt;b&gt;multiple ini files&lt;/b&gt;: one ini file will be used for each played file. Those ini files will be saved in the folder %1</source>
         <translation>&lt;b&gt;няколко ini файла&lt;/b&gt;: за всеки изпълняван файл, ще се използва по един ini файл. Тези ini файлове ще се запаметяват в папка %1</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1097"/>
+        <location filename="../prefgeneral.cpp" line="1101"/>
         <source>If you check this option, SMPlayer will remember the last position of the file when you open it again. This option works only with regular files (not with DVDs, CDs, URLs...).</source>
         <translation>Ако отметнете тази опция, SMPlayer ще помни последната позиция на файла, когато го отворите отново. Тази опция работи само с обикновени файлове (без DVD-та, CD-та, Интернет адреси...).</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1205"/>
+        <location filename="../prefgeneral.cpp" line="1213"/>
         <source>If checked, turns on direct rendering (not supported by all codecs and video outputs)&lt;br&gt;&lt;b&gt;Warning:&lt;/b&gt; May cause OSD/SUB corruption!</source>
         <translation>Ако е отметнато, преобръща в директно четене (не се поддържа от всички кодеци и видео изходи) &lt;br&gt;&lt;b&gt;Внимание:&lt;/b&gt; Може да предизвика повреда на ЕИ/СУБ!</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1113"/>
+        <location filename="../prefgeneral.cpp" line="1117"/>
         <source>Enable screenshots</source>
         <translation>Включи снимки на екрана</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1114"/>
+        <location filename="../prefgeneral.cpp" line="1118"/>
         <source>You can use this option to enable or disable the possibility to take screenshots.</source>
         <translation>Можете да използвате тази опция, за да включите или изключите възможността за правене на снимки на екрана.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1118"/>
+        <location filename="../prefgeneral.cpp" line="1122"/>
         <source>Here you can specify a folder where the screenshots taken by SMPlayer will be stored. If the folder is not valid the screenshot feature will be disabled.</source>
         <translation>Тук можете да зададете папка, където снимките на екрана взети от SMPlayer ще бъдат сахранени. Ако тази папка не е валидна, възможността за снимки на екрана ще бъде забранена.</translation>
     </message>
@@ -6798,137 +6972,137 @@ Do you want to overwrite?</source>
         <translation>&amp;Папка:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1290"/>
+        <location filename="../prefgeneral.cpp" line="1298"/>
         <source>Global volume</source>
         <translation>Общ звук</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1291"/>
+        <location filename="../prefgeneral.cpp" line="1299"/>
         <source>If this option is checked, the same volume will be used for all files you play. If the option is not checked each file uses its own volume.</source>
         <translation>Ако тази опция е отметната, една и съща сила на звука ще се използва за всички възпроизвеждани файлове. В противен случай за всеки файл ще е различно.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1294"/>
+        <location filename="../prefgeneral.cpp" line="1302"/>
         <source>This option also applies for the mute control.</source>
         <translation>Тази опция въздейства и върху заглушаването.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="879"/>
+        <location filename="../prefgeneral.ui" line="886"/>
         <source>Glo&amp;bal volume</source>
         <translation>О&amp;бщ звук</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1236"/>
+        <location filename="../prefgeneral.cpp" line="1244"/>
         <source>Switch screensaver off</source>
         <translation>Изключване предпазител на екрана</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1237"/>
+        <location filename="../prefgeneral.cpp" line="1245"/>
         <source>This option switches the screensaver off just before starting to play a file and switches it on when playback finishes. If this option is enabled, the screensaver won&apos;t appear even if playing audio files or when a file is paused.</source>
         <translation>Тази опция изключва предпазителя на екрана точно преди да започне възпроизвеждането и го включва отново, когато възпроизвеждането приключи. Ако опцията е активна, предпазителя няма да се появява, дори ако файлът е на пауза или се възпроизвеждат звукови файлове.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1243"/>
+        <location filename="../prefgeneral.cpp" line="1251"/>
         <source>Avoid screensaver</source>
         <translation>Избягвай предпазител на екрана</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1244"/>
+        <location filename="../prefgeneral.cpp" line="1252"/>
         <source>When this option is checked, SMPlayer will try to prevent the screensaver to be shown when playing a video file. The screensaver will be allowed to be shown if playing an audio file or in pause mode. This option only works if the SMPlayer window is in the foreground.</source>
         <translation>Когато тази опция е отметната, SMPlayer ще се опита да предотврати показването на предпазителя на екрана, когато се възпроизвежда видео файл. Ще бъде позволено на предпазителя да се показва, ако се възпроизвежда звуков файл или в режим на пауза. Това работи само ако прозореца на SMPlayer е отпред.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="648"/>
+        <location filename="../prefgeneral.ui" line="655"/>
         <source>Screensaver</source>
         <translation>Предпазител на екрана</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="654"/>
+        <location filename="../prefgeneral.ui" line="661"/>
         <source>Swit&amp;ch screensaver off</source>
         <translation>Изклю&amp;чване прездпазител на екрана</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="661"/>
+        <location filename="../prefgeneral.ui" line="668"/>
         <source>Avoid &amp;screensaver</source>
         <translation>Избягвай &amp;предпазител на екрана</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1310"/>
+        <location filename="../prefgeneral.cpp" line="1318"/>
         <source>Audio/video auto synchronization</source>
         <translation>Автоматично звук/видео синхронизиране</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1311"/>
+        <location filename="../prefgeneral.cpp" line="1319"/>
         <source>Gradually adjusts the A/V sync based on audio delay measurements.</source>
         <translation>Постепенно наглася З/В синхронизирането, базирано на измерванията забавянето на звука.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1314"/>
+        <location filename="../prefgeneral.cpp" line="1322"/>
         <source>A-V sync correction</source>
         <translation>Поправка на З-В синхронизиране</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1315"/>
+        <location filename="../prefgeneral.cpp" line="1323"/>
         <source>Maximum A-V sync correction per frame (in seconds)</source>
         <translation>Максимална поправка на З-В синхронизацията за кадър (в секунди)</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="955"/>
+        <location filename="../prefgeneral.ui" line="962"/>
         <source>Synchronization</source>
         <translation>Синхронизация</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="966"/>
+        <location filename="../prefgeneral.ui" line="973"/>
         <source>Audio/video auto &amp;synchronization</source>
         <translation>Автоматично звук/видео &amp;синхронизиране</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="992"/>
+        <location filename="../prefgeneral.ui" line="999"/>
         <source>&amp;Factor:</source>
         <translation>&amp;Фактор:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="1028"/>
+        <location filename="../prefgeneral.ui" line="1035"/>
         <source>A-V sync &amp;correction</source>
         <translation>&amp;Поправка на З-В синхронизиране</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="1051"/>
+        <location filename="../prefgeneral.ui" line="1058"/>
         <source>&amp;Max. correction:</source>
         <translation>&amp;Макс. поправка:</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1186"/>
+        <location filename="../prefgeneral.cpp" line="1194"/>
         <source>&lt;b&gt;Note:&lt;/b&gt; This option won&apos;t be used for TV channels.</source>
         <translation>&lt;b&gt;Бележка:&lt;/b&gt; Тази опция няма да се използва за ТВ канали.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="488"/>
+        <location filename="../prefgeneral.ui" line="495"/>
         <source>Dei&amp;nterlace by default (except for TV):</source>
         <translation>Ком&amp;пенсиране по подразбиране (освен за ТВ):</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1272"/>
+        <location filename="../prefgeneral.cpp" line="1280"/>
         <source>Uses hardware AC3 passthrough.</source>
         <translation>Използвай хардуерен AC3 пренос.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="1273"/>
+        <location filename="../prefgeneral.cpp" line="1281"/>
         <source>&lt;b&gt;Note:&lt;/b&gt; none of the audio filters will be used when this option is enabled.</source>
         <translation>&lt;b&gt;Бележка:&lt;/b&gt; нито един от звуковите филтри няма да се използва, когато тази опция е активирана.</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="499"/>
+        <location filename="../prefgeneral.cpp" line="503"/>
         <source>snap mode</source>
         <translation>режим на затвора</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.cpp" line="500"/>
+        <location filename="../prefgeneral.cpp" line="504"/>
         <source>slower dive mode</source>
         <translation>по-бавен режим на потапяне</translation>
     </message>
     <message>
-        <location filename="../prefgeneral.ui" line="385"/>
+        <location filename="../prefgeneral.ui" line="392"/>
         <source>Configu&amp;re...</source>
         <translation>Настрой&amp;ване...</translation>
     </message>
@@ -6953,7 +7127,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefinput.ui" line="107"/>
         <source>Select &amp;keys...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefinput.ui" line="117"/>
@@ -7283,12 +7457,12 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefinput.cpp" line="81"/>
         <source>Play next</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefinput.cpp" line="82"/>
         <source>Play previous</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefinput.cpp" line="87"/>
@@ -7635,7 +7809,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefinterface.ui" line="420"/>
         <source>Use the syste&amp;m native file dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefinterface.ui" line="506"/>
@@ -7885,12 +8059,12 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefinterface.cpp" line="795"/>
         <source>Use the system native file dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefinterface.cpp" line="796"/>
         <source>When this option is enabled, SMPlayer will try to use the system native file dialog. Otherwise it will use the internal one.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefinterface.cpp" line="798"/>
@@ -7957,7 +8131,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefinterface.cpp" line="829"/>
         <source>Note: this option only works when using mpv as multimedia engine.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefinterface.cpp" line="831"/>
@@ -8188,7 +8362,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefnetwork.ui" line="89"/>
         <source>P&amp;referred quality:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="118"/>
@@ -8198,27 +8372,27 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefnetwork.ui" line="126"/>
         <source>Playback &amp;quality:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="154"/>
         <source>Use a&amp;daptive streams (resolution up to 4K)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="188"/>
         <source>Use &amp;60 fps if available</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="209"/>
         <source>&amp;User agent:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="227"/>
         <source>YouTube support application</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="253"/>
@@ -8258,22 +8432,22 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefnetwork.ui" line="377"/>
         <source>Convert SRT subtitles to &amp;VTT</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="409"/>
         <source>&amp;Overwrite existing VTT files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="416"/>
         <source>Try to &amp;remove advertisements</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="425"/>
         <source>Position of &amp;subtitles on screen:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="480"/>
@@ -8299,7 +8473,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefnetwork.ui" line="200"/>
         <source>Allow AV&amp;1 codec</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.ui" line="532"/>
@@ -8332,11 +8506,6 @@ Do you want to overwrite?</source>
         <translation>Мрежа</translation>
     </message>
     <message>
-        <location filename="../prefnetwork.cpp" line="332"/>
-        <source>it will try to use mpv + youtube-dl only for the sites that require it</source>
-        <translation>ще се опита да използва mpv + youtube-dl единствено за сайтовете, които ги изискват</translation>
-    </message>
-    <message>
         <location filename="../prefnetwork.cpp" line="371"/>
         <source>User agent</source>
         <translation>Потребителски агент</translation>
@@ -8355,16 +8524,22 @@ Do you want to overwrite?</source>
         <translation>Автоматично</translation>
     </message>
     <message>
+        <location filename="../prefnetwork.cpp" line="97"/>
+        <location filename="../prefnetwork.cpp" line="335"/>
+        <source>Internal YouTube support</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../prefnetwork.cpp" line="110"/>
         <location filename="../prefnetwork.cpp" line="347"/>
         <source>Best video and audio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="118"/>
         <location filename="../prefnetwork.cpp" line="350"/>
         <source>Worst</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="326"/>
@@ -8382,65 +8557,70 @@ Do you want to overwrite?</source>
         <translation>поддръжката за видео сайтовете е изключена</translation>
     </message>
     <message>
+        <location filename="../prefnetwork.cpp" line="332"/>
+        <source>it will try to use mpv with yt-dlp (or youtube-dl) only for the sites that require it</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../prefnetwork.cpp" line="335"/>
         <source>only the internal support for YouTube will be used</source>
         <translation>ще бъде използвана само вътрешната поддръжка за YouTube</translation>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="338"/>
-        <source>uses mpv + youtube-dl for all sites</source>
-        <translation>използва mpv + youtube-dl за всички сайтове</translation>
+        <source>uses mpv with yt-dlp (or youtube-dl) for all sites</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="344"/>
         <source>Preferred quality</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="345"/>
-        <source>This option specifies the preferred quality for the video streams handled by youtube-dl.</source>
-        <translation type="unfinished"></translation>
+        <source>This option specifies the preferred quality for the video streams handled by yt-dlp or youtube-dl.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="347"/>
         <source>selects the best video and audio streams available</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="111"/>
         <location filename="../prefnetwork.cpp" line="348"/>
         <source>Best</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="231"/>
         <source>yt-dlp (based on youtube-dl with improvements)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="249"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="348"/>
         <source>selects the best quality format available as a single file</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="349"/>
         <source>1080p, 720p...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="349"/>
         <source>will try to use the selected resolution if available</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="350"/>
         <source>selects the worst quality format available</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="359"/>
@@ -8455,22 +8635,22 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefnetwork.cpp" line="363"/>
         <source>Use adaptive streams</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="364"/>
         <source>This option enables adaptive streams which can provide videos up to 4K.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="366"/>
         <source>Use 60 fps if available</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="367"/>
         <source>This option enables streams at 60 frames per second if available.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="372"/>
@@ -8510,52 +8690,52 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefnetwork.cpp" line="401"/>
         <source>Convert SRT subtitles to VTT</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="402"/>
         <source>When this option is enabled SMPlayer will convert automatically subtitle files in SRT format to VTT format. The VTT subtitle will have the same filename but extension .vtt</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="405"/>
         <source>Overwrite existing VTT files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="406"/>
         <source>If this option is enabled SMPlayer will overwrite existing VTT files.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="408"/>
         <source>Try to remove advertisements</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="409"/>
         <source>If this option is enabled SMPlayer will try to find advertisements in the subtitles and remove them.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="412"/>
         <source>Position of subtitles on screen</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="413"/>
         <source>This option sets the position on the screen where the subtitles are displayed.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="414"/>
         <source>0 is the top of the screen, 100 is the bottom of the screen.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="415"/>
         <source>The special value -1 means the default position.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefnetwork.cpp" line="419"/>
@@ -8627,8 +8807,8 @@ Do you want to overwrite?</source>
 <context>
     <name>PrefPerformance</name>
     <message>
-        <location filename="../prefperformance.cpp" line="85"/>
-        <location filename="../prefperformance.cpp" line="302"/>
+        <location filename="../prefperformance.cpp" line="95"/>
+        <location filename="../prefperformance.cpp" line="312"/>
         <source>Performance</source>
         <translation>Производителност</translation>
     </message>
@@ -8639,7 +8819,7 @@ Do you want to overwrite?</source>
     </message>
     <message>
         <location filename="../prefperformance.ui" line="33"/>
-        <location filename="../prefperformance.cpp" line="306"/>
+        <location filename="../prefperformance.cpp" line="316"/>
         <source>Priority</source>
         <translation>Приоритет</translation>
     </message>
@@ -8704,22 +8884,22 @@ Do you want to overwrite?</source>
         <translation>Задаването на складиране може да подобри производителността при бавни файлове</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="312"/>
+        <location filename="../prefperformance.cpp" line="322"/>
         <source>Allow frame drop</source>
         <translation>Разреши пропускане на кадри</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="313"/>
+        <location filename="../prefperformance.cpp" line="323"/>
         <source>Skip displaying some frames to maintain A/V sync on slow systems.</source>
         <translation>Пропускане показването на някои кадри, за да се поддържа З/В синхронизирането на бавни системи.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="315"/>
+        <location filename="../prefperformance.cpp" line="325"/>
         <source>Allow hard frame drop</source>
         <translation>Разреши голямо пропускане на кадри</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="316"/>
+        <location filename="../prefperformance.cpp" line="326"/>
         <source>More intense frame dropping (breaks decoding). Leads to image distortion!</source>
         <translation>По-често пропускане на кадри (пречи на разкодирането). Води до накъсване на образа!</translation>
     </message>
@@ -8749,22 +8929,22 @@ Do you want to overwrite?</source>
         <translation>Бързо &amp;превъртане до главите в DVD-тата</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="366"/>
+        <location filename="../prefperformance.cpp" line="376"/>
         <source>Fast audio track switching</source>
         <translation>Бързо превключване на звуковата пътечка</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="377"/>
+        <location filename="../prefperformance.cpp" line="387"/>
         <source>Fast seek to chapters in dvds</source>
         <translation>Бързо превъртане до главите в DVD-тата</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="378"/>
+        <location filename="../prefperformance.cpp" line="388"/>
         <source>If checked, it will try the fastest method to seek to chapters but it might not work with some discs.</source>
         <translation>Ако е отметната, ще опита най-бързият метод за превъртане до главите, но може да не работи с всички дискове.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="344"/>
+        <location filename="../prefperformance.cpp" line="354"/>
         <source>Skip loop filter</source>
         <translation>Пропускане на повтарящ филтър</translation>
     </message>
@@ -8774,37 +8954,37 @@ Do you want to overwrite?</source>
         <translation>H.264</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="367"/>
+        <location filename="../prefperformance.cpp" line="377"/>
         <source>Possible values:&lt;br&gt; &lt;b&gt;Yes&lt;/b&gt;: it will try the fastest method to switch the audio track (it might not work with some formats).&lt;br&gt; &lt;b&gt;No&lt;/b&gt;: the MPlayer process will be restarted whenever you change the audio track.&lt;br&gt; &lt;b&gt;Auto&lt;/b&gt;: SMPlayer will decide what to do according to the MPlayer version.</source>
         <translation>Възможни стойности:&lt;br&gt; &lt;b&gt;Да&lt;/b&gt;: ще опита най-бързият метод за смяна на звуковата пътечка (може да не работи с всички формати).&lt;br&gt; &lt;b&gt;Не&lt;/b&gt;: процесът на MPlayer ще бъде рестартиран, когато се смени звуковата пътечка.&lt;br&gt; &lt;b&gt;Авто&lt;/b&gt;: SMPlayer ще реши какво да прави в зависимост от версията на MPlayer.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="387"/>
+        <location filename="../prefperformance.cpp" line="397"/>
         <source>Cache for files</source>
         <translation>Складиране за файлове</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="388"/>
+        <location filename="../prefperformance.cpp" line="398"/>
         <source>This option specifies how much memory (in kBytes) to use when precaching a file.</source>
         <translation>Тази опция определя колко памет (в кБайтове) да се използва при прескладиране на файла.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="391"/>
+        <location filename="../prefperformance.cpp" line="401"/>
         <source>Cache for streams</source>
         <translation>Складиране за потоци</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="392"/>
+        <location filename="../prefperformance.cpp" line="402"/>
         <source>This option specifies how much memory (in kBytes) to use when precaching a URL.</source>
         <translation>Тази опция определя колко памет (в кБайтове) да се използва при прескладиране на интернет адрес.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="395"/>
+        <location filename="../prefperformance.cpp" line="405"/>
         <source>Cache for DVDs</source>
         <translation>Складиране за DVD-та</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="396"/>
+        <location filename="../prefperformance.cpp" line="406"/>
         <source>This option specifies how much memory (in kBytes) to use when precaching a DVD.&lt;br&gt;&lt;b&gt;Warning:&lt;/b&gt; Seeking might not work properly (including chapter switching) when using a cache for DVDs.</source>
         <translation>Тази опция определя колко памет (в кБайтове) да се използва за прескладиране на DVD.&lt;br&gt; &lt;b&gt;Внимание:&lt;/b&gt; Превъртането може да не работи правилно (включително смяна на главата), когато се използва складиране за DVD-та.</translation>
     </message>
@@ -8826,7 +9006,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefperformance.ui" line="45"/>
         <source>Select the priority for the player process.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefperformance.ui" line="411"/>
@@ -8834,17 +9014,17 @@ Do you want to overwrite?</source>
         <translation>Складиране за &amp;потоци:</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="100"/>
+        <location filename="../prefperformance.cpp" line="110"/>
         <source>Enabled</source>
         <translation>Активиран</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="101"/>
+        <location filename="../prefperformance.cpp" line="111"/>
         <source>Skip (always)</source>
         <translation>Пропускане (винаги)</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="102"/>
+        <location filename="../prefperformance.cpp" line="112"/>
         <source>Skip only on HD videos</source>
         <translation>Пропускане само за HD видеа</translation>
     </message>
@@ -8854,7 +9034,7 @@ Do you want to overwrite?</source>
         <translation>Повтарящ &amp;филтър</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="345"/>
+        <location filename="../prefperformance.cpp" line="355"/>
         <source>This option allows to skips the loop filter (AKA deblocking) during H.264 decoding. Since the filtered frame is supposed to be used as reference for decoding dependent frames this has a worse effect on quality than not doing deblocking on e.g. MPEG-2 video. But at least for high bitrate HDTV this provides a big speedup with no visible quality loss.</source>
         <translation>Тази опция позволява пропускането на повтарящия филтър (заглаждане) по време на H.264 разкодиране. След като филтрираната рамка очаквано се използва като отговор за зависимите рамки за разкодиране, това има по-лош ефект върху качеството, отколкото ако не се прави заглаждане, например върху MPEG-2 видео. Но в крайна сметка за HDTV с по-голяма побитова скорост това предоставя голямо ускоряване без забележима загуба на качество.</translation>
     </message>
@@ -8865,112 +9045,117 @@ Do you want to overwrite?</source>
     </message>
     <message>
         <location filename="../prefperformance.cpp" line="34"/>
-        <location filename="../prefperformance.cpp" line="384"/>
+        <source>Auto (safe)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../prefperformance.cpp" line="35"/>
+        <location filename="../prefperformance.cpp" line="394"/>
         <source>Auto</source>
         <translation>Автоматично</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="307"/>
+        <location filename="../prefperformance.cpp" line="317"/>
         <source>Set process priority for %1 according to the predefined priorities available under Windows.&lt;br&gt;&lt;b&gt;Warning:&lt;/b&gt; Using realtime priority can cause system lockup.</source>
         <translation>Задава приоритет на процеса за %1, съгласно регламентираните налични приоритети под Windows. &lt;br&gt;&lt;b&gt;Внимание:&lt;/b&gt; Използването на приоритет в реално време може да предизвика системно забиване.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="323"/>
+        <location filename="../prefperformance.cpp" line="333"/>
         <source>Hardware decoding</source>
         <translation>Хардуерно разкодиране</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="324"/>
+        <location filename="../prefperformance.cpp" line="334"/>
         <source>Sets the hardware video decoding API. If hardware decoding is not possible, software decoding will be used instead.</source>
         <translation>Задава ППИ за хардуерно видео разкодиране. Ако хардуерното разкодиране не е възможно, вместо него ще се използва софтуерно разкодиране.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="326"/>
+        <location filename="../prefperformance.cpp" line="336"/>
         <source>Available options:</source>
         <translation>Налични опции:</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="328"/>
+        <location filename="../prefperformance.cpp" line="338"/>
         <source>None: only software decoding will be used.</source>
         <translation>Без: ще бъде използвано само софтуерно разкодиране.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="329"/>
+        <location filename="../prefperformance.cpp" line="339"/>
         <source>Auto: it tries to automatically enable hardware decoding using the first available method.</source>
         <translation>Авто: опит за автоматично активиране на хардуерното разкодиране по първият наличен метод.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="331"/>
+        <location filename="../prefperformance.cpp" line="341"/>
         <source>vdpau: for the vdpau and opengl video outputs.</source>
         <translation>vdpau: за видео изходи vdpau и opengl.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="332"/>
+        <location filename="../prefperformance.cpp" line="342"/>
         <source>vaapi: for the opengl and vaapi video outputs. For Intel GPUs only.</source>
         <translation>vaapi: за видео изходи opengl и vaapi. Само за ГП на Intel.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="333"/>
+        <location filename="../prefperformance.cpp" line="343"/>
         <source>vaapi-copy: it copies video back into system RAM. For Intel GPUs only.</source>
         <translation>vaapi-copy: копира видеото обратно в системната ППД. Само за ГП на Intel.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="336"/>
+        <location filename="../prefperformance.cpp" line="346"/>
         <source>dxva2-copy: it copies video back to system RAM. Experimental.</source>
         <translation>dxva2-copy: копира видеото обратно в системната ППД. Експериментално.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="340"/>
+        <location filename="../prefperformance.cpp" line="350"/>
         <source>This option only works with mpv.</source>
         <translation>Тази опция работи само с mpv.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="352"/>
+        <location filename="../prefperformance.cpp" line="362"/>
         <source>Possible values:</source>
         <translation>Възможни стойности:</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="353"/>
+        <location filename="../prefperformance.cpp" line="363"/>
         <source>&lt;b&gt;Enabled&lt;/b&gt;: the loop filter is not skipped</source>
         <translation>&lt;b&gt;Активиран&lt;/b&gt;: повтарящият филтър не се пропуска</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="354"/>
+        <location filename="../prefperformance.cpp" line="364"/>
         <source>&lt;b&gt;Skip (always)&lt;/b&gt;: the loop filter is skipped no matter the resolution of the video</source>
         <translation>&lt;b&gt;Пропускане (винаги)&lt;/b&gt;: повтарящият филтър се пропуска без значение от резолюцията</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="356"/>
+        <location filename="../prefperformance.cpp" line="366"/>
         <source>&lt;b&gt;Skip only on HD videos&lt;/b&gt;: the loop filter will be skipped only on videos which height is %1 or greater.</source>
         <translation>&lt;b&gt;Пропускане само за HD видеа&lt;/b&gt;: повтарящият филтър ще се пропуска само за видеоклипове, чиято височина е %1 или по-висока.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="361"/>
+        <location filename="../prefperformance.cpp" line="371"/>
         <source>Try to use the non-free CoreAVC codec when no other codec is specified and a non-VDPAU video output is selected.</source>
         <translation>Опит да се използва комерсиалният кодек CoreAVC, когато друг такъв не е зададен и е избран видео изход, различен от VDPAU.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="363"/>
+        <location filename="../prefperformance.cpp" line="373"/>
         <source>Requires a %1 build with CoreAVC support.</source>
         <translation>Изисква %1 версия с поддръжка на CoreAVC.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="382"/>
+        <location filename="../prefperformance.cpp" line="392"/>
         <source>Cache</source>
         <translation>Складиране</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="385"/>
+        <location filename="../prefperformance.cpp" line="395"/>
         <source>Usually this option will enable the cache when it&apos;s necessary.</source>
         <translation>Обикновено тази опция би активиранала складирането, когато е необходимо.</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="400"/>
+        <location filename="../prefperformance.cpp" line="410"/>
         <source>Cache for audio CDs</source>
         <translation>Складиране за звукови CD-та</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="401"/>
+        <location filename="../prefperformance.cpp" line="411"/>
         <source>This option specifies how much memory (in kBytes) to use when precaching an audio CD.</source>
         <translation>Тази опция определя колко памет (в кБайтове) да се използва при прескладиране на звуково CD.</translation>
     </message>
@@ -8980,12 +9165,12 @@ Do you want to overwrite?</source>
         <translation>Складиране за з&amp;вукови CD-та:</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="404"/>
+        <location filename="../prefperformance.cpp" line="414"/>
         <source>Cache for VCDs</source>
         <translation>Складиране за VCD-та</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="405"/>
+        <location filename="../prefperformance.cpp" line="415"/>
         <source>This option specifies how much memory (in kBytes) to use when precaching a VCD.</source>
         <translation>Тази опция определя колко памет (в кБайтове) да се използва при прескладиране на VCD.</translation>
     </message>
@@ -8995,12 +9180,12 @@ Do you want to overwrite?</source>
         <translation>Ск&amp;ладиране за VCD-та:</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="319"/>
+        <location filename="../prefperformance.cpp" line="329"/>
         <source>Threads for decoding</source>
         <translation>Нишки за разкодиране</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="320"/>
+        <location filename="../prefperformance.cpp" line="330"/>
         <source>Sets the number of threads to use for decoding. Only for MPEG-1/2 and H.264</source>
         <translation>Задаване на броя нишки, които да се използват за разкодиране. Само за MPEG-1/2 и H.264</translation>
     </message>
@@ -9010,7 +9195,7 @@ Do you want to overwrite?</source>
         <translation>&amp;Нишки за разкодиране (само MPEG-1/2 и H.264):</translation>
     </message>
     <message>
-        <location filename="../prefperformance.cpp" line="360"/>
+        <location filename="../prefperformance.cpp" line="370"/>
         <source>Use CoreAVC if no other codec specified</source>
         <translation>Използвай CoreAVC, ако не е зададен друг кодек</translation>
     </message>
@@ -9100,22 +9285,22 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefplaylist.cpp" line="234"/>
         <source>Display title name instead of filename</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefplaylist.cpp" line="235"/>
         <source>The playlist will display the title (if any) instead of the filename.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefplaylist.cpp" line="237"/>
         <source>The playlist window is dockable</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefplaylist.cpp" line="238"/>
         <source>If this option is checked, the playlist window can be docked inside the main window. Otherwise the playlist would be a regular window.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefplaylist.cpp" line="241"/>
@@ -9285,12 +9470,12 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefplaylist.ui" line="157"/>
         <source>Display title name instead of &amp;filename</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefplaylist.ui" line="164"/>
         <source>The playlist window is &amp;dockable</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefplaylist.ui" line="185"/>
@@ -9377,12 +9562,12 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefsubtitles.ui" line="77"/>
         <source>All subtitles containing the movie name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefsubtitles.ui" line="82"/>
         <source>All subtitles in the directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefsubtitles.ui" line="123"/>
@@ -9672,7 +9857,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../prefsubtitles.ui" line="694"/>
         <source>Opacity:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../prefsubtitles.ui" line="730"/>
@@ -10140,19 +10325,13 @@ Do you want to overwrite?</source>
         <location filename="../helper.cpp" line="127"/>
         <location filename="../helper.cpp" line="133"/>
         <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n секунда</numerusform>
-            <numerusform>%n секунди</numerusform>
-        </translation>
+        <translation><numerusform>%n секунда</numerusform><numerusform>%n секунди</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../helper.cpp" line="130"/>
         <location filename="../helper.cpp" line="132"/>
         <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n минута</numerusform>
-            <numerusform>%n минути</numerusform>
-        </translation>
+        <translation><numerusform>%n минута</numerusform><numerusform>%n минути</numerusform></translation>
     </message>
     <message>
         <location filename="../helper.cpp" line="134"/>
@@ -10200,7 +10379,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../clhelp.cpp" line="101"/>
         <source>time</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../clhelp.cpp" line="127"/>
@@ -10235,7 +10414,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../clhelp.cpp" line="180"/>
         <source>specifies the start time (in seconds) of the first file to be played. Also valid h:m:s and m:s</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../clhelp.cpp" line="192"/>
@@ -10608,7 +10787,7 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../timedialog.cpp" line="26"/>
         <source>SMPlayer - Seek</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -10878,12 +11057,12 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../videopreview/videopreview.cpp" line="128"/>
         <source>&amp;Close</source>
-        <translation type="unfinished">&amp;Затваряне</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../videopreview/videopreview.cpp" line="129"/>
         <source>&amp;Save</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../videopreview/videopreview.cpp" line="168"/>
@@ -10908,12 +11087,12 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../videopreview/videopreview.cpp" line="520"/>
         <source>FPS: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../videopreview/videopreview.cpp" line="522"/>
         <source>Audio format: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../videopreview/videopreview.cpp" line="697"/>
@@ -11067,12 +11246,12 @@ Do you want to overwrite?</source>
     <message>
         <location filename="../videopreview/videopreviewconfigdialog.cpp" line="28"/>
         <source>&amp;OK</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../videopreview/videopreviewconfigdialog.cpp" line="29"/>
         <source>&amp;Cancel</source>
-        <translation type="unfinished">&amp;Отказ</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../videopreview/videopreviewconfigdialog.cpp" line="47"/>

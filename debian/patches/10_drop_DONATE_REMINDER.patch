@@ -4,6 +4,7 @@ Author: Mateusz Łukasik <mati75@linuxmint.pl>
 Origin: vendor
 Bug-Debian: https://bugs.debian.org/964359
 Last-Update: 2020-08-13
+Forwarded: not-needed
 
 --- a/src/basegui.cpp
 +++ b/src/basegui.cpp

@@ -1,5 +1,5 @@
 /*  smplayer, GUI front-end for mplayer.
-    Copyright (C) 2006-2021 Ricardo Villalba <ricardo@smplayer.info>
+    Copyright (C) 2006-2024 Ricardo Villalba <ricardo@smplayer.info>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -175,11 +175,13 @@ void MPVProcess::initializeRX() {
 	rx_audio.setPattern("^.* Audio\\s+--aid=(\\d+)( --alang=([a-zA-Z-]+)|)([ \\(\\)\\*]+)('(.*)'|)");
 	rx_subs.setPattern("^.* Subs\\s+--sid=(\\d+)( --slang=([a-zA-Z-]+)|)([ \\(\\)\\*]+)('(.*)'|)");
 
+	/*
 	rx_videocodec.setPattern("^INFO_VIDEO_CODEC=(.*)\\s");
 	rx_videocodec.setMinimal(true);
 
 	rx_audiocodec.setPattern("^INFO_AUDIO_CODEC=(.*)\\s");
 	rx_audiocodec.setMinimal(true);
+	*/
 
 #if !NOTIFY_VIDEO_CHANGES
 	rx_video.setPattern("^.* Video\\s+--vid=(\\d+)([ \\(\\)\\*]+)('(.*)'|)");
@@ -223,6 +225,8 @@ void MPVProcess::parseLine(QByteArray ba) {
 	#endif
 #endif
 
+	if (line.contains("IGNORE_THIS")) return;
+
 	if (verbose) {
 		line.replace("[statusline] ", "");
 		line.replace("[cplayer] ", "");
@@ -264,6 +268,10 @@ void MPVProcess::parseLine(QByteArray ba) {
 		}
 
 		if (paused) {
+			if (last_sec != sec) {
+				last_sec = sec;
+				emit receivedCurrentSec(sec);
+			}
 			notified_pause = true;
 			qDebug("MPVProcess::parseLine: paused");
 			emit receivedPause();
@@ -617,7 +625,7 @@ void MPVProcess::parseLine(QByteArray ba) {
 			emit receivedPlaying();
 		}
 		else
-
+		/*
 		if (rx_videocodec.indexIn(line) > -1) {
 			md.video_codec = rx_videocodec.cap(1);
 			qDebug() << "MPVProcess::parseLine: md.video_codec:" << md.video_codec;
@@ -628,6 +636,7 @@ void MPVProcess::parseLine(QByteArray ba) {
 			qDebug() << "MPVProcess::parseLine: md.audio_codec:" << md.audio_codec;
 		}
 		else
+		*/
 
 		if (rx_forbidden.indexIn(line) > -1) {
 			qDebug("MVPProcess::parseLine: 403 forbidden");
@@ -680,7 +689,6 @@ void MPVProcess::parseLine(QByteArray ba) {
 				md.video_fps = value;
 			}
 			else
-			/*
 			if (tag == "INFO_VIDEO_CODEC") {
 				md.video_codec = value;
 			}
@@ -689,7 +697,6 @@ void MPVProcess::parseLine(QByteArray ba) {
 				md.audio_codec = value;
 			}
 			else
-			*/
 			if (tag == "INFO_DEMUX_ROTATION") {
 				emit receivedDemuxRotation(value.toInt());
 			}

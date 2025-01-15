@@ -2,6 +2,7 @@ Description: Update mime types
 Author: Mateusz Łukasik <mati75@linuxmint.pl>
 Bug-Debian: https://bugs.debian.org/842899
 Last-Update: 2018-01-10
+Forwarded: not-needed
 
 --- a/smplayer.desktop
 +++ b/smplayer.desktop

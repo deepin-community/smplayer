@@ -1,3 +1,4 @@
+00_drop_docs_dir.patch
 01-update-mime-types.patch
 02-disable_updates.patch
 04_update_desktop_launcher.patch
@@ -8,3 +9,7 @@
 
 #08-disable-yt-js.patch - if the 'only' problem is https - fixed in 09-
 10_drop_DONATE_REMINDER.patch
+11-drop-google-dns.patch
+12-drop-google-dns-from-chromecast.patch
+#13-Another-workaround-for-the-pause-problem.patch
+14-Adapt-MPV-renaming--sub-forced-only-to--sub-forced-events-only.patch
